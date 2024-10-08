@@ -18,9 +18,9 @@ defmodule TimemanagerWeb.ClockJSON do
   defp data(%Clock{} = clock) do
     %{
       id: clock.id,
-      times: clock.time,
+      time: clock.time,
       status: clock.status,
-      user: clock.user
+      user_id: clock.user_id
     }
   end
 end

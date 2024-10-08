@@ -37,6 +37,13 @@ defmodule Timemanager.Clocking do
   """
   def get_clock!(id), do: Repo.get!(Clock, id)
 
+  def get_clocks_by_user(user_id) do
+    Clock
+    |> where([c], c.user_id == ^user_id)
+    |> Repo.all()
+    |> Repo.preload(:user) # Préchargement de l'utilisateur
+  end
+
   @doc """
   Creates a clock.
 
