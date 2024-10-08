@@ -22,4 +22,8 @@ defmodule TimemanagerWeb.UserJSON do
       email: user.email
     }
   end
+
+  def error(%{message: message}) do
+    %{error: message}
+  end
 end
