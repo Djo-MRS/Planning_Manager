@@ -1,6 +1,5 @@
 <template>
   <div class="user">
-    <NavBarComponent />
     <MDBContainer>
       <div class="d-flex justify-content-start align-items-center flex-column">
         <h2>Create a user</h2>
@@ -32,8 +31,6 @@
 
 <script>
 import { MDBBtn, MDBContainer, MDBInput } from "mdb-vue-ui-kit";
-import NavBarComponent from "@/components/NavBarComponent.vue";
-
 
 export default {
   name: "UserComponent",
@@ -41,7 +38,6 @@ export default {
     MDBContainer,
     MDBInput,
     MDBBtn,
-    NavBarComponent
   },
   data() {
     return {
@@ -53,30 +49,29 @@ export default {
   },
   methods: {
     async createUser() {
-  try {
-    const response = await fetch("http://localhost:4000/api/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        user: {
-          username: this.username,
-          email: this.email
-        }
-      })
-    });
+      try {
+        const response = await fetch("http://localhost:4000/api/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            user: {
+              username: this.username,
+              email: this.email
+            }
+          })
+        });
 
-    const newUser = await response.json();
-    this.users.push(newUser);
-    this.message = "User created successfully!";
-    this.username = "";
-    this.email = "";
-  } catch (error) {
-    this.message = "Error creating user: " + error.message;
-  }
-}
-
+        const newUser = await response.json();
+        this.users.push(newUser);
+        this.message = "User created successfully!";
+        this.username = "";
+        this.email = "";
+      } catch (error) {
+        this.message = "Error creating user: " + error.message;
+      }
+    }
   }
 };
 </script>
