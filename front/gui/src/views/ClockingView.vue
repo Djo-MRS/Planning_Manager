@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ClockingComponent />
+      <ClockingComponent />
     </div>
   </template>
   
