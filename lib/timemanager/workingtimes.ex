@@ -35,7 +35,7 @@ defmodule Timemanager.Workingtimes do
       ** (Ecto.NoResultsError)
 
   """
-  def get_workingtime!(id), do: Repo.get!(Workingtime, id)
+def get_workingtime(id), do: Repo.get(Workingtime, id)
 
   @doc """
   Creates a workingtime.
