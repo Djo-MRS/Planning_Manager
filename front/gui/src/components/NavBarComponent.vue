@@ -11,7 +11,7 @@
         <MDBNavbarItem to="/" active> Home </MDBNavbarItem>
         <MDBNavbarItem to="/user"> User </MDBNavbarItem>
         <MDBNavbarItem to="#"> WorkingTime </MDBNavbarItem>
-        <MDBNavbarItem to="#"> Clocking </MDBNavbarItem>
+        <MDBNavbarItem to="/clock/1"> Clocking </MDBNavbarItem>
       </MDBNavbarNav>
     </MDBCollapse>
   </MDBNavbar>
