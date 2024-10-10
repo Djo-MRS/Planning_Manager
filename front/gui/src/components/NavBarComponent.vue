@@ -10,7 +10,7 @@
       <MDBNavbarNav>
         <MDBNavbarItem to="/" active> Home </MDBNavbarItem>
         <MDBNavbarItem to="/user"> User </MDBNavbarItem>
-        <MDBNavbarItem to="#"> WorkingTime </MDBNavbarItem>
+        <MDBNavbarItem to="/workingtime"> WorkingTime </MDBNavbarItem>
         <MDBNavbarItem to="#"> Clocking </MDBNavbarItem>
       </MDBNavbarNav>
     </MDBCollapse>
