@@ -3,6 +3,7 @@ defmodule TimemanagerWeb.ClockController do
 
   alias Timemanager.Clocking
   alias Timemanager.Clocking.Clock
+  alias Timemanager.Accounts
 
   action_fallback TimemanagerWeb.FallbackController
 
@@ -10,26 +11,55 @@ defmodule TimemanagerWeb.ClockController do
     clocks = Clocking.list_clocks()
     render(conn, :index, clocks: clocks)
   end
-  def create_for_user(conn, %{"userID" => user_id, "clock" => clock_params}) do
-    clock_params = Map.put(clock_params, "user_id", user_id)
 
-    with {:ok, %Clock{} = clock} <- Clocking.create_clock(clock_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")
-      |> render(:show, clock: clock)
-    else
-      _ ->
+  def create_for_user(conn, %{"userID" => user_id, "clock" => clock_params}) do
+    case Accounts.get_user(user_id) do
+      nil ->
         conn
-        |> put_status(:bad_request)
-        |> json(%{error: "Invalid data"})
+        |> put_status(:not_found)
+        |> json(%{error: "Utilisateur non trouvé"})
+
+      _user ->
+        clock_params = Map.put(clock_params, "user_id", user_id)
+
+        with {:ok, %Clock{} = clock} <- Clocking.create_clock(clock_params) do
+          conn
+          |> put_status(:created)
+          |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")
+          |> render(:show, clock: clock)
+        else
+          {:error, %Ecto.Changeset{} = changeset} ->
+            errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+              Enum.reduce(opts, msg, fn {key, value}, acc -> String.replace(acc, "%{#{key}}", to_string(value)) end)
+            end)
+
+            conn
+            |> put_status(:unprocessable_entity)
+            |> json(%{errors: errors})
+
+          _ ->
+            conn
+            |> put_status(:bad_request)
+            |> json(%{error: "Données invalides"})
+        end
     end
   end
 
+
+
   def get_by_user(conn, %{"userID" => user_id}) do
-    clocks = Clocking.get_clocks_by_user(user_id)
-    render(conn, :index, clocks: clocks)
+    case Accounts.get_user(user_id) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "Utilisateur non trouvé"})
+
+      _user ->
+        clocks = Clocking.get_clocks_by_user(user_id)
+        render(conn, :index, clocks: clocks)
+    end
   end
+
 
   def show(conn, %{"id" => id}) do
     clock = Clocking.get_clock!(id)

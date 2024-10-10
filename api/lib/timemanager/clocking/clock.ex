@@ -16,5 +16,6 @@ defmodule Timemanager.Clocking.Clock do
     |> cast(attrs, [:time, :status, :user_id])
     |> validate_required([:time, :status, :user_id])
     |> validate_inclusion(:status, [true, false], message: "Status must be true or false")
+    |> foreign_key_constraint(:user_id)
   end
 end
