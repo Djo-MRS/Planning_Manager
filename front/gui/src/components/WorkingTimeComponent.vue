@@ -1,7 +1,7 @@
 <template>
-    <main>
-      <RouterView />
-      <MDBContainer>
+  <main>
+    <RouterView />
+    <MDBContainer>
       <MDBRow>
         <MDBCol>
           <h2>Select a user</h2>
@@ -23,29 +23,41 @@
           </select>
         </MDBCol>
       </MDBRow>
+      <MDBRow>
+        <MDBCol>
+          <h2>Working Times</h2>
+          <ul v-if="workingTimes.length">
+            <li v-for="time in workingTimes" :key="time.id">
+              {{ time.date }}: {{ time.hours }}
+            </li>
+          </ul>
+          <p v-else>No working times available.</p>
+        </MDBCol>
+      </MDBRow>
     </MDBContainer>
-    </main>
-  </template>
-  
-  <script>
-  import { MDBContainer, MDBCol } from "mdb-vue-ui-kit";
+  </main>
+</template>
 
-  export default {
+  
+<script>
+import { MDBContainer, MDBCol } from "mdb-vue-ui-kit";
+
+export default {
   name: "UserComponent",
   components: {
     MDBContainer,
     MDBCol,
- 
   },
   data() {
     return {
       username: "",
       email: "",
       users: [],
-      selectedUserId: "",  // This will hold the selected user ID
+      selectedUserId: "",
       message: "",
       createUsername: "",
-      createEmail: ""
+      createEmail: "",
+      workingTimes: []  // Nouveau tableau pour stocker les heures de travail
     };
   },
   mounted() {
@@ -60,19 +72,30 @@
         this.message = "Error getting users: " + error.message;
       }
     },
+    async getWorkingTimes() {
+      if (!this.selectedUserId) return;  // Ne pas récupérer si aucun utilisateur n'est sélectionné
+      try {
+        const response = await fetch(`http://localhost:4000/api/users/${this.selectedUserId}/workingtimes`);
+        this.workingTimes = (await response.json()).data;
+      } catch (error) {
+        this.message = "Error getting working times: " + error.message;
+      }
+    },
     selectUser() {
       const selectedUser = this.users.find(user => user.id === this.selectedUserId);
       if (selectedUser) {
         this.username = selectedUser.username;
         this.email = selectedUser.email;
+        this.getWorkingTimes();  // Appel de la fonction pour récupérer les heures de travail
       } else {
         this.username = "";
         this.email = "";
+        this.workingTimes = [];  // Réinitialiser les heures de travail si aucun utilisateur n'est sélectionné
       }
     }
   }
 }
-  </script>
+</script>
   
   <style>
   #app {
