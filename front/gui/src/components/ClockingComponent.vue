@@ -4,7 +4,7 @@
       <div>
         <label for="userSelect">Sélectionner un utilisateur :</label>
         <select id="userSelect" v-model="selectedUserId" @change="selectUser">
-          <option value="" disabled selected>Choisir un utilisateur</option>
+          <option value="" disabled selected></option>
           <option v-for="user in users" :key="user.id" :value="user.id">{{ user.username }}</option>
         </select>
       </div>
@@ -131,6 +131,7 @@
             },
             body: JSON.stringify({
               clock: {
+                user_id: this.selectedUserId,
                 clockIn: false,
                 time: new Date().toISOString()
               }
