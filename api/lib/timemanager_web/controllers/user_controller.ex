@@ -19,25 +19,27 @@ defmodule TimemanagerWeb.UserController do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/users/#{user}")
+      |> put_resp_header("location", Routes.user_path(conn, :show, user.id))
       |> render(:show, user: user)
     else
-      _error ->
+      {:error, %Ecto.Changeset{} = changeset} ->
+        errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+          Enum.reduce(opts, msg, fn {key, value}, acc -> String.replace(acc, "%{#{key}}", to_string(value)) end)
+        end)
         conn
-        |> put_status(:not_found)
-        |> render("error.json", message: "User not created")
+        |> put_status(:unprocessable_entity)
+        |> json(%{errors: errors})
     end
   end
 
   def show(conn, %{"id" => id}) do
-    try do
-        user = Accounts.get_user!(id)
-        render(conn, :show, user: user)
-    rescue
-      Ecto.NoResultsError ->
+    case Accounts.get_user(id) do
+      nil ->
         conn
         |> put_status(:not_found)
-        |> render("error.json", message: "User not found")
+        |> json(%{error: "User not found"})
+      user ->
+        render(conn, :show, user: user)
     end
   end
 
@@ -55,29 +57,43 @@ defmodule TimemanagerWeb.UserController do
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Accounts.get_user!(id)
-
-    with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
-      render(conn, :show, user: user)
-    else
-      _error ->
+    case Accounts.get_user(id) do
+      nil ->
         conn
         |> put_status(:not_found)
-        |> render("error.json", message: "User not updated")
+        |> json(%{error: "User not found"})
+
+      user ->
+        with {:ok, %User{} = updated_user} <- Accounts.update_user(user, user_params) do
+          render(conn, :show, user: updated_user)
+        else
+          {:error, %Ecto.Changeset{} = changeset} ->
+            errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+              Enum.reduce(opts, msg, fn {key, value}, acc -> String.replace(acc, "%{#{key}}", to_string(value)) end)
+            end)
+            conn
+            |> put_status(:unprocessable_entity)
+            |> json(%{errors: errors})
+        end
     end
   end
 
-  @spec delete(any(), map()) :: Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
-
-    with {:ok, %User{}} <- Accounts.delete_user(user) do
-      send_resp(conn, :no_content, "")
-    else
-      _error ->
+    case Accounts.get_user(id) do
+      nil ->
         conn
         |> put_status(:not_found)
-        |> render("error.json", message: "User not deleted")
+        |> json(%{error: "User not found"})
+
+      user ->
+        with {:ok, %User{}} <- Accounts.delete_user(user) do
+          send_resp(conn, :no_content, "")
+        else
+          _error ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> json(%{error: "Unable to delete user"})
+        end
     end
   end
 end
