@@ -16,7 +16,7 @@ const routes = [
     component: UserView
   },
   {
-    path: '/clock/:userId',
+    path: '/clock',
     name: 'ClockingView',
     component: ClockingView
   }, 
