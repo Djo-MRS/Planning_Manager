@@ -26,13 +26,14 @@
           <div class="text-center mb-3">
             <form @submit.prevent="createUser">
               <MDBInput 
-                label="Username" 
+                label="Username"
                 v-model="createUsername"
                 required
                 class="mb-3"
               />
               <MDBInput
                 label="Email" 
+                type="email"
                 v-model="createEmail" 
                 required
                 class="mb-3"
@@ -114,7 +115,7 @@ export default {
           body: JSON.stringify({
             user: {
               username: this.createUsername,
-              email: this.email
+              email: this.createEmail
             }
           })
         });

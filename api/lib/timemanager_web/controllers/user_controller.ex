@@ -19,7 +19,7 @@ defmodule TimemanagerWeb.UserController do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.user_path(conn, :show, user.id))
+      |> put_resp_header("location", ~p"/api/users/#{user}")
       |> render(:show, user: user)
     else
       {:error, %Ecto.Changeset{} = changeset} ->
