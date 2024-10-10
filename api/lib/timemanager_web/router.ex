@@ -2,6 +2,7 @@ defmodule TimemanagerWeb.Router do
   use TimemanagerWeb, :router
 
   pipeline :api do
+    plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
   end
 
@@ -10,7 +11,7 @@ defmodule TimemanagerWeb.Router do
 
     get "/clocks/:userID", ClockController, :get_by_user
     post "/clocks/:userID", ClockController, :create_for_user
-    
+
     get "/users/:id", UserController, :show
     post "/users", UserController, :create
     delete "/users/:id", UserController, :delete
