@@ -1,4 +1,5 @@
 defmodule TimemanagerWeb.Router do
+  alias Hex.API.User
   use TimemanagerWeb, :router
 
   pipeline :api do
@@ -13,6 +14,7 @@ defmodule TimemanagerWeb.Router do
     post "/clocks/:userID", ClockController, :create_for_user
 
     get "/users/:id", UserController, :show
+    get "/users", UserController, :index
     post "/users", UserController, :create
     delete "/users/:id", UserController, :delete
     put "/users/:id", UserController, :update

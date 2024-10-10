@@ -9,17 +9,10 @@ defmodule TimemanagerWeb.UserController do
   action_fallback TimemanagerWeb.FallbackController
 
   def index(conn, _params) do
-    users = Accounts.list_users()
-
-    with {:ok, users} <- Accounts.list_users() do
-      render(conn, :index, users: users)
-    else
-      _error ->
-        conn
-        |> put_status(:not_found)
-        |> render("error.json", message: "Users not found")
+    case users = Accounts.list_users() do
+      [] -> {:error, :not_found}
+      _user -> render(conn, :index, users: users)
     end
-    render(conn, :index, users: users)
   end
 
   def create(conn, %{"user" => user_params}) do

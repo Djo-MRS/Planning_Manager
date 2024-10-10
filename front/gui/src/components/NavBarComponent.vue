@@ -1,6 +1,6 @@
 <template>
 
-<MDBNavbar light bg="light" expand="lg" container>
+<MDBNavbar light bg="light" expand="lg" class="mb-3" container>
     <MDBNavbarBrand href="/">TimeManager</MDBNavbarBrand>
     <MDBNavbarToggler
       target="#navbarNav"
