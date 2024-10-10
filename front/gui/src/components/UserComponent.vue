@@ -1,20 +1,6 @@
 <template>
   <div class="user">
-    <MDBNavbar light bg="light" expand="lg" container>
-    <MDBNavbarBrand href="/">TimeManager</MDBNavbarBrand>
-    <MDBNavbarToggler
-      target="#navbarNav"
-      @click="collapse2 = !collapse2"
-    ></MDBNavbarToggler>
-    <MDBCollapse id="navbarNav" v-model="collapse2">
-      <MDBNavbarNav>
-        <MDBNavbarItem to="#" active> Home </MDBNavbarItem>
-        <MDBNavbarItem to="/user"> User </MDBNavbarItem>
-        <MDBNavbarItem to="#"> WorkingTime </MDBNavbarItem>
-        <MDBNavbarItem to="#"> Clocking </MDBNavbarItem>
-      </MDBNavbarNav>
-    </MDBCollapse>
-  </MDBNavbar>
+    <NavBarComponent />
     <MDBContainer>
       <div class="d-flex justify-content-start align-items-center flex-column">
         <h2>Create a user</h2>
@@ -26,7 +12,7 @@
               required
               class="mb-3"
             />
-            <MDBInput 
+            <MDBInput
               label="Email" 
               v-model="email" 
               required
@@ -45,7 +31,9 @@
 </template>
 
 <script>
-import { MDBBtn, MDBContainer, MDBInput, MDBNavbar, MDBNavbarBrand, MDBNavbarToggler, MDBCollapse, MDBNavbarNav, MDBNavbarItem } from "mdb-vue-ui-kit";
+import { MDBBtn, MDBContainer, MDBInput } from "mdb-vue-ui-kit";
+import NavBarComponent from "@/components/NavBarComponent.vue";
+
 
 export default {
   name: "UserComponent",
@@ -53,12 +41,7 @@ export default {
     MDBContainer,
     MDBInput,
     MDBBtn,
-    MDBNavbar,
-    MDBNavbarBrand,
-    MDBNavbarToggler,
-    MDBCollapse,
-    MDBNavbarNav,
-    MDBNavbarItem
+    NavBarComponent
   },
   data() {
     return {
