@@ -22,7 +22,20 @@ defmodule TimemanagerWeb.ClockController do
       _user ->
         clock_params = Map.put(clock_params, "user_id", user_id)
 
-        with {:ok, %Clock{} = clock} <- Clocking.create_clock(clock_params) do
+        last_clock = Clocking.get_clocks_by_user(user_id)
+                    |> Enum.sort_by(& &1.inserted_at, :desc)
+                    |> List.first()
+
+        new_status =
+          case last_clock do
+            nil -> true
+            %Clock{status: true} -> false
+            %Clock{status: false} -> true
+          end
+
+        updated_clock_params = Map.put(clock_params, "status", new_status)
+
+        with {:ok, %Clock{} = clock} <- Clocking.create_clock(updated_clock_params) do
           conn
           |> put_status(:created)
           |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")
@@ -45,8 +58,6 @@ defmodule TimemanagerWeb.ClockController do
     end
   end
 
-
-
   def get_by_user(conn, %{"userID" => user_id}) do
     case Accounts.get_user(user_id) do
       nil ->
@@ -59,7 +70,6 @@ defmodule TimemanagerWeb.ClockController do
         render(conn, :index, clocks: clocks)
     end
   end
-
 
   def show(conn, %{"id" => id}) do
     clock = Clocking.get_clock!(id)
