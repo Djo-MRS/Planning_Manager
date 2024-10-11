@@ -1,10 +1,17 @@
 <template>
     <div class="clocking">
       <h3>Clocking</h3>
+      <div>
+        <label for="userSelect">Sélectionner un utilisateur :</label>
+        <select id="userSelect" v-model="selectedUserId" @change="selectUser">
+          <option value="" disabled selected></option>
+          <option v-for="user in users" :key="user.id" :value="user.id">{{ user.username }}</option>
+        </select>
+      </div>
       <div v-if="errorMessage">
         <p>{{ errorMessage }}</p>
       </div>
-      <div v-else>
+      <div v-else-if="selectedUserId">
         <div v-if="clockIn">
           <p>Actuellement pointé depuis : {{ formattedStartDateTime }}</p>
           <button @click="clockOut">Dépointer</button>
@@ -22,24 +29,54 @@
     name: "ClockingComponent",
     data() {
       return {
-        userId: this.$route.params.userId,
+        username: "",
+        email: "",
+        users: [],
+        selectedUserId: "",
         clockIn: false,
         startDateTime: null,
         formattedStartDateTime: '',
         errorMessage: ''
       };
     },
+    mounted() {
+      this.getUsers();
+    },
     methods: {
+      async getUsers() {
+        try {
+          const response = await fetch("http://localhost:4000/api/users");
+          this.users = (await response.json()).data;
+        } catch (error) {
+          this.errorMessage = "Erreur lors de la récupération des utilisateurs : " + error.message;
+        }
+      },
+      selectUser() {
+        const selectedUser = this.users.find(user => user.id === this.selectedUserId);
+        if (selectedUser) {
+          this.errorMessage = '';
+          this.fetchClockStatus();
+        } else {
+          this.errorMessage = "Erreur : Utilisateur non trouvé";
+          this.clockIn = false;
+          this.startDateTime = null;
+          this.formattedStartDateTime = '';
+        }
+      },
       async fetchClockStatus() {
         try {
-          const response = await fetch(`http://localhost:4000/api/clocks/${this.userId}`, {
+          const response = await fetch(`http://localhost:4000/api/clocks/${this.selectedUserId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
             }
           });
           if (!response.ok) {
-            throw new Error("ID utilisateur non trouvé");
+            if (response.status === 404) {
+              throw new Error("Utilisateur non trouvé");
+            } else {
+              throw new Error("Erreur de serveur");
+            }
           }
           const data = await response.json();
           if (data && data.clockIn) {
@@ -51,12 +88,12 @@
           }
         } catch (error) {
           console.error("Error fetching clock status", error);
-          this.errorMessage = "Erreur : ID utilisateur non trouvé";
+          this.errorMessage = `Erreur : ${error.message}`;
         }
       },
       async clockInUser() {
         try {
-          const response = await fetch(`http://localhost:4000/api/clocks/${this.userId}`, {
+          const response = await fetch(`http://localhost:4000/api/clocks/${this.selectedUserId}`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -69,7 +106,11 @@
             })
           });
           if (!response.ok) {
-            throw new Error("ID utilisateur non trouvé");
+            if (response.status === 404) {
+              throw new Error("Utilisateur non trouvé");
+            } else {
+              throw new Error("Erreur de serveur");
+            }
           }
           await response.json();
           this.clockIn = true;
@@ -78,25 +119,30 @@
           this.errorMessage = '';
         } catch (error) {
           console.error("Error clocking in", error);
-          this.errorMessage = "Erreur : ID utilisateur non trouvé";
+          this.errorMessage = `Erreur : ${error.message}`;
         }
       },
       async clockOut() {
         try {
-          const response = await fetch(`http://localhost:4000/api/clocks/${this.userId}`, {
+          const response = await fetch(`http://localhost:4000/api/clocks/${this.selectedUserId}`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               clock: {
+                user_id: this.selectedUserId,
                 clockIn: false,
                 time: new Date().toISOString()
               }
             })
           });
           if (!response.ok) {
-            throw new Error("ID utilisateur non trouvé");
+            if (response.status === 404) {
+              throw new Error("Utilisateur non trouvé");
+            } else {
+              throw new Error("Erreur de serveur");
+            }
           }
           await response.json();
           this.clockIn = false;
@@ -104,11 +150,13 @@
           this.errorMessage = '';
         } catch (error) {
           console.error("Error clocking out", error);
-          this.errorMessage = "Erreur : ID utilisateur non trouvé";
+          this.errorMessage = `Erreur : ${error.message}`;
         }
       },
       refresh() {
-        this.fetchClockStatus();
+        if (this.selectedUserId) {
+          this.fetchClockStatus();
+        }
       },
       clock() {
         if (this.clockIn) {
@@ -117,9 +165,6 @@
           this.clockInUser();
         }
       }
-    },
-    created() {
-      this.fetchClockStatus();
     }
   };
   </script>
