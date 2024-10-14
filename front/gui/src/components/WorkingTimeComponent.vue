@@ -26,17 +26,28 @@
       <MDBRow>
         <MDBCol>
           <h2>Working Times</h2>
-          <ul v-if="workingTimes.length">
-            <li v-for="time in workingTimes" :key="time.id">
-              {{ time.date }}: {{ time.hours }}
-            </li>
-          </ul>
-          <p v-else>No working times available.</p>
+          <MDBTable class="align-middle mb-0 bg-white">
+            <thead class="bg-light">
+              <tr>
+                <th>Start</th>
+                <th>End</th>
+                <th>Update</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="workingTime in workingTimes" :key="workingTime.id">
+                <td>{{ workingTime.start }}</td>
+                <td>{{ workingTime.end }}</td>
+                <td>
+                  <MDBBtn color="primary" @click="openModal">Update</MDBBtn>
+                  <WorkingTimeModal :showModal="exampleModal" :currentDate="currentDate" :period="workingTime" :current_user="selectedUser" @closeModal="closeModal" />
+                </td>
+              </tr>
+            </tbody>
+        </MDBTable>
         </MDBCol>
       </MDBRow>
     </MDBContainer>
-    <MDBBtn color="primary" @click="openModal">fezbfubze</MDBBtn>
-    <WorkingTimeModal :showModal="exampleModal" :currentDate="currentDate" :period="period" :current_user="current_user" @closeModal="closeModal" />
   </main>
 </template>
 
@@ -46,18 +57,8 @@
   import WorkingTimeModal from './WorkingTimeModal.vue';
   import { ref } from 'vue';
   const currentDate = "2024-10-10"
-  const period = {
-      start: "2024-10-08T14:00:00Z",
-      end: "2024-10-08T17:30:00Z",
-  }
-  const current_user = {
-      id: "1",
-      firstname: "Yann",
-      lastname: "Plouhinec",
-  }
   const exampleModal = ref(false)
   const openModal = () => {
-      console.log('ici')
       exampleModal.value = true;
   }
   const closeModal = () => {
@@ -67,7 +68,7 @@
 
 
 <script>
-import { MDBContainer, MDBCol, MDBBtn } from "mdb-vue-ui-kit";
+import { MDBContainer, MDBCol, MDBBtn, MDBTable, MDBRow } from "mdb-vue-ui-kit";
 
 export default {
   name: "UserComponent",
@@ -75,18 +76,28 @@ export default {
     MDBContainer,
     MDBCol,
     MDBBtn,
-    WorkingTimeModal
+    WorkingTimeModal,
+    MDBTable,
+    MDBRow
   },
   data() {
     return {
-      username: "",
-      email: "",
       users: [],
-      selectedUserId: "",
       message: "",
       createUsername: "",
       createEmail: "",
-      workingTimes: []  // Nouveau tableau pour stocker les heures de travail
+      workingTimes: [],
+      selectedUserId: "",
+      selectedUser: {
+        id: "",
+        username: "",
+        email: ""
+      },
+      selectedWorkingTime: {
+        id: "",
+        start: "",
+        end: ""
+      }
     };
   },
   mounted() {
@@ -102,24 +113,27 @@ export default {
       }
     },
     async getWorkingTimes() {
-      if (!this.selectedUserId) return;  // Ne pas récupérer si aucun utilisateur n'est sélectionné
+      if (!this.selectedUser.id) return;
       try {
-        const response = await fetch(`http://localhost:4000/api/users/${this.selectedUserId}/workingtimes`);
+        const response = await fetch(`http://localhost:4000/api/workingtime/${this.selectedUser.id}`);
         this.workingTimes = (await response.json()).data;
       } catch (error) {
         this.message = "Error getting working times: " + error.message;
       }
     },
     selectUser() {
-      const selectedUser = this.users.find(user => user.id === this.selectedUserId);
-      if (selectedUser) {
-        this.username = selectedUser.username;
-        this.email = selectedUser.email;
-        this.getWorkingTimes();  // Appel de la fonction pour récupérer les heures de travail
+      const currentUser = this.users.find(user => user.id === this.selectedUserId);
+      console.log(currentUser);
+      if (currentUser) {
+        this.selectedUser.id = currentUser.id;
+        this.selectedUser.username = currentUser.username;
+        this.selectedUser.email = currentUser.email;
+        this.getWorkingTimes();
       } else {
-        this.username = "";
-        this.email = "";
-        this.workingTimes = [];  // Réinitialiser les heures de travail si aucun utilisateur n'est sélectionné
+        this.selectedUser.username = "";
+        this.selectedUser.email = "";
+        this.selectedUser.id = "";
+        this.workingTimes = [];
       }
     }
   }

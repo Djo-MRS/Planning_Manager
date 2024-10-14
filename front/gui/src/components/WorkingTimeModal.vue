@@ -21,7 +21,7 @@
               </div>
           </MDBModalBody>
           <MDBModalFooter>    
-              <MDBBtn color="primary" @click="defineSavingMethod">Save changes</MDBBtn>
+              <MDBBtn color="primary" @click="savingWorkingTime">Save changes</MDBBtn>
               <MDBBtn color="secondary" @click="clearAllData">Clear data</MDBBtn>
           </MDBModalFooter>
       </MDBModal> 
@@ -54,7 +54,6 @@
   const end = ref(props.period.end);
   const isEmpty = ref(true);
   let isMorning = true;
-  let method = '';
   const formatTime=()=>{
       if (props.period && props.period.start) {
           const startDate = new Date(props.period.start);
@@ -82,13 +81,7 @@
       isEmpty.value = !(start.value && end.value);
   });
 
-  /*watch(()=> props.period, (newValue) => {
-      formatTime();
-  }, {immediate :true})*/
-
   const emit = defineEmits(['closeModal']);
-  console.log('currentDate:', props.currentDate);
-  console.log('period:', props.period);
   const localShowModal = computed({
       get: ()=> props.showModal, 
       set: (value) => {
@@ -97,23 +90,9 @@
           }
       }
   });
-
-  const defineSavingMethod=()=>{
-      if(isEmpty.value){
-          console.log('Define method POST')
-          method = "POST"
-      } else {
-          console.log('Define method PUT')
-
-          method = "PUT"
-      }
-      savingWorkingTime()
-  }
   const clearAllData=async()=>{
-      //faire appel workingtime delete
-      console.log('clearing...')
       try {
-          await fetch(`http://localhost:4000/api/workingtime/${props.current_user.id}`, {
+          await fetch(`http://localhost:4000/api/workingtime/${props.current_user.id}/${props.period.id}`, {
               method: "DELETE",
               headers: {
                   "Content-Type": "application/json"
@@ -125,11 +104,9 @@
   }
 
   const savingWorkingTime=async()=>{
-      //faire appel workingtime create_workingtime_by_user
-      console.log('saving...')
       try {
-          await fetch(`http://localhost:4000/api/workingtime/${props.current_user.id}`, {//mettre userID
-              method: method,
+          await fetch(`http://localhost:4000/api/workingtime/${props.period.id}`, {
+              method: "PUT",
               headers: {
                   "Content-Type": "application/json"
               },
@@ -147,11 +124,11 @@
 </script>
 
 <style>
-#app {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-}
+  #app {
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+  }
 
-.data_row{
-  justify-content: center;
-}
+  .data_row{
+    justify-content: center;
+  }
 </style>
