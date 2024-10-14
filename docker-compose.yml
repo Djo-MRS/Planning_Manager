@@ -21,10 +21,12 @@ services:
 
   frontend:
     build:  ./front/gui
-    volumes:
-      - ./frontend:/app
     ports:
       - "8080:80"
+    develop:
+      watch:
+        - action: rebuild
+          path: ./front/gui
 
 volumes:
   pgdata:
