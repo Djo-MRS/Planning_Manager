@@ -66,10 +66,20 @@ defmodule TimemanagerWeb.ClockController do
         |> json(%{error: "Utilisateur non trouvé"})
 
       _user ->
-        clocks = Clocking.get_clocks_by_user(user_id)
-        render(conn, :index, clocks: clocks)
+        last_clock = Clocking.get_clocks_by_user(user_id)
+                      |> Enum.sort_by(& &1.inserted_at, :desc)
+                      |> List.first()
+
+        if last_clock do
+          render(conn, :show, clock: last_clock)
+        else
+          conn
+          |> put_status(:not_found)
+          |> json(%{error: "Aucun pointage trouvé pour cet utilisateur"})
+        end
     end
   end
+
 
   def show(conn, %{"id" => id}) do
     clock = Clocking.get_clock!(id)
