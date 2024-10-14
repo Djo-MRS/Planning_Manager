@@ -35,18 +35,47 @@
         </MDBCol>
       </MDBRow>
     </MDBContainer>
+    <MDBBtn color="primary" @click="openModal">fezbfubze</MDBBtn>
+    <WorkingTimeModal :showModal="exampleModal" :currentDate="currentDate" :period="period" :current_user="current_user" @closeModal="closeModal" />
   </main>
 </template>
 
   
+<script setup>
+  import { RouterView } from 'vue-router';
+  import WorkingTimeModal from './WorkingTimeModal.vue';
+  import { ref } from 'vue';
+  const currentDate = "2024-10-10"
+  const period = {
+      start: "2024-10-08T14:00:00Z",
+      end: "2024-10-08T17:30:00Z",
+  }
+  const current_user = {
+      id: "1",
+      firstname: "Yann",
+      lastname: "Plouhinec",
+  }
+  const exampleModal = ref(false)
+  const openModal = () => {
+      console.log('ici')
+      exampleModal.value = true;
+  }
+  const closeModal = () => {
+      exampleModal.value = false;
+  }
+</script>
+
+
 <script>
-import { MDBContainer, MDBCol } from "mdb-vue-ui-kit";
+import { MDBContainer, MDBCol, MDBBtn } from "mdb-vue-ui-kit";
 
 export default {
   name: "UserComponent",
   components: {
     MDBContainer,
     MDBCol,
+    MDBBtn,
+    WorkingTimeModal
   },
   data() {
     return {
