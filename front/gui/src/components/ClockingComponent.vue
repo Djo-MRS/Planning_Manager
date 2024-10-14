@@ -20,6 +20,7 @@
         <p>Actuellement dépointé depuis : {{ formattedStartDateTime }}</p>
         <button @click="clockInUser">Pointer</button>
       </div>
+      <!-- Affichage si l'utilisateur est dépointé ou n'a jamais pointé -->
       <div v-else>
         <p>Vous n'êtes pas pointé.</p>
         <button @click="clockInUser">Pointer</button>
@@ -49,7 +50,11 @@ export default {
     async getUsers() {
       try {
         const response = await fetch("http://localhost:4000/api/users");
-        this.users = (await response.json()).data;
+        if (!response.ok) {
+          throw new Error("Erreur lors de la récupération des utilisateurs");
+        }
+        const result = await response.json();
+        this.users = result.data;
       } catch (error) {
         this.errorMessage =
           "Erreur lors de la récupération des utilisateurs : " + error.message;
@@ -58,43 +63,59 @@ export default {
 
     async selectUser() {
       if (this.selectedUserId) {
-        try {
-          await this.fetchClockStatus(); 
-        } catch (error) {
-          this.errorMessage = error.message;
-        }
+        await this.fetchClockStatus();
+      } else {
+        // Réinitialiser les états si aucun utilisateur n'est sélectionné
+        this.clockIn = false;
+        this.lastAction = null;
+        this.startDateTime = null;
+        this.formattedStartDateTime = "";
+        this.errorMessage = "";
       }
     },
 
     async fetchClockStatus() {
+      // Réinitialiser le message d'erreur au début
+      this.errorMessage = "";
       try {
         const response = await fetch(
           `http://localhost:4000/api/clocks/${this.selectedUserId}`
         );
         if (!response.ok) {
           if (response.status === 404) {
-            throw new Error("Aucun pointage trouvé pour cet utilisateur");
+            // Aucun pointage trouvé, réinitialiser les états
+            this.clockIn = false;
+            this.lastAction = null;
+            this.startDateTime = null;
+            this.formattedStartDateTime = "";
+            return; // Sortir de la méthode sans définir d'erreur
           } else {
-            throw new Error(
-              "Erreur lors de la récupération de l'état de pointage"
-            );
+            throw new Error("Erreur lors de la récupération de l'état de pointage");
           }
         }
 
         const result = await response.json();
         const data = result.data;
 
-        const lastClock = data
-          .sort((a, b) => new Date(b.time) - new Date(a.time))[0]; 
+        if (Array.isArray(data) && data.length > 0) {
+          const lastClock = data
+            .sort((a, b) => new Date(b.time) - new Date(a.time))[0];
 
-        if (lastClock) {
-          this.clockIn = lastClock.status;
-          this.startDateTime = lastClock.time;
-          this.formattedStartDateTime = new Date(this.startDateTime).toLocaleString("fr-FR");
-          this.lastAction = lastClock.status ? "clockIn" : "clockOut"; 
+          if (lastClock) {
+            this.clockIn = lastClock.status;
+            this.startDateTime = lastClock.time;
+            this.formattedStartDateTime = new Date(this.startDateTime).toLocaleString("fr-FR");
+            this.lastAction = lastClock.status ? "clockIn" : "clockOut"; 
+          } else {
+            this.clockIn = false;
+            this.lastAction = null;
+          }
         } else {
+          // Si les données sont vides ou non valides, réinitialiser les états
           this.clockIn = false;
           this.lastAction = null;
+          this.startDateTime = null;
+          this.formattedStartDateTime = "";
         }
       } catch (error) {
         console.error(
