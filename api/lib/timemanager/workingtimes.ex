@@ -17,8 +17,11 @@ defmodule Timemanager.Workingtimes do
       [%Workingtime{}, ...]
 
   """
-  def list_workingtimes do
-    Repo.all(Workingtime)
+  def list_workingtimes(user_id) do
+    query = from w in Workingtime,
+      where: w.user_id == ^user_id,
+      select: w
+    Repo.all(query)
   end
 
   @doc """
@@ -35,7 +38,16 @@ defmodule Timemanager.Workingtimes do
       ** (Ecto.NoResultsError)
 
   """
-def get_workingtime(id), do: Repo.get(Workingtime, id)
+def get_workingtime_by_user(id, user_id) do
+    query = from w in Workingtime,
+        where: w.user_id == ^user_id and w.id == ^id,
+        select: w
+    Repo.one(query)
+end
+
+def get_workingtime(id) do
+    Repo.get(Workingtime, id)
+end
 
   @doc """
   Creates a workingtime.
