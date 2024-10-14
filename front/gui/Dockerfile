@@ -1,27 +1,32 @@
-# Use the official Node.js image for building the frontend
+# Étape 1 : Utiliser une image de base Node.js pour builder l'application Vue.js
 FROM node:18-alpine AS build
 
-# Set the working directory
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copy the package.json and install dependencies
+# Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
+
+# Installer les dépendances
 RUN npm install
 
-# Copy the rest of the application code
+# Copier le reste des fichiers de l'application
 COPY . .
 
-# Build the Vue.js application for production
+# Builder l'application Vue.js
 RUN npm run build
 
-# Use a minimal image to serve the frontend files
+# Étape 2 : Utiliser Nginx pour servir l'application
 FROM nginx:alpine
 
-# Copy built files to the nginx web directory
+# Copier le fichier de configuration Nginx personnalisé
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copier les fichiers générés par le build Vue.js dans le répertoire Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 80 for serving the frontend
+# Exposer le port 80 pour Nginx
 EXPOSE 80
 
-# Start nginx server
+# Démarrer Nginx
 CMD ["nginx", "-g", "daemon off;"]
