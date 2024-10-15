@@ -1,0 +1,23 @@
+name: Mirroring Github to Epitech
+ 
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  to_gitlab:
+      runs-on: ubuntu-latest
+      steps:                                             
+        - uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        - uses: pixta-dev/repository-mirroring-action@v1
+          with:
+            target_repo_url:
+              git@github.com:EpitechMscProPromo2026/T-POO-700-NAN_11.git
+            ssh_private_key:
+            b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+QyNTUxOQAAACDvPF1aflp3ODFZkX+n7iuvUFQNj8n8exD6x2qb62igiQAAAKA7h3GWO4dx
+lgAAAAtzc2gtZWQyNTUxOQAAACDvPF1aflp3ODFZkX+n7iuvUFQNj8n8exD6x2qb62igiQ
+AAAECd3TBq8IE0UrPlC/jNanCVooJj+GLr4neh4cIE8ujA7e88XVp+Wnc4MVmRf6fuK69Q
+VA2Pyfx7EPrHapvraKCJAAAAGmJhcHRpc3RlLnNhbGF1ZEBlcGl0ZWNoLmV1AQID
