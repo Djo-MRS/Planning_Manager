@@ -1,37 +1,55 @@
 <template>
-  <div class="clocking">
-    <h3>Clocking</h3>
+  <div class="clocking p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-4">
+    <h3 class="text-xl font-bold text-center text-gray-700 mb-4">Pointage</h3>
     <div>
-      <label for="userSelect">Sélectionner un utilisateur :</label>
-      <select id="userSelect" v-model="selectedUserId" @change="selectUser">
-        <option value="" disabled selected></option>
+      <label for="userSelect" class="block text-sm font-medium text-gray-700 mb-2">Sélectionner un utilisateur :</label>
+      <select 
+        id="userSelect" 
+        v-model="selectedUserId" 
+        @change="selectUser" 
+        class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="" disabled selected>Choisissez un utilisateur...</option>
         <option v-for="user in users" :key="user.id" :value="user.id">{{ user.username }}</option>
       </select>
     </div>
-    <div v-if="errorMessage">
+    <div v-if="errorMessage" class="bg-red-100 text-red-700 p-4 rounded-md">
       <p>{{ errorMessage }}</p>
     </div>
-    <div v-else-if="selectedUserId">
-      <div v-if="lastAction === 'clockIn'">
-        <p>Actuellement pointé depuis : {{ formattedStartDateTime }}</p>
-        <button @click="clockOut">Dépointer</button>
+    <div v-else-if="selectedUserId" class="mt-4 text-center">
+      <div v-if="lastAction === 'clockIn'" class="space-y-3">
+        <p class="text-lg font-semibold text-green-600">Actuellement pointé depuis : {{ formattedStartDateTime }}</p>
+        <span @click="clockOut" class="clock-icon cursor-pointer hover:text-red-600">
+          <MDBIcon icon="clock" />   
+        </span>
       </div>
-      <div v-else-if="lastAction === 'clockOut'">
-        <p>Actuellement dépointé depuis : {{ formattedStartDateTime }}</p>
-        <button @click="clockInUser">Pointer</button>
+      <div v-else-if="lastAction === 'clockOut'" class="space-y-3">
+        <p class="text-lg font-semibold text-gray-600">Actuellement dépointé depuis : {{ formattedStartDateTime }}</p>
+        <span @click="clockInUser" class="clock-icon cursor-pointer hover:text-blue-600">
+          <MDBIcon icon="clock" />  
+         </span>
       </div>
-      <!-- Affichage si l'utilisateur est dépointé ou n'a jamais pointé -->
-      <div v-else>
-        <p>Vous n'êtes pas pointé.</p>
-        <button @click="clockInUser">Pointer</button>
+      <div v-else class="space-y-3">
+        <p class="text-lg font-semibold text-gray-600">Vous n'êtes pas pointé.</p>
+        <span @click="clockInUser" class="clock-icon cursor-pointer hover:text-blue-600">
+          <MDBIcon icon="clock" />        
+        </span>
       </div>
     </div>
   </div>
 </template>
 
+
+
+
 <script>
+import { MDBIcon } from 'mdb-vue-ui-kit';
+
 export default {
   name: "ClockingComponent",
+  components: {
+    MDBIcon
+  },
   data() {
     return {
       users: [],
@@ -200,9 +218,21 @@ export default {
 <style scoped>
 .clocking {
   margin: 20px;
+  max-width: 400px;
+  padding: 20px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-button {
-  padding: 10px;
-  margin-top: 10px;
+
+.clock-icon {
+  font-size: 36px; /* Agrandir les icônes */
+  color: inherit; /* Garde la couleur courante */
+  transition: color 0.3s ease, transform 0.2s;
+}
+
+.clock-icon:hover {
+  transform: scale(1.2); /* Augmentation légère de la taille au survol */
 }
 </style>
+

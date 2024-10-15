@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "mdb-vue-ui-kit": "^6.0.0",
     "vue": "^3.5.11"
   }
 }
