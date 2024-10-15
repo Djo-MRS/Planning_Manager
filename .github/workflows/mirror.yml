@@ -1,0 +1,5 @@
+name: Mirroring Github to Epitech
+ 
+on:
+  push:
+    branches: [ main ]
