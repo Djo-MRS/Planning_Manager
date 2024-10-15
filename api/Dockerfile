@@ -2,7 +2,7 @@ FROM elixir:alpine AS app
 
 WORKDIR /app
 
-RUN apk add --no-cache postgresql-client git build-base bash
+RUN apk add --no-cache postgresql-client git build-base bash inotify-tools
 
 COPY . .
 

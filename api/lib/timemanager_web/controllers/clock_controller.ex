@@ -17,7 +17,7 @@ defmodule TimemanagerWeb.ClockController do
       nil ->
         conn
         |> put_status(:not_found)
-        |> json(%{error: "Utilisateur non trouvé"})
+        |> json(%{error: "Utilisateur non"})
 
       _user ->
         clock_params = Map.put(clock_params, "user_id", user_id)

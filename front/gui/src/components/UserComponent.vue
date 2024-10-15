@@ -3,7 +3,7 @@
     <MDBContainer>
       <MDBRow>
         <MDBCol>
-          <h2>Create a user</h2>
+          <h2>Create a userr</h2>
           <div class="text-center mb-3">
             <form @submit.prevent="createUser">
               <MDBInput 
@@ -100,12 +100,13 @@
           </div>
         </MDBCol>
       </MDBRow>
+      <MDBIcon icon="camera-retro" size="10x" />
     </MDBContainer>
   </div>
 </template>
 
 <script>
-import { MDBBtn, MDBContainer, MDBInput, MDBRow, MDBCol } from "mdb-vue-ui-kit";
+import { MDBBtn, MDBContainer, MDBInput, MDBRow, MDBCol, MDBIcon } from "mdb-vue-ui-kit";
 
 export default {
   name: "UserComponent",
@@ -114,7 +115,8 @@ export default {
     MDBInput,
     MDBBtn,
     MDBCol,
-    MDBRow
+    MDBRow,
+    MDBIcon
   },
   data() {
     return {

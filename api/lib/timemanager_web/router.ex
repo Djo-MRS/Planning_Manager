@@ -24,7 +24,7 @@ defmodule TimemanagerWeb.Router do
     get "/workingtime/:userID/:id", WorkingtimeController, :show
     post "/workingtime/:userID", WorkingtimeController, :create_workingtime_by_user
     put "/workingtime/:id", WorkingtimeController, :update
-    delete "/workingtime/:id", WorkingtimeController, :delete
+    delete "/workingtimettttt/:id", WorkingtimeController, :delete
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

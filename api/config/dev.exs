@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :timemanager, Timemanager.Repo,
-  username: System.get_env("DB_USER"),
-  password: System.get_env("DB_PASSWORD"),
-  hostname: System.get_env("DB_HOST"),
-  database: System.get_env("DB_NAME"),
+  username: System.get_env("DB_USER", "postgres"),
+  password: System.get_env("DB_PASSWORD", "postgres"),
+  hostname: System.get_env("DB_HOST", "localhost"),
+  database: System.get_env("DB_NAME", "timemanager_dev"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -24,10 +24,15 @@ config :timemanager, TimemanagerWeb.Endpoint,
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "7BmCbmPEaQW+G2LIdTQEFoW/i+XelXZ1RV67+Y5QePvBeMlEbOR+pLwmQlCWRW7h",
-  watchers: [
-    esbuild: {Esbuild, :install_and_run, [:timemanager, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:timemanager, ~w(--watch)]}
+  live_reload: [
+    patterns: [
+      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/gettext/.*(po)$",
+      ~r"lib/timemanager_web/(live|views)/.*(ex)$",
+      ~r"lib/timemanager_web/templates/.*(eex)$"
+    ]
   ]
+
 
 # ## SSL Support
 #
