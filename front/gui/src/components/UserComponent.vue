@@ -3,7 +3,7 @@
     <MDBContainer>
       <MDBRow>
         <MDBCol>
-          <h2>Create a user</h2>
+          <h2>Create a userr</h2>
           <div class="text-center mb-3">
             <form @submit.prevent="createUser">
               <MDBInput 
