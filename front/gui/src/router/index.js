@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue';
 import UserView from '@/views/UserView.vue';
 import ClockingView from '@/views/ClockingView.vue';
 import WorkingTimeView from '@/views/WorkingTimeView.vue';
+import ClockingComponent2 from '@/components/ClockingComponent2.vue';
 
 const routes = [
     {
@@ -24,7 +25,12 @@ const routes = [
     path: '/workingtime',
     name: 'WorkingTimeView',
     component: WorkingTimeView
-  }
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: ClockingComponent2
+  },
 ];
 
 const router = createRouter({
