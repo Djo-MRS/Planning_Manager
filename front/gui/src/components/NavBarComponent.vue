@@ -9,9 +9,11 @@
     <MDBCollapse id="navbarNav" v-model="collapse2">
       <MDBNavbarNav>
         <MDBNavbarItem to="/" active> Home </MDBNavbarItem>
-        <MDBNavbarItem to="/help"> HelpView </MDBNavbarItem> <!--/user User-->
+        <MDBNavbarItem to="/user"> User </MDBNavbarItem> <!--/user User-->
         <MDBNavbarItem to="/clock"> Clocking </MDBNavbarItem>
         <MDBNavbarItem to="/workingtime"> WorkingTime </MDBNavbarItem>
+        <MDBNavbarItem to="/profile"> ProfileView </MDBNavbarItem>
+        <MDBNavbarItem to="/help"> HelpView </MDBNavbarItem>
       </MDBNavbarNav>
     </MDBCollapse>
   </MDBNavbar>
