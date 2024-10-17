@@ -59,8 +59,6 @@ import RightBarComponent from './components/RightBarComponent.vue';
     }
     .main-content{
         flex-grow: 1;
-        padding-bottom: 60px;
-        padding-right: 100px;
     }
     .right-bar{
         position: fixed;

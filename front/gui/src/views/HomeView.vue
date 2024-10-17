@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <HomeComponent />
+    <div class="main-content">
+        <HomeComponent />
     </div>
 </template>
 
@@ -14,3 +14,9 @@ export default {
     }
 };
 </script>
+
+<style>
+    .main-content{
+        padding: 50px;
+    }
+</style>

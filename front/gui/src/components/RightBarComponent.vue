@@ -1,14 +1,14 @@
 <template>
     <div class="column">
         <div class="top-column">
-            <MDBBtn color="light" floating class="profile-button">
+            <MDBBtn color="light" floating class="profile-button" @click="goToPage('/profile')">
                 <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon>
             </MDBBtn>
-            <MDBBtn color="light" floating class="notif-button">
+            <MDBBtn color="light" floating class="notif-button" @click="goToPage('/notif')">
                 <MDBIcon icon="bell" style="font-size: 18px;"></MDBIcon>
             </MDBBtn>
         </div>
-        <MDBBtn color="light" floating class="notif-button">
+        <MDBBtn color="light" floating class="notif-button" @click="goToPage('/help')">
             <MDBIcon icon="question" style="font-size: 18px;"></MDBIcon>
         </MDBBtn>
     </div>
@@ -23,6 +23,11 @@
         MDBBtn,
         MDBIcon
     },
+    methods: {
+    goToPage(path) {
+      this.$router.push(path); 
+    }
+  },
     data() {
         return {
     

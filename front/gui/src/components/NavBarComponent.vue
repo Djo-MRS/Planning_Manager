@@ -47,14 +47,14 @@
 
 <template>
   <div class="box-group">
-    <MDBBtnGroup class="button-group rounded-pill" @click="goToPage('/workingtime')">
-      <MDBBtn color="light">
+    <MDBBtnGroup class="button-group rounded-pill" >
+      <MDBBtn color="light" @click="goToPage('/workingtime')">
         <i class="fas fa-calendar-alt icon" ></i>
       </MDBBtn>
-      <MDBBtn color="light">
+      <MDBBtn color="light" @click="goToPage('/manager')">
         <i class="fas fa-users-cog icon" ></i>
       </MDBBtn>
-      <MDBBtn color="light">
+      <MDBBtn color="light" @click="goToPage('/request')">
         <i class="fas fa-envelope icon"></i>
       </MDBBtn>
     </MDBBtnGroup>
@@ -72,7 +72,7 @@
   },
   methods: {
     goToPage(path) {
-      this.$router.push(path); // Redirection vers la route spécifiée
+      this.$router.push(path);
     }
   },
   data() {
