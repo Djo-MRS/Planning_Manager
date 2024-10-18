@@ -1,16 +1,16 @@
 <template>
     <div>
-        <HelpComponent />
+        <SignupComponent />
     </div>
 </template>
 
 <script>
-import HelpComponent from '@/components/HelpComponent.vue';
+import SignupComponent from '@/components/SignupComponent.vue';
 
 export default {
-    name: 'HelpView',
+    name: 'SignupView',
     components: {
-        HelpComponent
+        SignupComponent
     }
 };
 </script>

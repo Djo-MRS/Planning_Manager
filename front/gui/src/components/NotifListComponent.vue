@@ -42,6 +42,7 @@ export default {
   width: 8px;
 }
 
+
 .list-container::-webkit-scrollbar-thumb {
   background-color: #8d8d8d;
   border-radius: 4px;

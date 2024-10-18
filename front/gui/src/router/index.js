@@ -7,6 +7,8 @@ import HelpView from '@/views/HelpView.vue';
 import ManagerView from '@/views/ManagerView.vue';
 import NotifView from '@/views/NotifView.vue';
 import RequestView from '@/views/RequestView.vue';
+import LoginView from '@/views/LoginView.vue';
+import SignupView from '@/views/SignupView.vue';
 
 const routes = [
     {
@@ -50,6 +52,16 @@ const routes = [
     name: 'RequestView',
     component: RequestView
   },
+
+  { 
+    path: '/sign_in', 
+    component: LoginView
+  },
+  { 
+    path: '/sign_up',
+    component: SignupView
+  },
+
 ];
 
 const router = createRouter({
@@ -57,4 +69,14 @@ const router = createRouter({
   routes
 });
 
+/* Middleware pour vérifier l'authentification
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('userId'); // Vérifie si l'utilisateur est connecté
+  if (to.path !== '/sign_in' && to.path !== '/sign_up' && !isAuthenticated) {
+    next('/sign_in'); // Redirige vers la page de connexion si non authentifié
+  } else {
+    next(); 
+  }
+});
+*/
 export default router;

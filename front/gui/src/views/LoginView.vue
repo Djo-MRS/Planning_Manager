@@ -1,16 +1,16 @@
 <template>
     <div>
-        <HelpComponent />
+        <LoginComponent />
     </div>
 </template>
 
 <script>
-import HelpComponent from '@/components/HelpComponent.vue';
+import LoginComponent from '@/components/LoginComponent.vue';
 
 export default {
-    name: 'HelpView',
+    name: 'LoginView',
     components: {
-        HelpComponent
+        LoginComponent
     }
 };
 </script>

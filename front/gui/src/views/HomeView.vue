@@ -1,19 +1,30 @@
 <template>
-    <div class="main-content">
-        <HomeComponent />
+    <div class="container-grid">
+        <div class="main-content">       
+            <HomeComponent />
+        </div>
+        <section class="right-bar">
+            <RightBarComponent/>
+        </section>
+        <NavBarComponent />
     </div>
 </template>
 
 <script>
-import HomeComponent from '@/components/HomeComponent.vue';
+    import NavBarComponent from '@/components/NavBarComponent.vue';
+    import RightBarComponent from '@/components/RightBarComponent.vue';
+    import HomeComponent from '@/components/HomeComponent.vue';
 
-export default {
-    name: 'HomeView',
-    components: {
-        HomeComponent
-    }
-};
+    export default {
+        name: 'App',
+        components: {
+            HomeComponent,
+            NavBarComponent,
+            RightBarComponent,
+        }
+    };
 </script>
+
 
 <style>
     .main-content{
