@@ -2,12 +2,13 @@ defmodule Timemanager.Accounts do
   @moduledoc """
   The Accounts context.
   """
+  import Plug.Conn
 
   import Ecto.Query, warn: false
   alias Timemanager.Repo
 
   alias Timemanager.Accounts.User
-
+  import Bcrypt, only: [hash_pwd_salt: 1]
   @doc """
   Returns the list of users.
 
@@ -100,4 +101,25 @@ def get_user(id), do: Repo.get(User, id)
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
+
+
+  def authenticate_user(conn, email, password) do
+    user = Repo.get_by(User, email: email)
+
+    case user do
+      nil -> {:error, :invalid_credentials}
+      _ ->
+        if Bcrypt.check_pass(user, password) do
+          {token, c_xsrf_token} = Timemanager.Auth.Token.generate_jwt(user)
+
+          # Stocker le c-xsrf-token dans un cookie HTTP-Only
+          conn = put_resp_cookie(conn, "c-xsrf-token", c_xsrf_token, http_only: true)
+
+          {:ok, token, conn} # Renvoie le token JWT et la connexion mise à jour
+        else
+          {:error, :invalid_credentials}
+        end
+    end
+  end
+
 end

@@ -48,7 +48,10 @@ defmodule Timemanager.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:cors_plug, "~> 2.0"},
-
+      {:plug_cowboy, "~> 2.0"},  # Plug + Cowboy pour le serveur HTTP
+      {:plug, "~> 1.0"},          # Dépendance Plug
+      {:joken, "~> 2.0"},
+      {:bcrypt_elixir, "~> 0.12"}
     ]
   end
 

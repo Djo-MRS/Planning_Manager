@@ -1,10 +1,11 @@
 defmodule TimemanagerWeb.Router do
-  alias Hex.API.User
+  #alias Hex.API.User
   use TimemanagerWeb, :router
 
   pipeline :api do
     plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
+    plug TimemanagerWeb.Middleware.CheckXsrf
   end
 
   scope "/api", TimemanagerWeb do
@@ -18,13 +19,17 @@ defmodule TimemanagerWeb.Router do
     post "/users", UserController, :create
     delete "/users/:id", UserController, :delete
     put "/users/:id", UserController, :update
-    get "/users", UserController, :show_with_query
+    #get "/users", UserController, :show_with_query
 
     get "/workingtime/:userID", WorkingtimeController, :index
     get "/workingtime/:userID/:id", WorkingtimeController, :show
     post "/workingtime/:userID", WorkingtimeController, :create_workingtime_by_user
     put "/workingtime/:id", WorkingtimeController, :update
     delete "/workingtimettttt/:id", WorkingtimeController, :delete
+
+    post "/users/sign_in", AuthController, :login
+    post "/users/sign_up", AuthController, :sign_up
+    delete "/users/sign_out", AuthController, :sign_out
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

@@ -6,6 +6,7 @@ defmodule TimemanagerWeb.UserController do
   import Ecto.Query
   alias Timemanager.Repo
 
+
   action_fallback TimemanagerWeb.FallbackController
 
   def index(conn, _params) do
