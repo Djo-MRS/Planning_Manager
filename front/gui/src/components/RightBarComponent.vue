@@ -18,7 +18,7 @@
     import { MDBBtn, MDBIcon } from "mdb-vue-ui-kit";
 
     export default {
-    name: "NavBarComponent",
+    name: "RightBarComponent",
     components: {
         MDBBtn,
         MDBIcon

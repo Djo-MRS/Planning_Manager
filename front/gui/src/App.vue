@@ -73,7 +73,7 @@ import HomeView from './views/HomeView.vue';
         components: {
             HomeView,
             NavBarComponent,
-          //  RightBarComponent
+           // RightBarComponent,
         },
         computed: {
       isAuthenticated() {

@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "chmod": "^0.2.1",
     "mdb-vue-ui-kit": "^6.0.0",
     "vue": "^3.5.11"
   }
