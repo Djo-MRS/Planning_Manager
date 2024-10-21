@@ -19,7 +19,7 @@
                     Vancances
                 </MDBDropdownToggle>
                 <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-                    <MDBDropdownItem href="#">Congés payées</MDBDropdownItem>
+                    <MDBDropdownItem href="#">Congés payés</MDBDropdownItem>
                     <MDBDropdownItem href="#">RTT</MDBDropdownItem>
                     <MDBDropdownItem href="#">Arrêt maladie</MDBDropdownItem>
                 </MDBDropdownMenu>
