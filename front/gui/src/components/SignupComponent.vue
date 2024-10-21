@@ -1,18 +1,18 @@
 <template>
   <div class="signup-container">
     <img src="@/assets/logohometimemanager.jpg" alt="Logo" class="logo" />
-    <form @submit.prevent="signUp" class="signup-form">
-      <input
+    <form @submit.prevent="createUser" class="signup-form">
+     <!-- <input
         type="text"
-        v-model="name"
-        placeholder="Name"
+        v-model="lastname"
+        placeholder="Lastname"
         required
         class="input-field"
-      />
+      /> -->
       <input
         type="text"
-        v-model="firstname"
-        placeholder="Firstname"
+        v-model="username"
+        placeholder="Username"
         required
         class="input-field"
       />
@@ -27,14 +27,12 @@
         type="password"
         v-model="password"
         placeholder="Password"
-        required
         class="input-field"
       />
       <input
         type="password"
         v-model="confirmPassword"
         placeholder="Confirm Password"
-        required
         class="input-field"
       />
       <button type="submit" class="sign-up-button">Inscription</button>
@@ -43,13 +41,13 @@
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
   data() {
     return {
-      name: '',
+      lastname: '',
       firstname: '',
+      username: '',
       email: '',
       phone: '',
       password: '',
@@ -57,27 +55,38 @@ export default {
     };
   },
   methods: {
-    async signUp() {
-      if (this.password !== this.confirmPassword) {
-        alert('Les mots de passe ne correspondent pas.');
-        return;
-      }
-
+  
+  async createUser() {
       try {
-        await axios.post('/api/users/sign_up', {
-          name: this.name,
-          firstname: this.firstname,
-          email: this.email,
-          phone: this.phone,
-          password: this.password,
+        const response = await fetch("http://localhost:4000/api/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            user: {
+              username: this.username,
+        email: this.email
+            }
+          })
         });
-        this.$router.push('/');
+
+        if (response.ok) {
+     //     this.message = "User created successfully!";
+          this.username = "";
+          this.email = "";
+        // this.messageDeleted = "";
+        //  this.messageUpdated = ""; -->
+      //    await this.getUsers(); // Refresh user list
+        } else {
+      //    this.message = "Error creating user: " + response.statusText;
+        }
       } catch (error) {
-        console.error('Error signing up:', error);
+     //   this.message = "Error creating user: " + error.message;
       }
     },
-  },
-};
+}
+}
 </script>
 
 <style scoped>

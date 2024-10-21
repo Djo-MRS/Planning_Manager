@@ -11,57 +11,64 @@ import LoginView from '@/views/LoginView.vue';
 import SignupView from '@/views/SignupView.vue';
 
 const routes = [
-    {
-        path: '/',
-        name: 'HomeView',
-        component: HomeView
-    },
+  {
+    path: '/',
+    name: 'HomeView',
+    component: HomeView,
+    meta: { requiresAuth: true },
+  },
   {
     path: '/user',
     name: 'UserView',
-    component: UserView
+    component: UserView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/profile',
     name: 'ProfileView',
-    component: ProfileView
+    component: ProfileView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/help',
     name: 'HelpView',
-    component: HelpView
+    component: HelpView,
+    // meta: { requiresAuth: true },
   },
   {
     path: '/workingtime',
     name: 'WorkingTimeView',
-    component: WorkingTimeView
+    component: WorkingTimeView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/manager',
     name: 'ManagerView',
-    component: ManagerView
+    component: ManagerView,
+    meta: { requiresAuth: true },
   },
-
   {
     path: '/notif',
     name: 'NotifView',
-    component: NotifView
+    component: NotifView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/request',
     name: 'RequestView',
-    component: RequestView
+    component: RequestView,
+    meta: { requiresAuth: true },
   },
-
   { 
     path: '/sign_in', 
-    component: LoginView
+    name: 'LoginView',
+    component: LoginView,
   },
   { 
     path: '/sign_up',
-    component: SignupView
+    name: 'SignupView',
+    component: SignupView,
   },
-
 ];
 
 const router = createRouter({
@@ -69,14 +76,14 @@ const router = createRouter({
   routes
 });
 
-/* Middleware pour vérifier l'authentification
+// Middleware pour vérifier l'authentification
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('userId'); // Vérifie si l'utilisateur est connecté
-  if (to.path !== '/sign_in' && to.path !== '/sign_up' && !isAuthenticated) {
+  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
     next('/sign_in'); // Redirige vers la page de connexion si non authentifié
   } else {
     next(); 
   }
 });
-*/
+
 export default router;
