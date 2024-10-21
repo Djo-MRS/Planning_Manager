@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <img src="@/assets/logohometimemanager.jpg" alt="Logo" class="logo" /> 
-    <form @submit.prevent="signIn" class="login-form">
+    <form class="login-form">
       <input
         type="email"
         v-model="email"
@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
   data() {
@@ -30,25 +29,7 @@ export default {
       email: '',
       password: '',
     };
-  },
-  methods: {
-    async signIn() {
-      try {
-        const response = await axios.post('/api/sign_in', {
-          email: this.email,
-          password: this.password,
-        });
-
-        localStorage.setItem('xsrfToken', response.data.xsrfToken);
-        localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('roleId', response.data.roleId);
-
-        this.$router.push('/');
-      } catch (error) {
-        console.error('Erreur de connexion:', error);
-      }
-    },
-  },
+  }
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="signup-container">
     <img src="@/assets/logohometimemanager.jpg" alt="Logo" class="logo" />
-    <form @submit.prevent="signUp" class="signup-form">
+    <form class="signup-form">
       <input
         type="text"
         v-model="name"
@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
   data() {
@@ -55,28 +54,7 @@ export default {
       password: '',
       confirmPassword: '',
     };
-  },
-  methods: {
-    async signUp() {
-      if (this.password !== this.confirmPassword) {
-        alert('Les mots de passe ne correspondent pas.');
-        return;
-      }
-
-      try {
-        await axios.post('/api/users/sign_up', {
-          name: this.name,
-          firstname: this.firstname,
-          email: this.email,
-          phone: this.phone,
-          password: this.password,
-        });
-        this.$router.push('/');
-      } catch (error) {
-        console.error('Error signing up:', error);
-      }
-    },
-  },
+  }
 };
 </script>
 
