@@ -20,7 +20,7 @@
         
     <style>
     </style>
--->
+
 
 
 <template>
@@ -37,7 +37,7 @@
 
 <script>
     import NavBarComponent from './components/NavBarComponent.vue';
-import RightBarComponent from './components/RightBarComponent.vue';
+    import RightBarComponent from './components/RightBarComponent.vue';
     import HomeView from './views/HomeView.vue';
 
     export default {
@@ -49,7 +49,49 @@ import RightBarComponent from './components/RightBarComponent.vue';
         }
     };
 </script>
-    
+
+-->
+
+<!-- Ajout test bouton déconnexion Djo-->
+<template>
+    <NavBarComponent />
+    <HomeView />
+    <div id="app">
+      <router-view></router-view>
+      <button v-if="isAuthenticated" @click="logout">Déconnexion</button>
+    </div>
+  </template>
+  
+  <script>
+
+import NavBarComponent from './components/NavBarComponent.vue';
+// import RightBarComponent from './components/RightBarComponent.vue';
+import HomeView from './views/HomeView.vue';
+
+  export default {
+      name: 'App',
+        components: {
+            HomeView,
+            NavBarComponent,
+           // RightBarComponent,
+        },
+        computed: {
+      isAuthenticated() {
+        return !!localStorage.getItem('userId');
+      },
+    },
+    methods: {
+      logout() {
+        // Appel à l'API pour déconnecter l'utilisateur
+        localStorage.removeItem('xsrfToken');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('roleId');
+        this.$router.push('/sign_in');
+      },
+    },
+  };
+  </script>
+  
 <style>
     .container-grid {
         display: flex;
