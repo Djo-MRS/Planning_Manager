@@ -1,17 +1,30 @@
 defmodule TimemanagerWeb.Router do
-  alias Hex.API.User
   use TimemanagerWeb, :router
 
-  pipeline :api do
+  pipeline :public_api do
     plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
   end
 
-  scope "/api", TimemanagerWeb do
-    pipe_through :api
+  # Pipeline pour les routes authentifiées (avec vérification XSRF)
+  pipeline :authenticated_api do
+    plug CORSPlug, origin: "*"
+    plug :accepts, ["json"]
+    plug TimemanagerWeb.Middleware.CheckXsrf
+    plug TimemanagerWeb.Plugs.RequireAuth
+  end
 
-    get "/clocks/:userID", ClockController, :get_by_user
-    post "/clocks/:userID", ClockController, :create_for_user
+  scope "/api", TimemanagerWeb do
+    # Routes publiques (sans vérification XSRF ni token)
+    pipe_through :public_api
+
+    post "/users/sign_in", AuthController, :login
+    post "/users/sign_up", AuthController, :sign_up
+
+    # Routes protégées (après connexion)
+    pipe_through :authenticated_api
+
+    delete "/users/sign_out", AuthController, :sign_out
 
     get "/users/:id", UserController, :show
     get "/users", UserController, :index
@@ -24,16 +37,11 @@ defmodule TimemanagerWeb.Router do
     get "/workingtime/:userID/:id", WorkingtimeController, :show
     post "/workingtime/:userID", WorkingtimeController, :create_workingtime_by_user
     put "/workingtime/:id", WorkingtimeController, :update
-    delete "/workingtimettttt/:id", WorkingtimeController, :delete
+    delete "/workingtime/:id", WorkingtimeController, :delete
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:timemanager, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do

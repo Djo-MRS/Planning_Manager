@@ -31,6 +31,7 @@ config :timemanager, TimemanagerWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :timemanager, Timemanager.Mailer, adapter: Swoosh.Adapters.Local
 
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
@@ -42,3 +43,9 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :joken,
+  default_signer: %{
+    signer_alg: "HS256",
+    key: System.get_env("JWT_SECRET") || "batman"
+  }

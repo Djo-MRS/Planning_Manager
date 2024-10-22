@@ -5,18 +5,25 @@ defmodule TimemanagerWeb.UserController do
   alias Timemanager.Accounts.User
   import Ecto.Query
   alias Timemanager.Repo
+  alias Timemanager.Auth.Token
+
+
 
   action_fallback TimemanagerWeb.FallbackController
 
+
   def index(conn, _params) do
-    case users = Accounts.list_users() do
+    case users = Accounts.list_users() |> Repo.preload(:role) do
       [] -> {:error, :not_found}
       _user -> render(conn, :index, users: users)
     end
   end
 
+
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
+      user = Repo.preload(user, :role)
+
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/users/#{user}")
@@ -32,8 +39,9 @@ defmodule TimemanagerWeb.UserController do
     end
   end
 
+
   def show(conn, %{"id" => id}) do
-    case Accounts.get_user(id) do
+    case Accounts.get_user(id) |> Repo.preload(:role) do
       nil ->
         conn
         |> put_status(:not_found)
@@ -43,9 +51,9 @@ defmodule TimemanagerWeb.UserController do
     end
   end
 
-  def show_with_query(conn, %{"email" => email, "username" => username}) do
+  def show_with_query(conn, %{"email" => email, "firstname" => firstname, "lastname" => lastname}) do
     try do
-        query = from(u in User, where: u.email == ^email and u.username == ^username)
+        query = from(u in User, where: u.email == ^email and u.firstname == ^firstname and u.lastname == ^lastname)
         user = Repo.one(query)
         render(conn, :show, user: user)
     rescue
@@ -57,7 +65,7 @@ defmodule TimemanagerWeb.UserController do
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    case Accounts.get_user(id) do
+    case Accounts.get_user(id) |> Repo.preload(:role) do
       nil ->
         conn
         |> put_status(:not_found)
@@ -79,7 +87,7 @@ defmodule TimemanagerWeb.UserController do
   end
 
   def delete(conn, %{"id" => id}) do
-    case Accounts.get_user(id) do
+    case Accounts.get_user(id) |> Repo.preload(:role) do
       nil ->
         conn
         |> put_status(:not_found)

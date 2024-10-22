@@ -4,6 +4,7 @@ defmodule TimemanagerWeb.ClockController do
   alias Timemanager.Clocking
   alias Timemanager.Clocking.Clock
   alias Timemanager.Accounts
+  alias Timemanager.Repo
 
   action_fallback TimemanagerWeb.FallbackController
 
@@ -17,9 +18,10 @@ defmodule TimemanagerWeb.ClockController do
       nil ->
         conn
         |> put_status(:not_found)
-        |> json(%{error: "Utilisateur non"})
+        |> json(%{error: "Utilisateur non trouvé"})
 
-      _user ->
+      user ->
+        user = Repo.preload(user, :role)  # Précharger l'association `role` si nécessaire
         clock_params = Map.put(clock_params, "user_id", user_id)
 
         last_clock = Clocking.get_clocks_by_user(user_id)
@@ -36,6 +38,7 @@ defmodule TimemanagerWeb.ClockController do
         updated_clock_params = Map.put(clock_params, "status", new_status)
 
         with {:ok, %Clock{} = clock} <- Clocking.create_clock(updated_clock_params) do
+          clock = Repo.preload(clock, :user)  # Précharger l'utilisateur associé au clock
           conn
           |> put_status(:created)
           |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")
@@ -65,14 +68,17 @@ defmodule TimemanagerWeb.ClockController do
         |> put_status(:not_found)
         |> json(%{error: "Utilisateur non trouvé"})
 
-      _user ->
+      user ->
+        user = Repo.preload(user, :role)  # Précharger l'association `role` si nécessaire
         clocks = Clocking.get_clocks_by_user(user_id)
+        clocks = Repo.preload(clocks, :user)  # Précharger l'association `user` pour chaque horloge
         render(conn, :index, clocks: clocks)
     end
   end
 
   def show(conn, %{"id" => id}) do
     clock = Clocking.get_clock!(id)
+    clock = Repo.preload(clock, :user)  # Précharger l'utilisateur associé au clock
     render(conn, :show, clock: clock)
   end
 
@@ -80,6 +86,7 @@ defmodule TimemanagerWeb.ClockController do
     clock = Clocking.get_clock!(id)
 
     with {:ok, %Clock{} = clock} <- Clocking.update_clock(clock, clock_params) do
+      clock = Repo.preload(clock, :user)  # Précharger l'utilisateur associé au clock après mise à jour
       render(conn, :show, clock: clock)
     end
   end
