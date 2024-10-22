@@ -2,13 +2,26 @@ defmodule TimemanagerWeb.AuthController do
   use TimemanagerWeb, :controller
   alias Timemanager.Accounts
   alias Timemanager.Accounts.User
+  alias Timemanager.Repo
 
   def login(conn, %{"email" => email, "password" => password}) do
     case Accounts.authenticate_user(conn, email, password) do
-      {:ok, token, conn} ->  # Si authenticate_user renvoie cette structure
+      {:ok, token, user, conn} ->  # Si authenticate_user renvoie cette structure
+        user = Repo.preload(user, :role)  # Précharger l'association role ici
+
         conn
         |> put_resp_cookie("jwt", token, http_only: true)
-        |> json(%{message: "Logged in successfully.", token: token})
+        |> json(%{
+          message: "Logged in successfully.",
+          token: token,
+          user: %{
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            role: user.role.name  # Inclure le rôle ici
+          }
+        })
 
       {:error, :invalid_credentials} ->  # Cas des identifiants invalides
         conn
@@ -20,19 +33,17 @@ defmodule TimemanagerWeb.AuthController do
     end
   end
 
-
-
   def sign_up(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
       {:ok, %User{} = user} ->
-        user = Repo.preload(user, :role)  # Précharger ici
+        user = Repo.preload(user, :role)  # Précharger l'association role ici
 
         conn
         |> put_status(:created)
         |> json(%{
           message: "User created successfully",
           user_id: user.id,
-          role: user.role.name  # Inclure le rôle si nécessaire
+          role: user.role.name  # Inclure le rôle ici
         })
 
       {:error, %Ecto.Changeset{} = changeset} ->
