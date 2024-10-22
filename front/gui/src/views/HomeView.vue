@@ -1,7 +1,7 @@
 <template>
     <div class="container-grid">
-        <div class="main-content">       
-            <HomeComponent />
+        <div class="main-content">      
+            <WorkingTimeComponent />
         </div>
         <section class="right-bar">
             <RightBarComponent/>
@@ -11,23 +11,16 @@
 </template>
 
 <script>
-    import NavBarComponent from '@/components/NavBarComponent.vue';
-    import RightBarComponent from '@/components/RightBarComponent.vue';
-    import HomeComponent from '@/components/HomeComponent.vue';
+import NavBarComponent from '@/components/NavBarComponent.vue';
+import RightBarComponent from '@/components/RightBarComponent.vue';
+import WorkingTimeComponent from '@/components/WorkingTimeComponent.vue';
 
-    export default {
-        name: 'App',
-        components: {
-            HomeComponent,
-            NavBarComponent,
-            RightBarComponent,
-        }
-    };
-</script>
-
-
-<style>
-    .main-content{
-        padding: 50px;
+export default {
+    name: 'HomeView',
+    components: {
+        WorkingTimeComponent,
+        RightBarComponent,
+        NavBarComponent,
     }
-</style>
+};
+</script>

@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <img src="@/assets/logohometimemanager.jpg" alt="Logo" class="logo" /> 
-    <form class="login-form">
+    <form @submit.prevent="loginUser" class="login-form">
       <input
         type="email"
         v-model="email"
@@ -22,14 +22,41 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
       email: '',
       password: '',
     };
-  }
+  },
+  methods: {
+    async loginUser() {
+      try {
+        const response = await fetch("http://localhost:4000/api/users/sign_in", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: this.email,
+            password: this.password,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('token', data.token);
+          this.$router.push('/home');
+        } else {
+          console.error("Erreur de connexion:", response.statusText);
+          alert("Erreur de connexion. Veuillez vérifier vos identifiants.");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la connexion:", error.message);
+        alert("Une erreur est survenue. Veuillez réessayer.");
+      }
+    },
+  },
 };
 </script>
 
@@ -44,26 +71,26 @@ export default {
 }
 
 .logo {
-  max-width: 400px; /* Ajustez la taille de l'image */
-  margin-bottom: 20px; /* Espace entre l'image et le formulaire */
+  max-width: 400px; 
+  margin-bottom: 20px; 
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  width: 300px; /* Largeur du formulaire */
+  width: 300px; 
 }
 
 .input-field {
   padding: 10px;
-  margin-bottom: 15px; /* Espace entre les champs */
+  margin-bottom: 15px; 
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
 .sign-in-button {
   padding: 10px;
-  background-color: #007bff; /* Couleur du bouton */
+  background-color: #007bff; 
   color: white;
   border: none;
   border-radius: 4px;
@@ -71,6 +98,7 @@ export default {
 }
 
 .sign-in-button:hover {
-  background-color: #0056b3; /* Couleur au survol */
+  background-color: #0056b3; 
 }
+
 </style>

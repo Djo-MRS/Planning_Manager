@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
-import UserView from '@/views/UserView.vue';
-import WorkingTimeView from '@/views/WorkingTimeView.vue';
 import ProfileView from '@/views/ProfileView.vue';
 import HelpView from '@/views/HelpView.vue';
 import ManagerView from '@/views/ManagerView.vue';
@@ -12,16 +10,16 @@ import SignupView from '@/views/SignupView.vue';
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'HomeView',
     component: HomeView,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/user',
     name: 'UserView',
     component: UserView,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/profile',
@@ -33,12 +31,6 @@ const routes = [
     path: '/help',
     name: 'HelpView',
     component: HelpView,
-    // meta: { requiresAuth: true },
-  },
-  {
-    path: '/workingtime',
-    name: 'WorkingTimeView',
-    component: WorkingTimeView,
     // meta: { requiresAuth: true },
   },
   {

@@ -5,8 +5,8 @@
         <section class="profile-info">
           <div class="profile-details">
             <h1 class="profile-title">Management</h1>
-            <button v-if="isAdmin" @click="showSignup">+</button>
-            <SignupComponent v-if="showSignupForm" @close="showSignupForm = false" />
+            <button v-if="isAdmin" @click="showModifyProfile">+</button>
+            <ModifyProfileComponent v-if="showModifyForm" @close="showModifyForm = false" />
           </div>
         </section>
       </div>
@@ -15,16 +15,16 @@
 </template>
 
 <script>
-import SignupComponent from '@/components/SignupComponent.vue';
+import ModifyProfileComponent from '@/components/ModifyProfileComponent.vue';
 
 export default {
   name: 'ManagerComponent',
   components: {
-    SignupComponent,
+    ModifyProfileComponent,
   },
   data() {
     return {
-      showSignupForm: false,
+      showModifyForm: false,
     };
   },
   computed: {
@@ -33,8 +33,8 @@ export default {
     },
   },
   methods: {
-    showSignup() {
-      this.showSignupForm = true; // Affichez le formulaire d'inscription
+    showModifyProfile() {
+      this.showModifyForm = true;
     },
   },
 };

@@ -20,6 +20,8 @@ defmodule TimemanagerWeb.Router do
 
     post "/users/sign_in", AuthController, :login
     post "/users/sign_up", AuthController, :sign_up
+    get "/users", UserController, :index
+
 
     # Routes protégées (après connexion)
     pipe_through :authenticated_api
@@ -27,7 +29,6 @@ defmodule TimemanagerWeb.Router do
     delete "/users/sign_out", AuthController, :sign_out
 
     get "/users/:id", UserController, :show
-    get "/users", UserController, :index
     post "/users", UserController, :create
     delete "/users/:id", UserController, :delete
     put "/users/:id", UserController, :update
