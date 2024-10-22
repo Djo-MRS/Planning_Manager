@@ -17,7 +17,7 @@
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/cc7ee409e90ba28d158a4c93a4327b6b2207a5e96fc2101271539f8895a65072?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Surname icon" />
                 <span class="profile-label">Firstname</span>
               </div>
-              <input type="text" class="form-input" v-model="user.surname" aria-label="Firstname input" />
+              <input type="text" class="form-input" v-model="user.firstname" aria-label="Firstname input" />
             </div>
             <div class="profile-row">
               <div class="profile-item">
@@ -29,9 +29,9 @@
             <div class="profile-row">
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/4bd16cbc188756c619de2382066dab461ca564bcfc1128a74560cc8c9ffc8db0?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Service icon" />
-                <span class="profile-label">Service</span>
+                <span class="profile-label">Role</span>
               </div>
-              <input type="text" class="form-input" v-model="user.service" aria-label="Service input" />
+              <input type="text" class="form-input" v-model="user.role" aria-label="Role input" />
             </div>
             <div class="profile-row">
               <div class="profile-item">
@@ -48,11 +48,10 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
-      user: {
+      data: {
         lastname: '',
         firstname: '',
         email: '',
@@ -67,8 +66,21 @@ export default {
   methods: {
     async fetchUserProfile() {
       try {
-        const response = await fetch('/api/users/1'); // Remplacez par votre endpoint API
-        this.user = response.data; 
+        const token = localStorage.getItem('token'); 
+        const response = await fetch('/api/users', { 
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          this.user = data;
+        } else {
+          console.error('Erreur lors de la récupération du profil:', response.statusText);
+        }
       } catch (error) {
         console.error('Erreur lors de la récupération du profil:', error);
       }

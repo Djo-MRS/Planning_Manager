@@ -15,30 +15,33 @@
   </div>
 </template>
   
-  <script>
-  import ManagerComponent from '@/components/ManagerComponent.vue';
-  import CalendarComponent from '@/components/CalendarComponent.vue'; 
+<script>
+import ManagerComponent from '@/components/ManagerComponent.vue';
+import CalendarComponent from '@/components/CalendarComponent.vue'; 
 import NavBarComponent from '@/components/NavBarComponent.vue';
 import RightBarComponent from '@/components/RightBarComponent.vue';
   
-  export default {
-    name: 'ManagerView',
-    components: {
-      ManagerComponent,
-      NavBarComponent,
-      RightBarComponent,
-      CalendarComponent,
+export default {
+  name: 'ManagerView',
+  components: {
+    ManagerComponent,
+    NavBarComponent,
+    RightBarComponent,
+    CalendarComponent,
+  },
+  computed: {
+    isManager() {
+      return localStorage.getItem('roleId') === 'manager';
     },
-    computed: {
-      isManager() {
-        return localStorage.getItem('roleId') === 'manager';
-      },
-      isAdmin() {
-        return localStorage.getItem('roleId') === 'admin';
-      },
+    isAdmin() {
+      return localStorage.getItem('roleId') === 'admin';
     },
-  };
-  </script>
+  },
+};
+</script>
   
-  <style>
-  </style>
+<style>
+  .main-content{
+      padding: 50px;
+  }
+</style>
