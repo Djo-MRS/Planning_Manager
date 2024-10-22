@@ -6,9 +6,9 @@ defmodule TimemanagerWeb.AuthController do
 
   def login(conn, %{"email" => email, "password" => password}) do
     case Accounts.authenticate_user(conn, email, password) do
-      {:ok, token, user, conn} ->  # Si authenticate_user renvoie cette structure
-        user = Repo.preload(user, :role)  # Précharger l'association role ici
-
+      {:ok, token, user, conn} ->
+        # Précharger le rôle de l'utilisateur et renvoyer la réponse
+        user = Repo.preload(user, :role)
         conn
         |> put_resp_cookie("jwt", token, http_only: true)
         |> json(%{
@@ -19,19 +19,21 @@ defmodule TimemanagerWeb.AuthController do
             firstname: user.firstname,
             lastname: user.lastname,
             email: user.email,
-            role: user.role.name  # Inclure le rôle ici
+            role: user.role.name
           }
         })
 
-      {:error, :invalid_credentials} ->  # Cas des identifiants invalides
+      {:error, :invalid_credentials} ->
         conn
         |> send_resp(401, "Unauthorized: Invalid credentials")
 
-      _ ->  # Gestion des cas non prévus
+      error ->
+        IO.inspect(error, label: "Unexpected error")
         conn
         |> send_resp(500, "Internal Server Error")
     end
   end
+
 
   def sign_up(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
