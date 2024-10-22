@@ -48,12 +48,13 @@ defmodule Timemanager.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:cors_plug, "~> 2.0"},
-      {:plug_cowboy, "~> 2.0"},  # Plug + Cowboy pour le serveur HTTP
-      {:plug, "~> 1.0"},          # Dépendance Plug
+      {:plug_cowboy, "~> 2.0"},
+      {:plug, "~> 1.0"},
       {:joken, "~> 2.0"},
-      {:bcrypt_elixir, "~> 3.0"}
+      {:argon2_elixir, "~> 3.0"}
     ]
   end
+
 
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to install project dependencies and perform other setup tasks, run:

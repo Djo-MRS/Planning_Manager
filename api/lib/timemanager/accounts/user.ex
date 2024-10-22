@@ -29,7 +29,7 @@ defmodule Timemanager.Accounts.User do
 
   defp hash_password(changeset) do
     if password = get_change(changeset, :password) do
-      change(changeset, password_hash: Bcrypt.hash_pwd_salt(password))
+      change(changeset, password_hash: Argon2.hash_pwd_salt(password))
     else
       changeset
     end

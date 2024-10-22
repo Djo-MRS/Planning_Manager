@@ -13,13 +13,19 @@ const routes = [
     path: '/home',
     name: 'HomeView',
     component: HomeView,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/user',
+    name: 'UserView',
+    component: UserView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/profile',
     name: 'ProfileView',
     component: ProfileView,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   },
   {
     path: '/help',
@@ -28,22 +34,28 @@ const routes = [
     // meta: { requiresAuth: true },
   },
   {
+    path: '/workingtime',
+    name: 'WorkingTimeView',
+    component: WorkingTimeView,
+    // meta: { requiresAuth: true },
+  },
+  {
     path: '/manager',
     name: 'ManagerView',
     component: ManagerView,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   },
   {
     path: '/notif',
     name: 'NotifView',
     component: NotifView,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   },
   {
     path: '/request',
     name: 'RequestView',
     component: RequestView,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   },
   { 
     path: '/sign_in', 

@@ -23,9 +23,7 @@
   </script>
   
 <style>
-    .main-content{
-        padding: 50px;
-    }
+   
 
     .signup-button {
         position: fixed;
