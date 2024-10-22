@@ -1,19 +1,17 @@
 defmodule TimemanagerWeb.Router do
   use TimemanagerWeb, :router
 
-  # Pipeline pour les routes publiques (sans vérification XSRF)
   pipeline :public_api do
     plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
-    # Aucune vérification de token ici pour les routes publiques
   end
 
   # Pipeline pour les routes authentifiées (avec vérification XSRF)
   pipeline :authenticated_api do
     plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
-    plug TimemanagerWeb.Middleware.CheckXsrf  # Vérification XSRF pour les routes authentifiées
-    plug TimemanagerWeb.Plugs.RequireAuth     # Vérification du token pour les routes authentifiées
+    plug TimemanagerWeb.Middleware.CheckXsrf
+    plug TimemanagerWeb.Plugs.RequireAuth
   end
 
   scope "/api", TimemanagerWeb do
@@ -33,6 +31,13 @@ defmodule TimemanagerWeb.Router do
     post "/users", UserController, :create
     delete "/users/:id", UserController, :delete
     put "/users/:id", UserController, :update
+    # get "/users", UserController, :show_with_query
+
+    get "/workingtime/:userID", WorkingtimeController, :index
+    get "/workingtime/:userID/:id", WorkingtimeController, :show
+    post "/workingtime/:userID", WorkingtimeController, :create_workingtime_by_user
+    put "/workingtime/:id", WorkingtimeController, :update
+    delete "/workingtime/:id", WorkingtimeController, :delete
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

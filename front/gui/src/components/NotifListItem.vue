@@ -36,9 +36,7 @@ export default {
     .list-item-circle{
         margin-right: 10px;
     }
-    .list-item-column{
-       
-    }
+    
     .title-request{
         font-size: 16px;
         font-weight: bold;
