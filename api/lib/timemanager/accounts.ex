@@ -7,8 +7,8 @@ defmodule Timemanager.Accounts do
   import Ecto.Query, warn: false
   alias Timemanager.Repo
 
-  alias Timemanager.Accounts.{User, Role}  # Ajoute Role ici
-  import Bcrypt, only: [hash_pwd_salt: 1]
+  alias Timemanager.Accounts.{User, Role}
+  import Argon2, only: [hash_pwd_salt: 1, check_pass: 2]
 
   @doc """
   Returns the list of users.
@@ -80,22 +80,21 @@ end
   @doc """
   Authentifie l'utilisateur.
   """
-  def authenticate_user(conn, email, password) do
-    user = Repo.get_by(User, email: email) |> Repo.preload(:role)
+ def authenticate_user(conn, email, password) do
+  user = Repo.get_by(User, email: email) |> Repo.preload(:role)
 
-    case user do
-      nil -> {:error, :invalid_credentials}
-      _ ->
-        if Bcrypt.check_pass(user, password) do
-          {token, c_xsrf_token} = Timemanager.Auth.Token.generate_jwt(user)
+  case user do
+    nil -> {:error, :invalid_credentials}
+    _ ->
+      if Argon2.check_pass(user, password) do
+        {token, c_xsrf_token} = Timemanager.Auth.Token.generate_jwt(user)
 
-          # Stocker le c-xsrf-token dans un cookie HTTP-Only
-          conn = put_resp_cookie(conn, "c-xsrf-token", c_xsrf_token, http_only: true)
+        conn = put_resp_cookie(conn, "c-xsrf-token", c_xsrf_token, http_only: true)
 
-          {:ok, token, conn} # Renvoie le token JWT et la connexion mise à jour
-        else
-          {:error, :invalid_credentials}
-        end
-    end
+        {:ok, token, user, conn}
+      else
+        {:error, :invalid_credentials}
+      end
   end
+end
 end
