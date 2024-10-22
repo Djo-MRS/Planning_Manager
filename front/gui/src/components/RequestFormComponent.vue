@@ -73,8 +73,14 @@ export default {
 <style>
     .box-form{
         width: 500px;
-
     }
+
+    @media (max-width: 768px) {
+        .box-form{
+            width: auto;
+        }
+    }
+
     .form-container{
         border: solid 1px #8d8d8d;
         border-radius: 25px;
