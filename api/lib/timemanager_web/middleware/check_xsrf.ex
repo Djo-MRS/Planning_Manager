@@ -1,44 +1,64 @@
 defmodule TimemanagerWeb.Middleware.CheckXsrf do
-  import Joken
   import Plug.Conn
-
-  alias Timemanager.Auth.Token # Assurez-vous d'importer le module de gestion des tokens
+  alias Timemanager.Auth.Token
+  require Logger
 
   @behaviour Plug
 
   def init(default), do: default
 
   def call(conn, _opts) do
-    # Récupérer le JWT depuis le cookie HTTP Only
-    jwt = conn |> req_cookie("jwt") # Assurez-vous que votre token JWT est stocké dans un cookie
+    Logger.info("Middleware CheckXsrf triggered for path: #{conn.request_path}")
 
-    # Vérifier si le JWT est présent
-    case jwt do
-      nil ->
+    # Skip XSRF check for sign_in and sign_up routes
+    case {conn.method, conn.request_path} do
+      {"POST", "/api/users/sign_in"} ->
+        Logger.info("Skipping XSRF check for sign_in route")
         conn
-        |> send_resp(401, "Unauthorized: No token provided")
-        |> halt()
+
+      {"POST", "/api/users/sign_up"} ->
+        Logger.info("Skipping XSRF check for sign_up route")
+        conn
 
       _ ->
-        # Vérifier le c-xsrf-token dans les cookies
-        xsrf_token = req_cookie(conn, "c-xsrf-token") # Utilisez get_req_cookie pour récupérer le cookie
+        # Retrieve the JWT from the HTTP-only cookie
+        jwt = conn.req_cookies["jwt"]
+        Logger.debug("JWT found in cookies: #{inspect(jwt)}")
 
-        # Décodez le JWT pour récupérer les claims
-        case Token.verify_n_validate(jwt) do
-          {:ok, claims} ->
-            # Vérifiez si le c-xsrf-token correspond à celui du JWT
-            if claims["c-xsrf-token"] == xsrf_token do
-              conn # Si tout va bien, passez la requête au prochain plug ou contrôleur
-            else
-              conn
-              |> send_resp(403, "Forbidden: Invalid XSRF token")
-              |> halt()
-            end
-
-          {:error, _reason} ->
+        # Verify if the JWT is present
+        case jwt do
+          nil ->
+            Logger.error("No JWT found in cookies")
             conn
-            |> send_resp(401, "Unauthorized: Invalid token")
+            |> send_resp(401, "Unauthorized: No token provided")
             |> halt()
+
+          _ ->
+            # Verify the c-xsrf-token in the cookies
+            xsrf_token = conn.cookies["c-xsrf-token"]
+            Logger.debug("XSRF token from cookies: #{inspect(xsrf_token)}")
+
+            # Decode the JWT to retrieve claims
+            case Token.verify_n_validate(jwt) do
+              {:ok, claims} ->
+                Logger.debug("JWT claims: #{inspect(claims)}")
+
+                if claims["c-xsrf-token"] == xsrf_token do
+                  Logger.info("XSRF token is valid, proceeding with request")
+                  conn # Proceed to the next plug or controller
+                else
+                  Logger.error("Invalid XSRF token")
+                  conn
+                  |> send_resp(403, "Forbidden: Invalid XSRF token")
+                  |> halt()
+                end
+
+              {:error, reason} ->
+                Logger.error("JWT validation failed: #{inspect(reason)}")
+                conn
+                |> send_resp(401, "Unauthorized: Invalid token")
+                |> halt()
+            end
         end
     end
   end

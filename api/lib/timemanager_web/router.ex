@@ -1,44 +1,42 @@
 defmodule TimemanagerWeb.Router do
-  #alias Hex.API.User
   use TimemanagerWeb, :router
 
-  pipeline :api do
+  # Pipeline pour les routes publiques (sans vérification XSRF)
+  pipeline :public_api do
     plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
-    plug TimemanagerWeb.Middleware.CheckXsrf
+    # Aucune vérification de token ici pour les routes publiques
+  end
+
+  # Pipeline pour les routes authentifiées (avec vérification XSRF)
+  pipeline :authenticated_api do
+    plug CORSPlug, origin: "*"
+    plug :accepts, ["json"]
+    plug TimemanagerWeb.Middleware.CheckXsrf  # Vérification XSRF pour les routes authentifiées
+    plug TimemanagerWeb.Plugs.RequireAuth     # Vérification du token pour les routes authentifiées
   end
 
   scope "/api", TimemanagerWeb do
-    pipe_through :api
+    # Routes publiques (sans vérification XSRF ni token)
+    pipe_through :public_api
 
-    get "/clocks/:userID", ClockController, :get_by_user
-    post "/clocks/:userID", ClockController, :create_for_user
+    post "/users/sign_in", AuthController, :login
+    post "/users/sign_up", AuthController, :sign_up
+
+    # Routes protégées (après connexion)
+    pipe_through :authenticated_api
+
+    delete "/users/sign_out", AuthController, :sign_out
 
     get "/users/:id", UserController, :show
     get "/users", UserController, :index
     post "/users", UserController, :create
     delete "/users/:id", UserController, :delete
     put "/users/:id", UserController, :update
-    #get "/users", UserController, :show_with_query
-
-    get "/workingtime/:userID", WorkingtimeController, :index
-    get "/workingtime/:userID/:id", WorkingtimeController, :show
-    post "/workingtime/:userID", WorkingtimeController, :create_workingtime_by_user
-    put "/workingtime/:id", WorkingtimeController, :update
-    delete "/workingtimettttt/:id", WorkingtimeController, :delete
-
-    post "/users/sign_in", AuthController, :login
-    post "/users/sign_up", AuthController, :sign_up
-    delete "/users/sign_out", AuthController, :sign_out
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:timemanager, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do

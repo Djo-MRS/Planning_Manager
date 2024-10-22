@@ -51,7 +51,7 @@ defmodule Timemanager.MixProject do
       {:plug_cowboy, "~> 2.0"},  # Plug + Cowboy pour le serveur HTTP
       {:plug, "~> 1.0"},          # Dépendance Plug
       {:joken, "~> 2.0"},
-      {:bcrypt_elixir, "~> 0.12"}
+      {:bcrypt_elixir, "~> 3.0"}
     ]
   end
 
