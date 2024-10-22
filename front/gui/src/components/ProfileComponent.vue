@@ -8,37 +8,32 @@
             <div class="profile-row">
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/1c18f04fefcdc9abdde53c4a5f1ff174e3d175ee995e3d195cd1dec4099be056?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Name icon" />
-                <span class="profile-label">Lastname</span>
               </div>
-              <input type="text" class="form-input" v-model="user.lastname" aria-label="Name input" />
+              <MDBInput label="Nom" v-model="user.lastname" />
             </div>
             <div class="profile-row">
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/cc7ee409e90ba28d158a4c93a4327b6b2207a5e96fc2101271539f8895a65072?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Surname icon" />
-                <span class="profile-label">Firstname</span>
               </div>
-              <input type="text" class="form-input" v-model="user.surname" aria-label="Firstname input" />
+              <MDBInput label="Prénom" v-model="user.firstname" />
             </div>
             <div class="profile-row">
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/509e27464df901bf921875bbb026e12ecb4955a30bf6190581e8848bf143b858?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Mail icon" />
-                <span class="profile-label">Mail</span>
               </div>
-              <input type="email" class="form-input" v-model="user.email" aria-label="Email input" />
+              <MDBInput label="Email" type="email" v-model="user.email"/>
             </div>
             <div class="profile-row">
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/4bd16cbc188756c619de2382066dab461ca564bcfc1128a74560cc8c9ffc8db0?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Service icon" />
-                <span class="profile-label">Service</span>
               </div>
-              <input type="text" class="form-input" v-model="user.service" aria-label="Service input" />
+              <MDBInput label="Service" type="text" v-model="user.service"  />
             </div>
             <div class="profile-row">
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/6aba804eaa1d8545a85a24c33aef6da56670f1863f755108481ef2d0a86bd07a?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Manager icon" />
-                <span class="profile-label">Manager</span>
               </div>
-              <input type="text" class="form-input" v-model="user.manager" aria-label="Manager input" />
+              <MDBInput type="text" label="Manager" v-model="user.manager"  />
             </div>
           </div>
         </section>
@@ -48,8 +43,13 @@
 </template>
 
 <script>
+import { MDBInput } from 'mdb-vue-ui-kit';
+
 
 export default {
+  components:{
+    MDBInput
+  },
   data() {
     return {
       user: {
@@ -78,28 +78,12 @@ export default {
 </script>
   
 <style scoped>
-.profile-view {
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  padding: 20px 30px; 
-  width: 1000px;
-}
-  
-  .profile-container {
-    width: 739px;
-    max-width: 100%;
-  }
-  
   .profile-content {
     display: flex;
     gap: 20px;
   }
   
-  .profile-info {
-    width: 35%;
-  }
+
   
   .profile-details {
     display: flex;
@@ -118,14 +102,13 @@ export default {
   .profile-row {
     display: flex;
     align-items: center;
-    margin-top: 20px;
   }
   
   .profile-item {
     display: flex;
     align-items: right;
     gap: 10px;
-    width: 200px; 
+    margin: 7px;
   }
   
   .profile-icon {

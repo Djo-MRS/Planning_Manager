@@ -1,6 +1,6 @@
 <template>
-  <div class="container-grid">
-      <div class="main-content">      
+  <div class="contnr-grid">
+      <div >      
           <ProfileComponent />
       </div>
       <section class="right-bar">
@@ -26,7 +26,15 @@ export default {
 </script>
 
 <style>
-  .main-content{
-      padding: 50px;
+  .contnr-grid{
+    display: flex;
+    padding: 40px
+  }
+
+  @media (max-width: 768px) {
+      .contnr-grid{
+          justify-content: center;
+          padding: 0px
+      }
   }
 </style>

@@ -25,9 +25,7 @@ export default {
 </script>
 
 <style>
-    .main-content{
-        padding: 50px;
-    }
+    
 
     .home-button {
         position: fixed;
