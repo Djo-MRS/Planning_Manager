@@ -34,12 +34,6 @@ const routes = [
     // meta: { requiresAuth: true },
   },
   {
-    path: '/workingtime',
-    name: 'WorkingTimeView',
-    component: WorkingTimeView,
-    // meta: { requiresAuth: true },
-  },
-  {
     path: '/manager',
     name: 'ManagerView',
     component: ManagerView,

@@ -26,9 +26,9 @@
             <div class="profile-row">
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/4bd16cbc188756c619de2382066dab461ca564bcfc1128a74560cc8c9ffc8db0?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Service icon" />
-                <span class="profile-label">Service</span>
+                <span class="profile-label">Role</span>
               </div>
-              <MDBInput label="Service" type="text" v-model="user.service"  />
+              <MDBInput label="Role" type="text" v-model="user.role"  />
             </div>
             <div class="profile-row">
               <div class="profile-item">
@@ -56,8 +56,8 @@ export default {
         lastname: '',
         firstname: '',
         email: '',
-        service: '',
-        manager: ''
+        role: '',
+        manager: '',
       }
     };
   },
