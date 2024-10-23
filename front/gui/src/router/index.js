@@ -7,6 +7,7 @@ import NotifView from '@/views/NotifView.vue';
 import RequestView from '@/views/RequestView.vue';
 import LoginView from '@/views/LoginView.vue';
 import SignupView from '@/views/SignupView.vue';
+import TeamView from '@/views/TeamView.vue';
 
 const routes = [
   {
@@ -54,6 +55,16 @@ const routes = [
     path: '/sign_up',
     name: 'SignupView',
     component: SignupView,
+  },
+  {
+    path: '/team',
+    name: 'TeamView',
+    component: TeamView,
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: TeamView,
   },
 ];
 

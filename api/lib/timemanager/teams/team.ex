@@ -6,6 +6,8 @@ defmodule Timemanager.Teams.Team do
     field :name, :string
     field :description, :string
 
+    many_to_many :users, Timemanager.Accounts.User, join_through: "user_teams"
+
     timestamps(type: :utc_datetime)
   end
 
