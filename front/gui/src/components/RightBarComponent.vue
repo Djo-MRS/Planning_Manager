@@ -2,30 +2,30 @@
     <div class="column">
         <div class="top-column">
             <MDBBtn color="light" floating class="profile-button" @click="goToPage('/profile')">
-            <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon>
+                <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon>
             </MDBBtn>
             <MDBBtn color="light" floating class="notif-button" @click="goToPage('/notif')">
-            <MDBIcon icon="bell" style="font-size: 18px;"></MDBIcon>
+                <MDBIcon icon="bell" style="font-size: 18px;"></MDBIcon>
             </MDBBtn>
-            </div>
+        </div>
         <div class="center-button">
-            <MDBBtn color="light" floating class="notif-button" @click="showAlert">
+            <MDBBtn color="light" floating class="notif-button" @click="triggerAlert">
                 <i class="fab fa-earlybirds" style="font-size: 40px;"></i>
-            </MDBBtn>       
+            </MDBBtn>
         </div>
         <MDBBtn color="light" floating class="notif-button" @click="goToPage('/help')">
-        <MDBIcon icon="question" style="font-size: 18px;"></MDBIcon>
+            <MDBIcon icon="question" style="font-size: 18px;"></MDBIcon>
         </MDBBtn>
         <div v-if="alertVisible" class="alert">
             BATMAN EST EN MISSION !!!
         </div>
     </div>
-  </template>
-    
-  <script>
-    import { MDBBtn, MDBIcon } from "mdb-vue-ui-kit";
+</template>
 
-    export default {
+<script>
+import { MDBBtn, MDBIcon } from "mdb-vue-ui-kit";
+
+export default {
     name: "RightBarComponent",
     components: {
         MDBBtn,
@@ -37,17 +37,14 @@
         };
     },
     methods: {
-    goToPage(path) {
-      this.$router.push(path); 
-    },
-    showAlert() {
-            this.alertVisible = true; // Affiche l'alerte
-            setTimeout(() => {
-                this.alertVisible = false; // Cache l'alerte après 3 secondes
-            }, 3000);
+        goToPage(path) {
+            this.$router.push(path);
         },
-     async sendNotification() {
-        const userRole = this.getUserRole();
+        triggerAlert() {
+            this.$refs.alerte.showAlert();
+        },
+        async sendNotification() {
+            const userRole = this.getUserRole();
             if (userRole === 'Manager' || userRole === 'Admin') {
                 try {
                     const response = await fetch('/api/notifications', {
@@ -82,55 +79,45 @@
         }
     },
 }
-  </script>
-  
-  <style>
-  
-    .column{
-        display: flex;
-        height: 100%;
-        padding: 50px;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .top-column{
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-    }
-    
-    .profile-button{
-        width: 70px;
-        height: 70px;
-        border: solid 1px #8d8d8d;
-        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2)    
-    }
-    .notif-button{
-        width: 55px;
-        height: 55px;
-        margin-top: 10px;
-        border: solid 1px #8d8d8d;
-        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2)    
-    }
-    .center-button {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        position: relative;
-        font-size: 30px
-    }
-    .alert {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 0, 0, 0.8); /* Rouge avec transparence */
-    color: white;
-    font-size: 36px;
-    padding: 20px;
-    border-radius: 10px;
-    z-index: 1000; /* Assure que l'alerte est au-dessus des autres éléments */
-    }
-  </style>
+</script>
+
+<style>
+.column {
+    display: flex;
+    height: 100%;
+    padding: 50px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-column {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.profile-button {
+    width: 70px;
+    height: 70px;
+    border: solid 1px #8d8d8d;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2)
+}
+
+.notif-button {
+    width: 55px;
+    height: 55px;
+    margin-top: 10px;
+    border: solid 1px #8d8d8d;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2)
+}
+
+.center-button {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    font-size: 30px
+}
+
+</style>

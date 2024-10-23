@@ -2,7 +2,7 @@
     <div class="list-item-row">
         <div class="list-item-circle">
             <MDBBtn color="light" floating class="profile-button">
-                <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon> <!--Faire en fonction de l'user-->
+                <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon>
             </MDBBtn>
         </div>
         <div class="list-item-column">
