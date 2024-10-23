@@ -2,15 +2,23 @@
     <div class="column">
         <div class="top-column">
             <MDBBtn color="light" floating class="profile-button" @click="goToPage('/profile')">
-                <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon>
+            <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon>
             </MDBBtn>
             <MDBBtn color="light" floating class="notif-button" @click="goToPage('/notif')">
-                <MDBIcon icon="bell" style="font-size: 18px;"></MDBIcon>
+            <MDBIcon icon="bell" style="font-size: 18px;"></MDBIcon>
             </MDBBtn>
+            </div>
+        <div class="center-button">
+            <MDBBtn color="light" floating class="notif-button" @click="showAlert">
+                <i class="fab fa-earlybirds" style="font-size: 40px;"></i>
+            </MDBBtn>       
         </div>
         <MDBBtn color="light" floating class="notif-button" @click="goToPage('/help')">
-            <MDBIcon icon="question" style="font-size: 18px;"></MDBIcon>
+        <MDBIcon icon="question" style="font-size: 18px;"></MDBIcon>
         </MDBBtn>
+        <div v-if="alertVisible" class="alert">
+            BATMAN EST EN MISSION !!!
+        </div>
     </div>
   </template>
     
@@ -23,18 +31,57 @@
         MDBBtn,
         MDBIcon
     },
+    data() {
+        return {
+            alertVisible: false // Gère la visibilité de l'alerte
+        };
+    },
     methods: {
     goToPage(path) {
       this.$router.push(path); 
-    }
-  },
-    data() {
-        return {
-    
-        };
-    }
-    };
-  
+    },
+    showAlert() {
+            this.alertVisible = true; // Affiche l'alerte
+            setTimeout(() => {
+                this.alertVisible = false; // Cache l'alerte après 3 secondes
+            }, 3000);
+        },
+     async sendNotification() {
+        const userRole = this.getUserRole();
+            if (userRole === 'Manager' || userRole === 'Admin') {
+                try {
+                    const response = await fetch('/api/notifications', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            notification: {
+                                title: "Mission Alert",
+                                message: "Batman est en mission !!!",
+                                date: new Date().toISOString(),
+                                sender: "System", // Ou le nom de l'utilisateur
+                                receiver: "User" // À remplacer par le destinataire réel
+                            }
+                        })
+                    });
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de l\'ajout de la notification');
+                    }
+                    const data = await response.json();
+                    console.log(data);
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                alert("Vous n'avez pas les autorisations nécessaires.");
+            }
+        },
+        getUserRole() {
+            return 'Manager'; // Exemple statique, implémentez selon votre logique
+        }
+    },
+}
   </script>
   
   <style>
@@ -67,5 +114,23 @@
         border: solid 1px #8d8d8d;
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2)    
     }
-    
+    .center-button {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+        font-size: 30px
+    }
+    .alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 0, 0, 0.8); /* Rouge avec transparence */
+    color: white;
+    font-size: 36px;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1000; /* Assure que l'alerte est au-dessus des autres éléments */
+    }
   </style>
