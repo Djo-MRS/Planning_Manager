@@ -46,6 +46,7 @@ export default {
         if (response.ok) {
           const data = await response.json();
           localStorage.setItem('token', data.token);
+          console.log('1')
           this.$router.push('/home');
         } else {
           console.error("Erreur de connexion:", response.statusText);
