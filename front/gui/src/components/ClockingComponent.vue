@@ -1,27 +1,15 @@
 <template>
   <div
-    v-if="users.length"
     class="clocking p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-4"
   >
     <div class="mb-4">
       <label
         for="userSelect"
         class="block text-sm font-medium text-gray-700 mb-2"
-        >Sélectionner un utilisateur :</label
+        >{{ user.firstname + " " + user.lastname }}</label
       >
-      <select
-        id="userSelect"
-        v-model="selectedUserId"
-        @change="selectUser"
-        class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-      >
-        <option value="" disabled selected>Choisissez un utilisateur...</option>
-        <option v-for="user in users" :key="user.id" :value="user.id">
-          {{ user.username }}
-        </option>
-      </select>
     </div>
-    <div v-if="selectedUserId" class="mt-4">
+    <div v-if="user.id" class="mt-4">
       <h3 class="text-xl font-bold text-center text-gray-700 mb-4">
         {{ currentDateTime }}
       </h3>
@@ -50,8 +38,7 @@ export default {
   name: "ClockingComponent",
   data() {
     return {
-      users: [],
-      selectedUserId: "",
+      user: {},
       clockIn: false,
       startDateTime: null,
       formattedStartDateTime: "",
@@ -71,57 +58,37 @@ export default {
     };
   },
   mounted() {
-    this.getUsers();
+    this.user = JSON.parse(localStorage.getItem("user"));
+    console.log("x-csrf-token=" + document.cookie);
+  
     this.updateCurrentDateTime();
-    if (this.selectedUserId) {
+    if (this.user.id) {
       this.fetchClockStatus();
     }
   },
   methods: {
-    async getUsers() {
-      try {
-        const response = await fetch("http://localhost:4000/api/users");
-        if (!response.ok) {
-          throw new Error("Erreur lors de la récupération des utilisateurs");
-        }
-        const result = await response.json();
-        this.users = result.data;
-      } catch (error) {
-        this.errorMessage =
-          "Erreur lors de la récupération des utilisateurs : " + error.message;
-      }
-    },
-
-    async selectUser() {
-      if (this.selectedUserId) {
-        await this.fetchClockStatus();
-      } else {
-        // Réinitialiser les états si aucun utilisateur n'est sélectionné
-        this.clockIn = false;
-        this.lastAction = null;
-        this.startDateTime = null;
-        this.formattedStartDateTime = "";
-        this.formattedEndTime = "";
-        this.errorMessage = "";
-      }
-    },
-
     async fetchClockStatus() {
-      // Réinitialiser le message d'erreur au début
       this.errorMessage = "";
       try {
         const response = await fetch(
-          `http://localhost:4000/api/clocks/${this.selectedUserId}`
+          `http://localhost:4000/api/clocks/${this.user.id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+              "Cookie": "x-csrf-token=" + document.cookie.getItem("x-csrf-token"),
+            },
+          }
         );
         if (!response.ok) {
           if (response.status === 404) {
-            // Aucun pointage trouvé, réinitialiser les états
             this.clockIn = false;
             this.lastAction = null;
             this.startDateTime = null;
             this.formattedStartDateTime = "";
             this.formattedEndTime = "";
-            return; // Sortir de la méthode sans définir d'erreur
+            return;
           } else {
             throw new Error(
               "Erreur lors de la récupération de l'état de pointage"
@@ -163,7 +130,6 @@ export default {
             this.lastAction = null;
           }
         } else {
-          // Si les données sont vides ou non valides, réinitialiser les états
           this.clockIn = false;
           this.lastAction = null;
           this.startDateTime = null;
@@ -182,11 +148,13 @@ export default {
     async clockInUser() {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/clocks/${this.selectedUserId}`,
+          `http://localhost:4000/api/clocks/${this.user.id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+              "Cookie": "x-csrf-token=" + document.cookie.getItem("x-csrf-token"),
             },
             body: JSON.stringify({
               clock: {
@@ -218,11 +186,13 @@ export default {
     async clockOut() {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/clocks/${this.selectedUserId}`,
+          `http://localhost:4000/api/clocks/${this.user.id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+              "Cookie": "x-csrf-token=" + document.cookie.getItem("x-csrf-token"),
             },
             body: JSON.stringify({
               clock: {
@@ -246,7 +216,6 @@ export default {
         });
         this.errorMessage = "";
 
-        // Une fois le dépointage fait, envoyer les données vers l'API des working times
         await this.sendWorkingTime();
       } catch (error) {
         this.errorMessage = `Erreur : ${error.message}`;
@@ -254,17 +223,18 @@ export default {
     },
 
     async sendWorkingTime() {
-      // Envoi des données du temps de travail
       try {
         const startTime = new Date(this.startDateTime).toISOString();
-        const endTime = new Date().toISOString(); // Le temps de fin est celui du dépointage
+        const endTime = new Date().toISOString();
 
         const response = await fetch(
-          `http://localhost:4000/api/workingtime/${this.selectedUserId}`,
+          `http://localhost:4000/api/workingtime/${this.user.id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+              "Cookie": "x-csrf-token=" + document.cookie.getItem("x-csrf-token"),
             },
             body: JSON.stringify({
               workingtime: {
@@ -281,7 +251,7 @@ export default {
           );
         }
 
-        this.errorMessage = ""; // Réinitialiser le message d'erreur en cas de succès
+        this.errorMessage = "";
       } catch (error) {
         this.errorMessage = `Erreur lors de l'envoi des données de temps de travail : ${error.message}`;
       }
@@ -302,7 +272,7 @@ export default {
     },
 
     refresh() {
-      if (this.selectedUserId) {
+      if (this.user.id) {
         this.fetchClockStatus();
       }
     },

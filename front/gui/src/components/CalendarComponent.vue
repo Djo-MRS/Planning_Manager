@@ -34,7 +34,16 @@ export default {
   methods: {
     async getWorkingTimes() {
       try {
-        const response = await fetch('http://localhost:4000/api/workingtime/8');
+        const userId = JSON.parse(localStorage.getItem('user')).id;
+        const response = await fetch('http://localhost:4000/api/workingtime/'+ userId,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+          }
+        );
         const data = await response.json();
   
         console.log("data length: ", data.data.length);

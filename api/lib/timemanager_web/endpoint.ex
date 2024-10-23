@@ -32,7 +32,7 @@ defmodule TimemanagerWeb.Endpoint do
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :timemanager
   end
 
-  plug CORSPlug, origin: "*"
+  plug CORSPlug, origin: ["*"], credentials: true, max_age: 8600
 
   plug Phoenix.LiveDashboard.RequestLogger,
     param_key: "request_logger",
@@ -40,8 +40,6 @@ defmodule TimemanagerWeb.Endpoint do
 
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
-
-  plug CORSPlug, origin: "*"
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
