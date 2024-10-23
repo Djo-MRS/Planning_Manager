@@ -13,7 +13,7 @@ const routes = [
     path: '/home',
     name: 'HomeView',
     component: HomeView,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   },
   {
     path: '/profile',
@@ -63,13 +63,13 @@ const router = createRouter({
 });
 
 // Middleware pour vérifier l'authentification
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem('userId'); // Vérifie si l'utilisateur est connecté
-  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
-    next('/sign_in'); // Redirige vers la page de connexion si non authentifié
-  } else {
-    next(); 
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   const isAuthenticated = !!localStorage.getItem('userId'); // Vérifie si l'utilisateur est connecté
+//   if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+//     next('/sign_in'); // Redirige vers la page de connexion si non authentifié
+//   } else {
+//     next(); 
+//   }
+// });
 
 export default router;

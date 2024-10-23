@@ -9,7 +9,7 @@ defmodule Timemanager.Accounts.User do
     field :email, :string
     field :password_hash, :string
     field :password, :string, virtual: true
-
+    many_to_many :teams, Timemanager.Teams.Team, join_through: "user_teams"
     belongs_to :role, Timemanager.Accounts.Role, foreign_key: :role_id
 
     timestamps()
