@@ -2,17 +2,17 @@
   <div class="signup-container">
     <img src="@/assets/logohometimemanager.jpg" alt="Logo" class="logo" />
     <form @submit.prevent="createUser" class="signup-form">
-     <!-- <input
+     <input
         type="text"
         v-model="lastname"
         placeholder="Lastname"
         required
         class="input-field"
-      /> -->
+      />
       <input
         type="text"
-        v-model="username"
-        placeholder="Username"
+        v-model= "firstname"
+        placeholder="Firstname"
         required
         class="input-field"
       />
@@ -47,9 +47,7 @@ export default {
     return {
       lastname: '',
       firstname: '',
-      username: '',
       email: '',
-      phone: '',
       password: '',
       confirmPassword: '',
     };
@@ -66,7 +64,7 @@ export default {
           body: JSON.stringify({
             user: {
               username: this.username,
-        email: this.email
+              email: this.email
             }
           })
         });
