@@ -59,7 +59,7 @@ export default {
   },
   mounted() {
     this.user = JSON.parse(localStorage.getItem("user"));
-    console.log("x-csrf-token=" + document.cookie);
+    console.log(document.cookie);
   
     this.updateCurrentDateTime();
     if (this.user.id) {
@@ -77,7 +77,7 @@ export default {
             headers: {
               "Content-Type": "application/json",
               "Authorization": "Bearer " + localStorage.getItem("token"),
-              "Cookie": "x-csrf-token=" + document.cookie.getItem("x-csrf-token"),
+              "X-CSRF-Token": document.cookie.split("c-xsrf-token=")[1],
             },
           }
         );
@@ -154,7 +154,7 @@ export default {
             headers: {
               "Content-Type": "application/json",
               "Authorization": "Bearer " + localStorage.getItem("token"),
-              "Cookie": "x-csrf-token=" + document.cookie.getItem("x-csrf-token"),
+              "X-CSRF-Token": document.cookie.split("c-xsrf-token=")[1].split(";")[0],
             },
             body: JSON.stringify({
               clock: {
@@ -192,7 +192,7 @@ export default {
             headers: {
               "Content-Type": "application/json",
               "Authorization": "Bearer " + localStorage.getItem("token"),
-              "Cookie": "x-csrf-token=" + document.cookie.getItem("x-csrf-token"),
+              "X-CSRF-Token": document.cookie.split("c-xsrf-token=")[1].split(";")[0],
             },
             body: JSON.stringify({
               clock: {
@@ -234,7 +234,7 @@ export default {
             headers: {
               "Content-Type": "application/json",
               "Authorization": "Bearer " + localStorage.getItem("token"),
-              "Cookie": "x-csrf-token=" + document.cookie.getItem("x-csrf-token"),
+              "X-CSRF-Token": document.cookie.split("c-xsrf-token=")[1].split(";")[0],
             },
             body: JSON.stringify({
               workingtime: {

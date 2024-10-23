@@ -10,7 +10,6 @@ defmodule TimemanagerWeb.Middleware.CheckXsrf do
   def call(conn, _opts) do
     Logger.info("Middleware CheckXsrf triggered for path: #{conn.request_path}")
 
-    # Skip XSRF check for sign_in and sign_up routes
     case {conn.method, conn.request_path} do
       {"POST", "/api/users/sign_in"} ->
         Logger.info("Skipping XSRF check for sign_in route")
@@ -21,24 +20,20 @@ defmodule TimemanagerWeb.Middleware.CheckXsrf do
         conn
 
       _ ->
-        # Retrieve the JWT from the HTTP-only cookie
-        jwt = conn.req_cookies["jwt"]
-        Logger.debug("JWT found in cookies: #{inspect(jwt)}")
+        jwt = get_req_header(conn, "Authorization") |> List.first()
+        Logger.debug("JWT found in Authorization header: #{inspect(jwt)}")
 
-        # Verify if the JWT is present
         case jwt do
           nil ->
-            Logger.error("No JWT found in cookies")
+            Logger.error("No JWT found in Authorization header")
             conn
             |> send_resp(401, "Unauthorized: No token provided")
             |> halt()
 
           _ ->
-            # Verify the c-xsrf-token in the cookies
-            xsrf_token = conn.cookies["c-xsrf-token"]
-            Logger.debug("XSRF token from cookies: #{inspect(xsrf_token)}")
+            xsrf_token = get_req_header(conn, "X-CSRF-Token") |> List.first()
+            Logger.debug("XSRF token from headers: #{inspect(xsrf_token)}")
 
-            # Decode the JWT to retrieve claims
             case Token.verify_n_validate(jwt) do
               {:ok, claims} ->
                 Logger.debug("JWT claims: #{inspect(claims)}")
