@@ -5,22 +5,27 @@
         <section class="profile-info">
           <div class="profile-details">
             <h1 class="profile-title">Management</h1>
-            <button v-if="isAdmin" @click="showModifyProfile">+</button>
+            <button  @click="showModifyProfile">+</button> <!--v-if="isAdmin"-->
             <ModifyProfileComponent v-if="showModifyForm" @close="showModifyForm = false" />
+            <div>
+            </div>
           </div>
         </section>
       </div>
     </div>
+    <ManagerCalendarComponent @show-modal="toggleModal"/>
   </main>
 </template>
 
 <script>
 import ModifyProfileComponent from '@/components/ModifyProfileComponent.vue';
+import ManagerCalendarComponent from './ManagerCalendarComponent.vue';
 
 export default {
   name: 'ManagerComponent',
   components: {
     ModifyProfileComponent,
+    ManagerCalendarComponent,
   },
   data() {
     return {

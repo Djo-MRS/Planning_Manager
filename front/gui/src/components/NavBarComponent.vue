@@ -1,10 +1,10 @@
 <template>
   <div class="box-group">
     <MDBBtnGroup class="button-group rounded-pill">
-      <MDBBtn color="light" @click="goToPage('/workingtime')">
+      <MDBBtn color="light" @click="goToPage('/home')">
         <i class="fas fa-calendar-alt icon"></i>
       </MDBBtn>
-      <MDBBtn v-if="isManagerOrAdmin" color="light" @click="goToPage('/manager')">
+      <MDBBtn  color="light" @click="goToPage('/manager')"> <!--v-if="isManagerOrAdmin"-->
         <i class="fas fa-users-cog icon"></i>
       </MDBBtn>
       <MDBBtn color="light" @click="goToPage('/request')">

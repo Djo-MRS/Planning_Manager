@@ -6,7 +6,7 @@
       tabindex="-1"
       aria-labelledby="exampleModalLabel"
       v-model="localShowModal"
-    >
+    > 
       <MDBModalHeader>
         <MDBModalTitle id="exampleModalLabel">
           {{ currentDate }} {{ isMorning ? "Morning" : "Afternoon" }}
@@ -14,11 +14,20 @@
       </MDBModalHeader>
       <MDBModalBody>
         <div class="data_row d-flex">
+          <!-- Mettre dropdown des users de l'équipe -->
+
           <label for="start">Start </label>
           <input id="start" type="datetime-local" v-model="start" />
 
           <label for="end">End </label>
           <input id="end" type="datetime-local" v-model="end" />
+
+          <label for="user">Assign to</label>
+          <select id="user" v-model="assignedUser">
+            <option v-for="user in users" :key="user.id" :value="user.id">
+              {{ user.firstname }}
+            </option>
+          </select>
         </div>
       </MDBModalBody>
       <MDBModalFooter>
@@ -41,6 +50,7 @@
   import { RouterView } from "vue-router";
   import { defineProps, defineEmits, onMounted, computed, ref } from "vue";
 
+
   const props = defineProps({
     showModal: {
       type: Boolean,
@@ -56,12 +66,20 @@
     current_user: {
       type: Object,
     },
+    users:{
+      type: [],
+    },
+    from: {
+      type: String,
+      required: true,
+    }
   });
 
   const start = ref("");
   const end = ref("");
   const isEmpty = ref(true);
   let isMorning = true;
+  let method = "POST";
 
   const formatDateTime = (date) => {
     const year = date.getFullYear();
@@ -92,6 +110,7 @@
   onMounted(() => {
     console.log(props.period);
     formatTime();
+    defineMethod(props.from)
     isEmpty.value = !(start.value && end.value);
   });
 
@@ -105,6 +124,14 @@
     },
   });
 
+  const defineMethod = (from) => {
+    if(from == "add"){
+      method = "POST"
+    } else if (from == "modify"){
+      method = "PUT"
+    }
+  }
+  
   const clearAllData = async () => {
     try {
       await fetch(
@@ -125,7 +152,7 @@
     console.log(props.period);
     try {
       await fetch(`http://localhost:4000/api/workingtime/${props.period.id}`, {
-        method: "PUT",
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -144,11 +171,15 @@
 
 
 <style>
-#app {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-}
+  #app {
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+  }
 
-.data_row {
-  justify-content: center;
-}
+  .data_row {
+    justify-content: center;
+  }
+  .d-flex{
+    display: flex;
+    flex-direction: column;
+  }
 </style>
