@@ -24,6 +24,7 @@ defmodule TimemanagerWeb.Router do
       get "/users", UserController, :list_team_users  # Cette route doit être ajouté
       post "/add_user", TeamController, :add_user_to_team
       delete "/remove_user", TeamController, :remove_user_from_team
+    end
 
     # Routes protégées (après connexion)
     pipe_through :authenticated_api
