@@ -1,19 +1,17 @@
 <template>
     <div class="box-list">
-        <div>Vos notifications</div>
+      <div>Vos notifications</div>
         <div class="list-container">
-
-           <NotifListItem/>
-            <NotifListItem/>
-            <NotifListItem/>
-            <NotifListItem/>
-            <NotifListItem/>
-            <NotifListItem/>
-            <NotifListItem/>
-             <NotifListItem/>
-            <div style="border-top: solid 1px #8d8d8d;"></div>
-        </div>
-
+          <NotifListItem/>
+          <NotifListItem/>
+          <NotifListItem/>
+          <NotifListItem/>
+          <NotifListItem/>
+          <NotifListItem/>
+          <NotifListItem/>
+          <NotifListItem/>
+        <div style="border-top: solid 1px #8d8d8d;"></div>
+      </div>
     </div>
 </template>
 

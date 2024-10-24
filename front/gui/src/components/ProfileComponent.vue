@@ -52,41 +52,12 @@ export default {
   },
   data() {
     return {
-      data: {
-        lastname: '',
-        firstname: '',
-        email: '',
-        role: '',
-        manager: '',
-      }
+      user: {}
     };
   },
   mounted() {
-    this.fetchUserProfile();
+    this.user = JSON.parse(localStorage.getItem('user')); 
   },
-  methods: {
-    async fetchUserProfile() {
-      try {
-        const token = localStorage.getItem('token'); 
-        const response = await fetch('/api/users', { 
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          this.user = data;
-        } else {
-          console.error('Erreur lors de la récupération du profil:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Erreur lors de la récupération du profil:', error);
-      }
-    }
-  }
 };
 </script>
   
@@ -95,8 +66,6 @@ export default {
     display: flex;
     gap: 20px;
   }
-  
-
   
   .profile-details {
     display: flex;

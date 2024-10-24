@@ -32,7 +32,7 @@ export default {
   methods: {
     async loginUser() {
       try {
-        const response = await fetch("http://localhost:4000/api/users/sign_in", {
+        const response = await fetch("/api/users/sign_in", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -46,6 +46,7 @@ export default {
         if (response.ok) {
           const data = await response.json();
           localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
           this.$router.push('/home');
         } else {
           console.error("Erreur de connexion:", response.statusText);
