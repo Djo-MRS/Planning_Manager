@@ -4,7 +4,6 @@ defmodule Timemanager.Teams.Team do
 
   schema "teams" do
     field :name, :string
-    field :description, :string
 
     many_to_many :users, Timemanager.Accounts.User, join_through: "user_teams"
 
@@ -14,7 +13,7 @@ defmodule Timemanager.Teams.Team do
   @doc false
   def changeset(team, attrs) do
     team
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
   end
 end

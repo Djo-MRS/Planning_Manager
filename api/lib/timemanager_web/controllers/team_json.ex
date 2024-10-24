@@ -19,7 +19,6 @@ defmodule TimemanagerWeb.TeamJSON do
     %{
       id: team.id,
       name: team.name,
-      description: team.description
     }
   end
 end
