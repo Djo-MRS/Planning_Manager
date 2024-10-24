@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import ProfileView from '@/views/ProfileView.vue';
 import HelpView from '@/views/HelpView.vue';
-import ManagerView from '@/views/ManagerView.vue';
+import ManagerView from '@/views/ManagerPlanningView.vue';
 import NotifView from '@/views/NotifView.vue';
 import RequestView from '@/views/RequestView.vue';
 import LoginView from '@/views/LoginView.vue';

@@ -43,7 +43,6 @@ export default {
         plugins: [timeGridPlugin, dayGridPlugin],
         initialView: 'timeGridWeek',
         events: [],
-        height: 600,
         eventClick: this.handleEventClick,
       }
     };
@@ -178,7 +177,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1;
 }
 
 .modal-content {
@@ -199,4 +198,10 @@ export default {
 .modal-actions button {
   padding: 8px 12px;
 }
+
+.fc {
+    max-height: 75vh; 
+    overflow: auto; 
+}
+
 </style>
