@@ -6,6 +6,8 @@ defmodule TimemanagerWeb.UserController do
   import Ecto.Query
   alias Timemanager.Repo
   alias Timemanager.Auth.Token
+  alias Timemanager.Teams.Team
+
 
 
 
@@ -63,6 +65,16 @@ defmodule TimemanagerWeb.UserController do
         |> render("error.json", message: "User not found")
     end
   end
+
+  def list_team_users(conn, %{"team_id" => team_id}) do
+    team = Team
+           |> Repo.get!(team_id)
+           |> Repo.preload(users: [:role])  # Précharge l'association :users avec leur :role
+
+    render(conn, "index.json", users: team.users)
+  end
+
+
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     case Accounts.get_user(id) |> Repo.preload(:role) do

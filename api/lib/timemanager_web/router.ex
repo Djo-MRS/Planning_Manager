@@ -20,6 +20,11 @@ defmodule TimemanagerWeb.Router do
     post "/users/sign_up", AuthController, :sign_up
     get "/users", UserController, :index
 
+    resources "/teams", TeamController, only: [:index, :create, :show, :update, :delete] do
+      get "/users", UserController, :list_team_users  # Cette route doit être ajouté
+      post "/add_user", TeamController, :add_user_to_team
+      delete "/remove_user", TeamController, :remove_user_from_team
+    end
 
     # Routes protégées (après connexion)
     pipe_through :authenticated_api
@@ -30,7 +35,7 @@ defmodule TimemanagerWeb.Router do
     post "/users", UserController, :create
     delete "/users/:id", UserController, :delete
     put "/users/:id", UserController, :update
-    # get "/users", UserController, :show_with_query
+    get "/users", UserController, :show_with_query
 
     get "/workingtime/:userID", WorkingtimeController, :index
     get "/workingtime/:userID/:id", WorkingtimeController, :show
