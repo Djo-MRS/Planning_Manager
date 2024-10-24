@@ -8,94 +8,95 @@ defmodule TimemanagerWeb.ClockController do
 
   action_fallback TimemanagerWeb.FallbackController
 
-  def index(conn, _params) do
-    clocks = Clocking.list_clocks()
-    render(conn, :index, clocks: clocks)
+  def get_token(conn) do
+    case get_req_header(conn, "authorization") do
+      ["Bearer " <> token] -> {:ok, token}
+      _ -> get_jwt_from_cookies(conn)
+    end
   end
 
-  def create_for_user(conn, %{"userID" => user_id, "clock" => clock_params}) do
-    case Accounts.get_user(user_id) do
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> json(%{error: "Utilisateur non trouvé"})
-
-      user ->
-        user = Repo.preload(user, :role)  # Précharger l'association `role` si nécessaire
-        clock_params = Map.put(clock_params, "user_id", user_id)
-
-        last_clock = Clocking.get_clocks_by_user(user_id)
-                    |> Enum.sort_by(& &1.inserted_at, :desc)
-                    |> List.first()
-
-        new_status =
-          case last_clock do
-            nil -> true
-            %Clock{status: true} -> false
-            %Clock{status: false} -> true
-          end
-
-        updated_clock_params = Map.put(clock_params, "status", new_status)
-
-        with {:ok, %Clock{} = clock} <- Clocking.create_clock(updated_clock_params) do
-          clock = Repo.preload(clock, :user)  # Précharger l'utilisateur associé au clock
-          conn
-          |> put_status(:created)
-          |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")
-          |> render(:show, clock: clock)
-        else
-          {:error, %Ecto.Changeset{} = changeset} ->
-            errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
-              Enum.reduce(opts, msg, fn {key, value}, acc -> String.replace(acc, "%{#{key}}", to_string(value)) end)
-            end)
-
-            conn
-            |> put_status(:unprocessable_entity)
-            |> json(%{errors: errors})
-
-          _ ->
-            conn
-            |> put_status(:bad_request)
-            |> json(%{error: "Données invalides"})
-        end
+  defp get_jwt_from_cookies(conn) do
+    case conn.cookies["jwt"] do
+      nil -> {:error, "No token provided"}
+      token -> {:ok, token}
     end
   end
 
   def get_by_user(conn, %{"userID" => user_id}) do
-    case Accounts.get_user(user_id) do
-      nil ->
+    case get_token(conn) do
+      {:ok, token} ->
+        signer = Joken.Signer.create("HS256", System.get_env("JWT_SECRET") || "batman")
+
+        case Joken.verify(token, signer) do
+          {:ok, _claims} ->
+            case Accounts.get_user(user_id) do
+              nil ->
+                conn
+                |> put_status(:not_found)
+                |> json(%{error: "Utilisateur non trouvé"})
+
+              _user ->  # Utilisation du préfixe `_` pour éviter les avertissements
+                user = Repo.preload(Accounts.get_user(user_id), :role)
+                clocks = Clocking.get_clocks_by_user(user_id)
+                clocks = Repo.preload(clocks, :user)
+                render(conn, :index, clocks: clocks)
+            end
+
+          {:error, reason} ->
+            conn
+            |> put_status(:unauthorized)
+            |> json(%{error: reason})
+        end
+
+      {:error, _reason} ->
         conn
-        |> put_status(:not_found)
-        |> json(%{error: "Utilisateur non trouvé"})
-
-      user ->
-        user = Repo.preload(user, :role)  # Précharger l'association `role` si nécessaire
-        clocks = Clocking.get_clocks_by_user(user_id)
-        clocks = Repo.preload(clocks, :user)  # Précharger l'association `user` pour chaque horloge
-        render(conn, :index, clocks: clocks)
+        |> put_status(:unauthorized)
+        |> json(%{error: "No token provided"})
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    clock = Clocking.get_clock!(id)
-    clock = Repo.preload(clock, :user)  # Précharger l'utilisateur associé au clock
-    render(conn, :show, clock: clock)
-  end
+  def create_for_user(conn, %{"userID" => user_id, "clock" => clock_params}) do
+    IO.inspect(conn.cookies, label: "Cookies in POST request")
+    IO.inspect(get_req_header(conn, "authorization"), label: "Authorization header in POST request")
 
-  def update(conn, %{"id" => id, "clock" => clock_params}) do
-    clock = Clocking.get_clock!(id)
+    case get_token(conn) do
+      {:ok, token} ->
+        signer = Joken.Signer.create("HS256", System.get_env("JWT_SECRET") || "batman")
 
-    with {:ok, %Clock{} = clock} <- Clocking.update_clock(clock, clock_params) do
-      clock = Repo.preload(clock, :user)  # Précharger l'utilisateur associé au clock après mise à jour
-      render(conn, :show, clock: clock)
-    end
-  end
+        case Joken.verify(token, signer) do
+          {:ok, _claims} ->
+            case Accounts.get_user(user_id) do
+              nil ->
+                conn
+                |> put_status(:not_found)
+                |> json(%{error: "Utilisateur non trouvé"})
 
-  def delete(conn, %{"id" => id}) do
-    clock = Clocking.get_clock!(id)
+              _user ->
+                clock_params = Map.put(clock_params, "user_id", user_id)
 
-    with {:ok, %Clock{}} <- Clocking.delete_clock(clock) do
-      send_resp(conn, :no_content, "")
+                with {:ok, %Clock{} = clock} <- Clocking.create_clock(clock_params) do
+                  conn
+                  |> put_status(:created)
+                  |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")
+                  |> render("show.json", clock: clock)
+                else
+                  {:error, %Ecto.Changeset{} = changeset} ->
+                    conn
+                    |> put_status(:unprocessable_entity)
+                    |> render("error.json", changeset: changeset)
+                end
+            end
+
+          {:error, reason} ->
+            conn
+            |> put_status(:unauthorized)
+            |> json(%{error: reason})
+        end
+
+      {:error, _reason} ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: "No token provided"})
     end
   end
 end

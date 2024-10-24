@@ -3,6 +3,7 @@
     <img src="@/assets/logohometimemanager.jpg" alt="Logo" class="logo" />
     <form @submit.prevent="createUser" class="signup-form">
      <input
+     <input
         type="text"
         v-model="lastname"
         placeholder="Lastname"
@@ -16,10 +17,18 @@
         required
         class="input-field"
       />
+
       <input
-        type="email"
+        type="email" 
         v-model="email"
         placeholder="Email"
+        required
+        class="input-field"
+      />
+      <input
+        type="int"
+        v-model="role_id"
+        placeholder="Role"
         required
         class="input-field"
       />
@@ -48,6 +57,7 @@ export default {
       lastname: '',
       firstname: '',
       email: '',
+      role_id: 1,
       password: '',
       confirmPassword: '',
     };
@@ -56,14 +66,17 @@ export default {
   
   async createUser() {
       try {
-        const response = await fetch("http://localhost:4000/api/users", {
+        const response = await fetch("http://localhost:4000/api/users/sign_up", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
             user: {
-              username: this.username,
+              firstname: this.firstname,
+              lastname: this.lastname,
+              password: this.password,
+              role_id: this.role_id,
               email: this.email
             }
           })
