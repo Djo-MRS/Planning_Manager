@@ -13,7 +13,6 @@ defmodule TimemanagerWeb.Router do
   end
 
   scope "/api", TimemanagerWeb do
-    # Routes publiques (sans vérification XSRF ni token)
     pipe_through :public_api
 
     post "/users/sign_in", AuthController, :login
@@ -26,7 +25,6 @@ defmodule TimemanagerWeb.Router do
       delete "/remove_user", TeamController, :remove_user_from_team
     end
 
-    # Routes protégées (après connexion)
     pipe_through :authenticated_api
 
     delete "/users/sign_out", AuthController, :sign_out
