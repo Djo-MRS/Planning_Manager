@@ -2,13 +2,13 @@
     <div class="list-item-row">
         <div class="list-item-circle">
             <MDBBtn color="light" floating class="profile-button">
-                <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon> <!--Faire en fonction de l'user-->
+                <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon>
             </MDBBtn>
         </div>
         <div class="list-item-column">
-            <div class="title-request">Congés acceptés</div>
-            <div class="title-message"> Vos congés du 30 octobre ont bien été acceptées</div>
-            <div class="title-details">Il y a 2 mois</div>
+            <div class="title-request">Dinguerie</div>
+            <div class="title-message"> C'est la faute de Yann</div>
+            <div class="title-details">Tous les jours</div>
         </div>
     </div>
 </template>

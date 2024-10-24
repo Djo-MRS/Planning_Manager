@@ -8,11 +8,11 @@
         placeholder="Lastname"
         required
         class="input-field"
-      /> 
+      />
       <input
         type="text"
-        v-model="firstname"
-        placeholder="Username"
+        v-model= "firstname"
+        placeholder="Firstname"
         required
         class="input-field"
       />
@@ -55,7 +55,6 @@ export default {
     return {
       lastname: '',
       firstname: '',
-      username: '',
       email: '',
       role_id: 1,
       password: '',

@@ -89,7 +89,7 @@ end
       if Argon2.check_pass(user, password) do
         {token, c_xsrf_token} = Timemanager.Auth.Token.generate_jwt(user)
 
-        conn = put_resp_cookie(conn, "c-xsrf-token", c_xsrf_token, http_only: true)
+        conn = put_resp_cookie(conn, "c-xsrf-token", c_xsrf_token, http_only: false)
 
         {:ok, token, user, conn}
       else

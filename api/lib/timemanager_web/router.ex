@@ -2,13 +2,11 @@ defmodule TimemanagerWeb.Router do
   use TimemanagerWeb, :router
 
   pipeline :public_api do
-    plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
   end
 
   # Pipeline pour les routes authentifiées (avec vérification XSRF)
   pipeline :authenticated_api do
-    plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
     plug TimemanagerWeb.Middleware.CheckXsrf
     plug TimemanagerWeb.Plugs.RequireAuth
@@ -22,6 +20,11 @@ defmodule TimemanagerWeb.Router do
     post "/users/sign_up", AuthController, :sign_up
     get "/users", UserController, :index
 
+    resources "/teams", TeamController, only: [:index, :create, :show, :update, :delete] do
+      get "/users", UserController, :list_team_users  # Cette route doit être ajouté
+      post "/add_user", TeamController, :add_user_to_team
+      delete "/remove_user", TeamController, :remove_user_from_team
+    end
 
     # Routes protégées (après connexion)
     pipe_through :authenticated_api
@@ -32,13 +35,16 @@ defmodule TimemanagerWeb.Router do
     post "/users", UserController, :create
     delete "/users/:id", UserController, :delete
     put "/users/:id", UserController, :update
-    # get "/users", UserController, :show_with_query
+    get "/users", UserController, :show_with_query
 
     get "/workingtime/:userID", WorkingtimeController, :index
     get "/workingtime/:userID/:id", WorkingtimeController, :show
     post "/workingtime/:userID", WorkingtimeController, :create_workingtime_by_user
     put "/workingtime/:id", WorkingtimeController, :update
     delete "/workingtime/:id", WorkingtimeController, :delete
+
+    get "/clocks/:userID", ClockController, :get_by_user
+    post "/clocks/:userID", ClockController, :create_for_user
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
