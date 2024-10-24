@@ -8,8 +8,8 @@
   </section>
   <NavBarComponent />
   </div>
-  <ManagerComponent :is-admin="isAdmin" />
-  <div v-if="isManager">
+  <ManagerComponent  /> <!--:is-admin="isAdmin"-->
+  <div > <!--v-if="isManager"-->
     <h2>Planning des employés</h2>
     <CalendarComponent />
   </div>
