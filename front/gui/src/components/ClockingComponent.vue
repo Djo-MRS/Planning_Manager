@@ -342,4 +342,9 @@ export default {
 .rounded-xl {
   border-radius: 1rem;
 }
+
+.fc {
+    z-index: 1;
+  }
+
 </style>

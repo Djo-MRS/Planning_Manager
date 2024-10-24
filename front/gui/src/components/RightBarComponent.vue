@@ -84,11 +84,15 @@ export default {
 <style>
 .column {
     display: flex;
-    height: 100%;
-    padding: 50px;
+    position: fixed;
+    height: 100%; 
+    width: 80px; 
+    padding: 10px; 
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    z-index: 3000;
+    right: 0;
 }
 
 .top-column {
@@ -119,5 +123,13 @@ export default {
     position: relative;
     font-size: 30px
 }
-
+@media (max-width: 768px) {
+  .column {
+    top: 10px; 
+    right: 10px; 
+    padding: 10px;
+    z-index: 3000;
+    height: auto;
+  }
+}
 </style>

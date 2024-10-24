@@ -50,6 +50,7 @@ export default {
   position: fixed;
   bottom: 30px;
   width: 100%;
+  z-index: 1000;
 }
 .button-group {
   border-radius: 30px !important; /* Modifier le border-radius du groupe de boutons */
@@ -57,5 +58,10 @@ export default {
 .icon {
   font-size: 22px;
   padding-inline: 25px;
+}
+@media (max-width: 768px) {
+  .box-group {
+    bottom: 10px; /* Ajuste la position si nécessaire */
+  }
 }
 </style>

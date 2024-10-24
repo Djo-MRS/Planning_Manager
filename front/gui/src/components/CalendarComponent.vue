@@ -92,6 +92,11 @@ export default {
     font-family: Roboto, Helvetica, Arial, sans-serif;
   }
 
+  .fc {
+    position: relative;
+    z-index: 2;
+  }
+
   @media (max-width: 768px) {
         .fc .fc-toolbar{
             display: block;
