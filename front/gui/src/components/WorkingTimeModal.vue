@@ -66,11 +66,12 @@
     current_user: {
       type: Object,
     },
-    users:{
-      type: [],
+    users:{ 
+      type: Array,
     },
     from: {
       type: String,
+      default: '',
       required: true,
     }
   });
@@ -80,7 +81,7 @@
   const isEmpty = ref(true);
   let isMorning = true;
   let method = "POST";
-
+  const assignedUser= "";
   const formatDateTime = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -92,23 +93,23 @@
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
-  const formatTime = () => {
-    if (props.period && props.period.start) {
-      const startDate = new Date(props.period.start);
-      const endDate = new Date(props.period.end);
+ const formatTime = () => {
+  if (props.period && props.period.start) {
+    const startDate = new Date(props.period.start);
+    const endDate = new Date(props.period.end);
 
-      const hours = startDate.getHours();
-      isMorning = hours < 12;
+    const hours = startDate.getHours();
+    isMorning = hours < 12;
 
-      start.value = formatDateTime(startDate);
-      end.value = formatDateTime(endDate);
-    } else {
-      console.log("Start date is not defined.");
-    }
-  };
+    start.value = formatDateTime(startDate);
+    end.value = formatDateTime(endDate);
+  } else {
+    console.log("Period or start date is not defined.");
+  }
+};
 
   onMounted(() => {
-    console.log(props.period);
+    defineMethod(props.from)
     formatTime();
     defineMethod(props.from)
     isEmpty.value = !(start.value && end.value);

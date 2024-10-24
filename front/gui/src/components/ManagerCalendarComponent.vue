@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <MDBBtn color="info" class="add-task-button" @click="openModal">Ajouter une tâche</MDBBtn>
-        <WorkingTimeModal :showModal="isModalOpen" :currentDate="currentDate" :users="users" :from="add" @close="closeModal" />
+        <ManagerModalComponent :showModal="isModalOpen" :currentDate="currentDate" :users="users" :from="add" @closeModal="closeModal" />
     </div>
     <div class="calendar">
         <div class="header">
@@ -13,12 +13,12 @@
             <div class="tab-col-users">
                 <div class="users-col">
                     <!-- Dropdown with different teams attached to the Manager -->
-                    <select v-model="selected"  @change="selectTeam">
+                    <select v-model="selectedTeam"  @change="selectTeam">
                         <option v-for="team in teamsManager" :key="team.id" :value="team.teamName">
                             {{ team.teamName }}
                         </option>
                     </select>
-                    <div class="users-cell" v-for="(user, userIndex) in users" :key="userIndex">
+                    <div class="users-cell" v-for="user in users" :key="user.firstname">
                         <div class="image-profile">
                             
                         </div>
@@ -38,15 +38,14 @@
                             <div class="event-cells">
                                 <div v-for="(day, dayIndex) in weekDays" :key="dayIndex" class="event-cell">
                                     <div class="event-part upper-part">
-                                        <TaskItemComponent v-for="task in getTasksForDay(day, user)" :key="task.start" :task="task" @click="openModifyModal(task)"/>
-                                        <WorkingTimeModal 
-                                            :showModal="isModifyModalOpen" 
-                                            :currentDate="currentDate" 
-                                            :period="{start: currentTask.start, end: currentTask.end}"
-                                            :users="users" 
-                                            :from="modify" 
-                                            @close="closeModifyModal"   
-                                            />
+                                        <TaskItemComponent 
+                                        v-for="task in getTasksForDay(day, user)" 
+                                        :key="task.start" 
+                                        :task="task" 
+                                        :type="wt"
+                                        :current_user="user"
+                                       />
+                                        
                                     </div>
                                     <div class="event-part lower-part">
                                     </div>
@@ -63,15 +62,17 @@
 <script>
 import { MDBBtn } from 'mdb-vue-ui-kit';
 import TaskItemComponent from './TaskItemComponent.vue';
-import WorkingTimeModal from './WorkingTimeModal.vue';
 import { ref } from 'vue';
+import ManagerModalComponent from './ManagerModalComponent.vue';
 
 export default {
     data() {
         return {
+            wt: "workingtime",
             isModalOpen: false,
-            isModifyModalOpen: false,
             teamManager: false,
+            currentTask: {},
+            add: "add",
             tasks: [
                 {
                     user: 'Alice', // Assignation à l'utilisateur
@@ -86,14 +87,14 @@ export default {
                     end: '2024-10-24T16:00:00'
                 }
             ],
-            selectedTeam: ref('A'),
+            selectedTeam: ref('Policier'),
             teamsManager: [
                 { id: 1, teamName: "Policier" },
                 { id: 2, teamName: "Comptabilité" },
                 { id: 3, teamName: "Commerciale" },
             ],
             teamUsers:[],
-            currentDate: new Date(),
+            currentDate: ref(new Date()),
             users: [
                 { firstname: 'Alice', profilePic: 'https://via.placeholder.com/40' },
                 { firstname: 'Bob', profilePic: 'https://via.placeholder.com/40' },
@@ -113,7 +114,7 @@ export default {
     components: {
         MDBBtn,
         TaskItemComponent,
-        WorkingTimeModal
+        ManagerModalComponent
     },
     computed: {
         weekTitle() {
@@ -151,19 +152,12 @@ export default {
             this.isModalOpen = true;
         },
         closeModal() {
+            console.log('ici')
             this.isModalOpen = false;
         },
-        openModifyModal(task) {
-            console.log("Task",task)
-            this.currentTask = task;
-            this.isModalOpen = true;
-        },
-        closeModifyModal() {
-            this.isModalOpen = false;
-        },
+       
         selectTeam() {
             this.fetchUsersByTeam(this.selectedTeam.id);
-            console.log('Équipe sélectionnée :', this.selected);
         },
         addTasks(task){
             this.tasks.push(task);
@@ -173,11 +167,10 @@ export default {
         },
         getTasksForDay(day, user) {
             const dayDate = new Date(day).toDateString();
-            console.log('Tâches pour la journée :', dayDate, this.tasks);
             
             return this.tasks.filter(task => {
                 if (!task || !task.start) {
-                    console.warn('Tâche mal définie trouvée :', task);
+                    
                     return false;
                 }
                 const taskDate = new Date(task.start).toDateString();
@@ -238,7 +231,7 @@ export default {
                 }
 
                 const result = await response.json();
-                this.us = result.data;
+                this.users = result.data;
 
             } catch (error) {
                 console.error("Erreur lors de la récupération de l'état de pointage", error);
@@ -250,6 +243,7 @@ export default {
     mounted() {
         console.log(this.teamsManager[0].teamName)
         this.selected = this.teamsManager[0].teamName;
+     
     }
 };
 
@@ -391,7 +385,7 @@ export default {
     }
     
     select{
-        height: 50px;
+        height: 72px;
         width: 100%;
         border: 1px #8D8D8D solid;
     }

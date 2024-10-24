@@ -1,29 +1,56 @@
 <template>
-    <div class="task-cell">
-
+    <div class="task-cell" @click="handleClick">
+        <ManagerModalComponent
+            :showModal="isModifyModalOpen" 
+            :currentDate="currentDate" 
+            :task="task"
+            :users="users" 
+            :from="modify"
+            :current_user="current_user"
+            @close="closeModifyModal"   
+            />
     </div>
 </template>
   
 <script>
-    
-    export default {
-        name: "NavBarComponent",
-        components: {
-        },
-        methods: {
+import ManagerModalComponent from './ManagerModalComponent.vue';
 
+    export default {
+        name: "TaskItemComponent",
+        components: {
+            ManagerModalComponent,
         },
         data() {
             return {
-            
+                modify: "modify",
+                isModifyModalOpen: false,
+                currentTask: null,
+                currentDate: new Date(),
+                users: []
             };
         },
         props: {
-            currentTask:{
+            type: {
+                type: String,
+                required: true,
+            },
+            task: {
                 type: Object,
-                required: true, 
+                required: true
+            },
+            current_user: {
+                type: Object,
             }
-        }
+        },
+        methods: {
+            handleClick() {
+                this.currentTask = this.task;  // Mettez la tâche actuelle
+                this.isModifyModalOpen = true;  // Ouvrez la modal
+            },
+            closeModifyModal() {
+                this.isModifyModalOpen = false; // Fermez la modal
+            }
+        },
     };
 
    

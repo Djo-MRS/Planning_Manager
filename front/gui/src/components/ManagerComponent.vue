@@ -13,7 +13,7 @@
         </section>
       </div>
     </div>
-    <ManagerCalendarComponent @show-modal="toggleModal"/>
+    <ManagerCalendarComponent/>
   </main>
 </template>
 
