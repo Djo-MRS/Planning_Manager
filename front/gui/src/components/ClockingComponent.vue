@@ -14,7 +14,7 @@
         {{ currentDateTime }}
       </h3>
       <div class="flex justify-center mb-4">
-        <button v-if="!clockIn" @click="clockInUser" class="btn btn-primary">
+        <button v-if="!status" @click="clockInUser" class="btn btn-primary">
           Badger en entrée
         </button>
         <button v-else @click="clockOut" class="btn btn-primary">
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       user: {},
-      clockIn: false,
+      status: false,
       startDateTime: null,
       formattedStartDateTime: "",
       formattedStartTime: "",
@@ -69,26 +69,26 @@ export default {
   methods: {
     async fetchClockStatus() {
       this.errorMessage = "";
-      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];  // Correct CSRF token extraction
-      const token = localStorage.getItem("token");  // Récupérer le JWT du local storage
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
+      const token = localStorage.getItem("token");
 
       try {
         const response = await fetch(
-          `http://localhost:4000/api/clocks/${this.user.id}`,
+          `/api/clocks/${this.user.id}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,  // Ajouter le JWT dans l'en-tête Authorization
-              "X-CSRF-Token": csrfToken,  // Passer correctement le token CSRF
+              "Authorization": `Bearer ${token}`,
+              "X-CSRF-Token": csrfToken, 
             },
-            credentials: "include"  // Inclure les cookies dans la requête
+            credentials: "include"
           }
         );
 
         if (!response.ok) {
           if (response.status === 404) {
-            this.clockIn = false;
+            this.status = false;
             this.lastAction = null;
             this.startDateTime = null;
             this.formattedStartDateTime = "";
@@ -106,7 +106,7 @@ export default {
           const lastClock = data.sort((a, b) => new Date(b.time) - new Date(a.time))[0];
 
           if (lastClock) {
-            this.clockIn = lastClock.status;
+            this.status = lastClock.status;
             this.startDateTime = lastClock.time;
             this.formattedStartDateTime = new Date(this.startDateTime).toLocaleString("fr-FR");
             this.formattedStartTime = new Date(this.startDateTime).toLocaleTimeString("fr-FR", {
@@ -121,13 +121,13 @@ export default {
                   minute: "2-digit",
                   second: "2-digit",
                 });
-            this.lastAction = lastClock.status ? "clockIn" : "clockOut";
+            this.lastAction = lastClock.status ? "status" : "clockOut";
           } else {
-            this.clockIn = false;
+            this.status = false;
             this.lastAction = null;
           }
         } else {
-          this.clockIn = false;
+          this.status = false;
           this.lastAction = null;
           this.startDateTime = null;
           this.formattedStartDateTime = "";
@@ -140,21 +140,21 @@ export default {
     },
 
     async clockInUser() {
-      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];  // Correct CSRF token extraction
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
       try {
         const response = await fetch(
-          `http://localhost:4000/api/clocks/${this.user.id}`,
+          `/api/clocks/${this.user.id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               "Authorization": "Bearer " + localStorage.getItem("token"),
-              "X-CSRF-Token": csrfToken,  // Pass CSRF token correctly
+              "X-CSRF-Token": csrfToken,
             },
-            credentials: "include",  // Inclure les cookies dans la requête
+            credentials: "include",
             body: JSON.stringify({
               clock: {
-                clockIn: true,
+                status: true,
                 time: new Date().toISOString(),
               },
             }),
@@ -164,7 +164,7 @@ export default {
           throw new Error("Erreur lors du pointage");
         }
         await response.json();
-        this.clockIn = true;
+        this.status = true;
         this.startDateTime = new Date().toISOString();
         this.formattedStartDateTime = new Date().toLocaleString("fr-FR");
         this.formattedStartTime = new Date().toLocaleTimeString("fr-FR", {
@@ -172,7 +172,7 @@ export default {
           minute: "2-digit",
           second: "2-digit",
         });
-        this.lastAction = "clockIn";
+        this.lastAction = "status";
         this.errorMessage = "";
       } catch (error) {
         this.errorMessage = `Erreur : ${error.message}`;
@@ -180,10 +180,10 @@ export default {
     },
 
     async clockOut() {
-      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];  // Correct CSRF token extraction
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
       try {
         const response = await fetch(
-          `http://localhost:4000/api/clocks/${this.user.id}`,
+          `/api/clocks/${this.user.id}`,
           {
             method: "POST",
             headers: {
@@ -191,10 +191,10 @@ export default {
               "Authorization": "Bearer " + localStorage.getItem("token"),
               "X-CSRF-Token": csrfToken, 
             },
-            credentials: "include",  // Inclure les cookies dans la requête
+            credentials: "include",
             body: JSON.stringify({
               clock: {
-                clockIn: false,
+                status: false,
                 time: new Date().toISOString(),
               },
             }),
@@ -204,40 +204,43 @@ export default {
           throw new Error("Erreur lors du dépointage");
         }
         await response.json();
-        this.clockIn = false;
+
+        this.status = false;
         this.lastAction = "clockOut";
-        this.startDateTime = new Date().toISOString();
         this.formattedEndTime = new Date().toLocaleTimeString("fr-FR", {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
         });
+
         this.errorMessage = "";
 
+        // N'envoyez que le temps de travail une fois que l'heure de fin est bien définie
         await this.sendWorkingTime();
       } catch (error) {
         this.errorMessage = `Erreur : ${error.message}`;
       }
     },
 
+
     async sendWorkingTime() {
-      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];  // Correct CSRF token extraction
-      const token = localStorage.getItem("token");  // Récupérer le JWT du local storage
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
+      const token = localStorage.getItem("token");
 
       try {
         const startTime = new Date(this.startDateTime).toISOString();
         const endTime = new Date().toISOString();
 
         const response = await fetch(
-          `http://localhost:4000/api/workingtime/${this.user.id}`,
+          `/api/workingtime/${this.user.id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${token}`,
-              "X-CSRF-Token": csrfToken,  // Pass CSRF token correctly
+              "X-CSRF-Token": csrfToken,
             },
-            credentials: "include",  // Inclure les cookies dans la requête
+            credentials: "include",
             body: JSON.stringify({
               workingtime: {
                 start: startTime,
