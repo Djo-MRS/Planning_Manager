@@ -7,6 +7,7 @@ import NotifView from '@/views/NotifView.vue';
 import RequestView from '@/views/RequestView.vue';
 import LoginView from '@/views/LoginView.vue';
 import SignupView from '@/views/SignupView.vue';
+import TeamView from '@/views/TeamView.vue';
 
 const routes = [
   {
@@ -55,6 +56,16 @@ const routes = [
     name: 'SignupView',
     component: SignupView,
   },
+  {
+    path: '/team',
+    name: 'TeamView',
+    component: TeamView,
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: TeamView,
+  },
 ];
 
 const router = createRouter({
@@ -63,13 +74,13 @@ const router = createRouter({
 });
 
 // Middleware pour vérifier l'authentification
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem('userId'); // Vérifie si l'utilisateur est connecté
-  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
-    next('/sign_in'); // Redirige vers la page de connexion si non authentifié
-  } else {
-    next(); 
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   const isAuthenticated = !!localStorage.getItem('userId'); // Vérifie si l'utilisateur est connecté
+//   if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+//     next('/sign_in'); // Redirige vers la page de connexion si non authentifié
+//   } else {
+//     next(); 
+//   }
+// });
 
 export default router;
