@@ -6,8 +6,8 @@
             </MDBBtn>
         </div>
         <div class="list-item-column">
-            <div class="title-request">Congés acceptés</div>
-            <div class="title-message"> Vos congés du 30 octobre ont bien été acceptées</div>
+            <div class="title-request">Batman</div>
+            <div class="title-message"> Batman est en mission !!!</div>
             <div class="title-details">Il y a 2 mois</div>
         </div>
     </div>
