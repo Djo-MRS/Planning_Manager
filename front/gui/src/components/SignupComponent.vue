@@ -3,7 +3,6 @@
     <img src="@/assets/logohometimemanager.jpg" alt="Logo" class="logo" />
     <form @submit.prevent="createUser" class="signup-form">
      <input
-     <input
         type="text"
         v-model="lastname"
         placeholder="Lastname"
