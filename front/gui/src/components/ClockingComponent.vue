@@ -60,7 +60,7 @@ export default {
   mounted() {
     this.user = JSON.parse(localStorage.getItem("user"));
     console.log(document.cookie);
-  
+
     this.updateCurrentDateTime();
     if (this.user.id) {
       this.fetchClockStatus();
@@ -69,6 +69,9 @@ export default {
   methods: {
     async fetchClockStatus() {
       this.errorMessage = "";
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];  // Correct CSRF token extraction
+      const token = localStorage.getItem("token");  // Récupérer le JWT du local storage
+
       try {
         const response = await fetch(
           `http://localhost:4000/api/clocks/${this.user.id}`,
@@ -76,11 +79,13 @@ export default {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": "Bearer " + localStorage.getItem("token"),
-              "X-CSRF-Token": document.cookie.split("c-xsrf-token=")[1],
+              "Authorization": `Bearer ${token}`,  // Ajouter le JWT dans l'en-tête Authorization
+              "X-CSRF-Token": csrfToken,  // Passer correctement le token CSRF
             },
+            credentials: "include"  // Inclure les cookies dans la requête
           }
         );
+
         if (!response.ok) {
           if (response.status === 404) {
             this.clockIn = false;
@@ -90,9 +95,7 @@ export default {
             this.formattedEndTime = "";
             return;
           } else {
-            throw new Error(
-              "Erreur lors de la récupération de l'état de pointage"
-            );
+            throw new Error("Erreur lors de la récupération de l'état de pointage");
           }
         }
 
@@ -100,19 +103,13 @@ export default {
         const data = result.data;
 
         if (Array.isArray(data) && data.length > 0) {
-          const lastClock = data.sort(
-            (a, b) => new Date(b.time) - new Date(a.time)
-          )[0];
+          const lastClock = data.sort((a, b) => new Date(b.time) - new Date(a.time))[0];
 
           if (lastClock) {
             this.clockIn = lastClock.status;
             this.startDateTime = lastClock.time;
-            this.formattedStartDateTime = new Date(
-              this.startDateTime
-            ).toLocaleString("fr-FR");
-            this.formattedStartTime = new Date(
-              this.startDateTime
-            ).toLocaleTimeString("fr-FR", {
+            this.formattedStartDateTime = new Date(this.startDateTime).toLocaleString("fr-FR");
+            this.formattedStartTime = new Date(this.startDateTime).toLocaleTimeString("fr-FR", {
               hour: "2-digit",
               minute: "2-digit",
               second: "2-digit",
@@ -137,15 +134,13 @@ export default {
           this.formattedEndTime = "";
         }
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération de l'état de pointage",
-          error
-        );
+        console.error("Erreur lors de la récupération de l'état de pointage", error);
         this.errorMessage = `Erreur : ${error.message}`;
       }
     },
 
     async clockInUser() {
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];  // Correct CSRF token extraction
       try {
         const response = await fetch(
           `http://localhost:4000/api/clocks/${this.user.id}`,
@@ -154,8 +149,9 @@ export default {
             headers: {
               "Content-Type": "application/json",
               "Authorization": "Bearer " + localStorage.getItem("token"),
-              "X-CSRF-Token": document.cookie.split("c-xsrf-token=")[1].split(";")[0],
+              "X-CSRF-Token": csrfToken,  // Pass CSRF token correctly
             },
+            credentials: "include",  // Inclure les cookies dans la requête
             body: JSON.stringify({
               clock: {
                 clockIn: true,
@@ -184,6 +180,7 @@ export default {
     },
 
     async clockOut() {
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];  // Correct CSRF token extraction
       try {
         const response = await fetch(
           `http://localhost:4000/api/clocks/${this.user.id}`,
@@ -192,8 +189,9 @@ export default {
             headers: {
               "Content-Type": "application/json",
               "Authorization": "Bearer " + localStorage.getItem("token"),
-              "X-CSRF-Token": document.cookie.split("c-xsrf-token=")[1].split(";")[0],
+              "X-CSRF-Token": csrfToken, 
             },
+            credentials: "include",  // Inclure les cookies dans la requête
             body: JSON.stringify({
               clock: {
                 clockIn: false,
@@ -223,6 +221,9 @@ export default {
     },
 
     async sendWorkingTime() {
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];  // Correct CSRF token extraction
+      const token = localStorage.getItem("token");  // Récupérer le JWT du local storage
+
       try {
         const startTime = new Date(this.startDateTime).toISOString();
         const endTime = new Date().toISOString();
@@ -233,9 +234,10 @@ export default {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": "Bearer " + localStorage.getItem("token"),
-              "X-CSRF-Token": document.cookie.split("c-xsrf-token=")[1].split(";")[0],
+              "Authorization": `Bearer ${token}`,
+              "X-CSRF-Token": csrfToken,  // Pass CSRF token correctly
             },
+            credentials: "include",  // Inclure les cookies dans la requête
             body: JSON.stringify({
               workingtime: {
                 start: startTime,

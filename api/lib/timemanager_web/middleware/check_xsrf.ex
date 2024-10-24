@@ -1,6 +1,7 @@
 defmodule TimemanagerWeb.Middleware.CheckXsrf do
   import Plug.Conn
   alias Timemanager.Auth.Token
+  alias Joken.Signer
   require Logger
 
   @behaviour Plug
@@ -10,6 +11,7 @@ defmodule TimemanagerWeb.Middleware.CheckXsrf do
   def call(conn, _opts) do
     Logger.info("Middleware CheckXsrf triggered for path: #{conn.request_path}")
 
+    # Skip XSRF check for sign_in and sign_up routes
     case {conn.method, conn.request_path} do
       {"POST", "/api/users/sign_in"} ->
         Logger.info("Skipping XSRF check for sign_in route")
@@ -20,21 +22,28 @@ defmodule TimemanagerWeb.Middleware.CheckXsrf do
         conn
 
       _ ->
-        jwt = get_req_header(conn, "Authorization") |> List.first()
-        Logger.debug("JWT found in Authorization header: #{inspect(jwt)}")
+        # Retrieve the JWT from the HTTP-only cookie
+        jwt = conn.req_cookies["jwt"]
+        Logger.debug("JWT found in cookies: #{inspect(jwt)}")
 
+        # Verify if the JWT is present
         case jwt do
           nil ->
-            Logger.error("No JWT found in Authorization header")
+            Logger.error("No JWT found in cookies")
             conn
             |> send_resp(401, "Unauthorized: No token provided")
             |> halt()
 
           _ ->
-            xsrf_token = get_req_header(conn, "X-CSRF-Token") |> List.first()
-            Logger.debug("XSRF token from headers: #{inspect(xsrf_token)}")
+            # Verify the c-xsrf-token in the cookies
+            xsrf_token = conn.cookies["c-xsrf-token"]
+            Logger.debug("XSRF token from cookies: #{inspect(xsrf_token)}")
 
-            case Token.verify_n_validate(jwt) do
+            # Create the Joken signer (using HS256 and the secret key)
+            signer = Signer.create("HS256", System.get_env("JWT_SECRET") || "batman")
+
+            # Decode the JWT to retrieve claims
+            case Joken.verify(jwt, signer) do
               {:ok, claims} ->
                 Logger.debug("JWT claims: #{inspect(claims)}")
 
