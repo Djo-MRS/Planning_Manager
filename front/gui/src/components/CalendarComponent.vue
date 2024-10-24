@@ -1,5 +1,23 @@
 <template>
-  <FullCalendar ref="fullCalendar" :options="calendarOptions" />
+  <div>
+    <FullCalendar ref="fullCalendar" :options="calendarOptions" />
+
+    <div v-if="showModal" class="modal-overlay">
+      <div class="modal-content">
+        <h3>Modifier Working Time</h3>
+        <label for="start-date">Date de début :</label>
+        <input type="datetime-local" v-model="editedEvent.start" />
+
+        <label for="end-date">Date de fin :</label>
+        <input type="datetime-local" v-model="editedEvent.end" />
+
+        <div class="modal-actions">
+          <MDBButton @click="saveChanges">Enregistrer</MDBButton>
+          <MDBButton @click="closeModal">Annuler</MDBButton>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -14,45 +32,55 @@ export default {
   },
   data() {
     return {
+      showModal: false,
+      editedEvent: {
+        id: null,
+        start: '',
+        end: ''
+      },
       workingTimes: [],
       calendarOptions: {
         plugins: [timeGridPlugin, dayGridPlugin],
         initialView: 'timeGridWeek',
         events: [],
         height: 600,
+        eventClick: this.handleEventClick,
       }
     };
   },
   mounted() {
     this.getWorkingTimes();
     this.adjustForMobile();
-    window.addEventListener('resize', this.adjustForMobile); // Écouteur d'événements pour détecter les changements d'écran
+    window.addEventListener('resize', this.adjustForMobile); 
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.adjustForMobile); // Supprimer l'écouteur d'événements quand le composant est démonté
+    window.removeEventListener('resize', this.adjustForMobile); 
   },
   methods: {
     async getWorkingTimes() {
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
+      const token = localStorage.getItem("token");
+
       try {
         const userId = JSON.parse(localStorage.getItem('user')).id;
-        const response = await fetch('http://localhost:4000/api/workingtime/'+ userId,
+        const response = await fetch('/api/workingtime/'+ userId,
           {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
+              'Authorization': `Bearer ${token}`,
+              'X-CSRF-Token': csrfToken,
+            },
+            credentials: 'include'
           }
         );
         const data = await response.json();
   
-        console.log("data length: ", data.data.length);
-  
         this.workingTimes = [];
   
         for (let i = 0; i < data.data.length; i++) {
-          console.log("item : " + data.data[i].start);
           this.workingTimes.push({
+            id: data.data[i].id,
             title: 'Working time',
             start: data.data[i].start,
             end: data.data[i].end
@@ -61,26 +89,78 @@ export default {
   
         this.calendarOptions = {
           ...this.calendarOptions,
-          events: [...this.workingTimes], // Met à jour les événements
+          events: [...this.workingTimes],
         };
-  
-        console.log("Updated workingTimes: ", this.workingTimes);
+
+        console.log(this.workingTimes);
   
       } catch (error) {
         console.error("Error fetching working times: ", error);
       }
     },
 
+    handleEventClick(info) {
+      
+      this.editedEvent = {
+        id: info.event.id,
+        start: `${info.event.start.getFullYear()}-${(info.event.start.getMonth() + 1).toString().padStart(2, 0)}-${info.event.start.getDate().toString().padStart(2, 0)}T${info.event.start.getHours().toString().padStart(2, 0)}:${info.event.start.getMinutes().toString().padStart(2, 0)}`,
+        end: `${info.event.end.getFullYear()}-${(info.event.end.getMonth() + 1).toString().padStart(2, 0)}-${info.event.end.getDate().toString().padStart(2, 0)}T${info.event.end.getHours().toString().padStart(2, 0)}:${info.event.end.getMinutes().toString().padStart(2, 0)}`
+      };
+      this.showModal = true;
+    },
+
+    async saveChanges() {
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await fetch(`/api/workingtime/${this.editedEvent.id}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+              'X-CSRF-Token': csrfToken,
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              workingtime: {
+                start: new Date(this.editedEvent.start).toISOString(),
+                end: new Date(this.editedEvent.end).toISOString(),
+              }
+            })
+          }
+        );
+        if (response.ok) {
+          const updatedEvent = this.workingTimes.find(event => event.id === this.editedEvent.id);
+          if (updatedEvent) {
+            updatedEvent.start = this.editedEvent.start;
+            updatedEvent.end = this.editedEvent.end;
+          }
+          this.closeModal();
+          this.calendarOptions.events = [...this.workingTimes];
+        } else {
+          console.error("Erreur lors de la mise à jour de l'événement");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la requête : ", error);
+      }
+    },
+
+    closeModal() {
+      this.showModal = false;
+    },
+
     adjustForMobile() {
-      const isMobile = window.innerWidth <= 768; // Détecter si l'écran est mobile
-      const calendarApi = this.$refs.fullCalendar.getApi(); // Obtenir l'instance FullCalendar
+      const isMobile = window.innerWidth <= 768;
+      const calendarApi = this.$refs.fullCalendar.getApi();
 
       if (isMobile) {
-        const today = new Date(); // Obtenir la date actuelle
-        calendarApi.changeView('timeGridDay'); // Changer la vue à la journée
-        calendarApi.gotoDate(today); // Se positionner sur aujourd'hui
+        const today = new Date();
+        calendarApi.changeView('timeGridDay');
+        calendarApi.gotoDate(today);
       } else {
-        calendarApi.changeView('timeGridWeek'); // Revenir à la vue hebdomadaire
+        calendarApi.changeView('timeGridWeek');
       }
     }
   }
@@ -88,18 +168,35 @@ export default {
 </script>
 
 <style>
-  #app {
-    font-family: Roboto, Helvetica, Arial, sans-serif;
-  }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
-  .fc {
-    position: relative;
-    z-index: 2;
-  }
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 300px;
+  max-width: 75%;
+  margin: 0 20px;
+}
 
-  @media (max-width: 768px) {
-        .fc .fc-toolbar{
-            display: block;
-        }
-    }
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+.modal-actions button {
+  padding: 8px 12px;
+}
 </style>
