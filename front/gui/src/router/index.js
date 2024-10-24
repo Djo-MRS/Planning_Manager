@@ -13,7 +13,7 @@ const routes = [
     path: '/home',
     name: 'HomeView',
     component: HomeView,
-    meta: { requiresAuth: true },
+    //meta: { requiresAuth: true },
   },
   {
     path: '/profile',

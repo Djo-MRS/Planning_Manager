@@ -1,15 +1,27 @@
-FROM elixir:alpine AS app
+FROM elixir:1.14.5-alpine AS app
+
+# Installer uniquement les dépendances nécessaires
+RUN apk add --no-cache \
+    build-base \
+    bash \
+    postgresql-client \
+    openssl-dev
 
 WORKDIR /app
 
-RUN apk add --no-cache postgresql-client git build-base bash inotify-tools
-
+# Copier les fichiers du projet
 COPY . .
 
-RUN mix local.hex --force && mix local.hex --force
-RUN mix deps.get
-RUN mix do compile
+# Installer les dépendances Elixir et compiler le projet
+RUN mix local.hex --force \
+    && mix local.rebar --force \
+    && mix deps.get \
+    && mix compile
+RUN apk add --no-cache inotify-tools
 
+
+# Exposer le port de l'application
 EXPOSE 4000
 
+# Point d'entrée pour démarrer l'application
 ENTRYPOINT ["sh", "/app/entrypoint.sh"]

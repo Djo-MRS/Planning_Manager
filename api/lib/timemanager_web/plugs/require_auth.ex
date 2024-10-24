@@ -1,24 +1,38 @@
 defmodule TimemanagerWeb.Plugs.RequireAuth do
   import Plug.Conn
-  alias Timemanager.Auth.Token
+  import Phoenix.Controller, only: [json: 2] # Importer la fonction json/2
+  alias Joken.Signer
+  require Logger
+
+  @jwt_secret System.get_env("JWT_SECRET") || "batman"
 
   def init(default), do: default
 
   def call(conn, _opts) do
     case get_req_header(conn, "authorization") do
       ["Bearer " <> token] ->
-        case Token.verify_n_validate(token) do
-          {:ok, _claims} -> conn
-          {:error, _reason} -> unauthorized(conn)
-        end
-      _ -> unauthorized(conn)
-    end
-  end
+        signer = Joken.Signer.create("HS256", @jwt_secret)
 
-  defp unauthorized(conn) do
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(:unauthorized, Jason.encode!(%{error: "Unauthorized: No token provided or invalid token"}))
-    |> halt()
+        # Vérifier le token avec Joken
+        case Joken.verify(token, signer) do
+          {:ok, claims} ->
+            Logger.debug("JWT claims: #{inspect(claims)}")
+            assign(conn, :claims, claims)
+
+          {:error, reason} ->
+            Logger.error("JWT validation failed: #{inspect(reason)}")
+            conn
+            |> put_status(:unauthorized)
+            |> json(%{error: "Invalid token"})
+            |> halt()
+        end
+
+      _ ->
+        Logger.error("Authorization header not found or malformed")
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: "No token provided"})
+        |> halt()
+    end
   end
 end

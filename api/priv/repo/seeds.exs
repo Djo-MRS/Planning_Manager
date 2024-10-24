@@ -1,5 +1,9 @@
 alias Timemanager.Accounts
 alias Timemanager.Repo
+alias Timemanager.Accounts.User
+
+
+Repo.delete_all(User)
 
 # Vérification et création des rôles
 role_admin = Repo.get_by(Accounts.Role, name: "admin") ||

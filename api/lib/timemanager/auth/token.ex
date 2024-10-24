@@ -27,6 +27,6 @@ defmodule Timemanager.Auth.Token do
 
   def verify_n_validate(jwt) do
     signer = Joken.Signer.create("HS256", @secret_key)
-    Joken.verify_and_validate(%{}, jwt, signer)
+    Joken.verify_and_validate(jwt, signer)
   end
 end

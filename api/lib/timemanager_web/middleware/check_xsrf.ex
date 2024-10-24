@@ -1,6 +1,7 @@
 defmodule TimemanagerWeb.Middleware.CheckXsrf do
   import Plug.Conn
   alias Timemanager.Auth.Token
+  alias Joken.Signer
   require Logger
 
   @behaviour Plug
@@ -38,8 +39,11 @@ defmodule TimemanagerWeb.Middleware.CheckXsrf do
             xsrf_token = conn.cookies["c-xsrf-token"]
             Logger.debug("XSRF token from cookies: #{inspect(xsrf_token)}")
 
+            # Create the Joken signer (using HS256 and the secret key)
+            signer = Signer.create("HS256", System.get_env("JWT_SECRET") || "batman")
+
             # Decode the JWT to retrieve claims
-            case Token.verify_n_validate(jwt) do
+            case Joken.verify(jwt, signer) do
               {:ok, claims} ->
                 Logger.debug("JWT claims: #{inspect(claims)}")
 
