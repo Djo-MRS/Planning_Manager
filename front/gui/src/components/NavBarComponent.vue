@@ -48,12 +48,12 @@ export default {
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 30px;
+  bottom: 20px;
   width: 100%;
   z-index: 1000;
 }
 .button-group {
-  border-radius: 30px !important; /* Modifier le border-radius du groupe de boutons */
+  border-radius: 50px !important; /* Modifier le border-radius du groupe de boutons */
 }
 .icon {
   font-size: 22px;

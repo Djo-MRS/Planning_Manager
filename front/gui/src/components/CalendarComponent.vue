@@ -200,7 +200,7 @@ export default {
 }
 
 .fc {
-    max-height: 75vh; 
+    max-height: 80vh; 
     overflow: auto; 
 }
 

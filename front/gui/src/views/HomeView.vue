@@ -37,7 +37,8 @@ export default {
 
 .main-content {
     flex: 1; 
-    margin-right: 20px; 
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .right-bar {
