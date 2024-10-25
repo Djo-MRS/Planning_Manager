@@ -1,6 +1,9 @@
 <template>
     <div class="">
-        <MDBBtn color="info" class="add-task-button" @click="openModal">Ajouter une tâche</MDBBtn>
+        <div class= "buttons">
+            <MDBBtn color="info" class="add-task-button" @click="openModal">Ajouter une tâche</MDBBtn>
+            <MDBBtn color="warning" class="add-task-button" @click="goToPage('/teams')">Planning des équipes</MDBBtn>
+        </div>
         <ManagerModalComponent :showModal="isModalOpen" :currentDate="currentDate" :users="users" :from="add" @closeModal="closeModal" />
     </div>
     <div class="calendar">
@@ -184,6 +187,10 @@ export default {
                 day: 'numeric',   // Affiche le jour du mois (ex: "23")
                 month: 'long'     // Affiche le mois (ex: "octobre")
             });
+        },
+
+        goToPage(path) {
+            this.$router.push(path);
         },
         
         async fetchTeamsByManager() {

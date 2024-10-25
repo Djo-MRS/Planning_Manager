@@ -4,7 +4,7 @@
       <MDBBtn color="light" @click="goToPage('/home')">
         <i class="fas fa-home-alt icon"></i>
       </MDBBtn>
-      <MDBBtn  color="light" @click="goToPage('/manager')"> <!--v-if="isManagerOrAdmin"-->
+      <MDBBtn  color="light" @click="goToPage('/dashboard')"> <!--v-if="isManagerOrAdmin"-->
         <i class="fas fa-users-cog icon"></i>
       </MDBBtn>
       <MDBBtn color="light" @click="goToPage('/request')">

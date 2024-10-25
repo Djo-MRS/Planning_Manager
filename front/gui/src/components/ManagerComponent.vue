@@ -5,8 +5,6 @@
         <section class="profile-info">
           <div class="profile-details">
             <h1 class="profile-title">Management</h1>
-            <button  @click="showModifyProfile">+</button> <!--v-if="isAdmin"-->
-            <ModifyProfileComponent v-if="showModifyForm" @close="showModifyForm = false" />
             <div>
             </div>
           </div>
@@ -18,16 +16,15 @@
 </template>
 
 <script>
-import ModifyProfileComponent from '@/components/ModifyProfileComponent.vue';
+//import ModifyProfileComponent from '@/components/ModifyProfileComponent.vue';
 import ManagerCalendarComponent from './ManagerCalendarComponent.vue';
 
 export default {
   name: 'ManagerComponent',
   components: {
-    ModifyProfileComponent,
     ManagerCalendarComponent,
   },
-  data() {
+  /*data() {
     return {
       showModifyForm: false,
     };
@@ -41,25 +38,11 @@ export default {
     showModifyProfile() {
       this.showModifyForm = true;
     },
-  },
+  },*/
 };
 </script>
 
 <style scoped>
-.profile-view {
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    padding: 20px 30px; 
-    width: 1000px;
-  }
-  
-  .profile-container {
-    width: 739px;
-    max-width: 100%;
-  }
-  
   .profile-content {
     display: flex;
     gap: 20px;
@@ -86,7 +69,6 @@ export default {
   .profile-row {
     display: flex;
     align-items: center;
-    margin-top: 20px;
   }
   
   .profile-item {

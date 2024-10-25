@@ -1,33 +1,26 @@
 <template>
   <div class="container-grid">
     <div class="main-content">      
-      <ManagerComponent />
+      <TeamsComponent />
     </div>
   <section class="right-bar">
     <RightBarComponent/>
   </section>
   <NavBarComponent />
   </div>
-  <ManagerComponent  /> <!--:is-admin="isAdmin"-->
-  <div > <!--v-if="isManager"-->
-    <h2>Planning des employés</h2>
-    <CalendarComponent />
-  </div>
 </template>
   
 <script>
-import ManagerComponent from '@/components/ManagerComponent.vue';
-import CalendarComponent from '@/components/CalendarComponent.vue'; 
 import NavBarComponent from '@/components/NavBarComponent.vue';
 import RightBarComponent from '@/components/RightBarComponent.vue';
+import TeamsComponent from '@/components/TeamsComponent.vue';
   
 export default {
-  name: 'ManagerView',
+  name: 'ManagerTeamsView',
   components: {
-    ManagerComponent,
+    TeamsComponent,
     NavBarComponent,
     RightBarComponent,
-    CalendarComponent,
   },
   computed: {
     isManager() {
