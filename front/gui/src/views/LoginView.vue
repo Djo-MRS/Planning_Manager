@@ -1,9 +1,6 @@
 <template>
-    <div>
-      <button class="signup-button" @click="goToSignup">+</button>
-      <LoginComponent />
-    </div>
-  </template>
+    <LoginComponent />
+</template>
   
   <script>
   import LoginComponent from '@/components/LoginComponent.vue';
@@ -15,7 +12,6 @@
     },
     methods: {
       goToSignup() {
-        
         this.$router.push('/sign_up');
       }
     }

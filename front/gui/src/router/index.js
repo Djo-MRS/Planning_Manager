@@ -10,44 +10,48 @@ import SignupView from '@/views/SignupView.vue';
 
 const routes = [
   {
+    path: '/', 
+    name: 'LoginView',
+    component: LoginView,
+  },
+  {
     path: '/home',
     name: 'HomeView',
     component: HomeView,
-    // meta: { requiresAuth: true },
   },
   {
     path: '/profile',
     name: 'ProfileView',
     component: ProfileView,
-    // meta: { requiresAuth: true },
+  },
+  {
+    path: '/help',
+    name: 'HelpView',
+    component: HelpView,
   },
   {
     path: '/dashboard',
     name: 'ManagerDashboardView',
     component: ManagerDashboardView,
-    // meta: { requiresAuth: true },
   },
   {
     path: '/teams',
     name: 'ManagerTeamsView',
     component: ManagerTeamsView,
-   // meta: { requiresAuth: true }, 
   },
   {
     path: '/notif',
     name: 'NotifView',
     component: NotifView,
-    // meta: { requiresAuth: true },
   },
   {
     path: '/request',
     name: 'RequestView',
     component: RequestView,
-    // meta: { requiresAuth: true },
   },
   { 
     path: '/sign_in', 
-    name: 'LoginView',
+    name: 'SigninView',
     component: LoginView,
   },
   { 
@@ -62,14 +66,16 @@ const router = createRouter({
   routes
 });
 
-// Middleware pour vérifier l'authentification
-// router.beforeEach((to, from, next) => {
-//   const isAuthenticated = !!localStorage.getItem('userId'); // Vérifie si l'utilisateur est connecté
-//   if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
-//     next('/sign_in'); // Redirige vers la page de connexion si non authentifié
-//   } else {
-//     next(); 
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/sign_in', '/sign_up'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('user');
+
+  if (authRequired && !loggedIn) {
+    return next('/sign_in');
+  }
+
+  next();
+});
 
 export default router;

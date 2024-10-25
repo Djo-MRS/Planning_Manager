@@ -4,7 +4,7 @@
       <MDBBtn color="light" @click="goToPage('/home')" id="navbar-home">
         <i class="fas fa-home-alt icon"></i>
       </MDBBtn>
-      <MDBBtn  color="light" @click="goToPage('/dashboard')" id="navbar-dashboard"> <!--v-if="isManagerOrAdmin"-->
+      <MDBBtn  color="light" @click="goToPage('/dashboard')" v-if="isManagerOrAdmin" id="navbar-dashboard">
         <i class="fas fa-users-cog icon"></i>
       </MDBBtn>
       <MDBBtn color="light" @click="goToPage('/request')" id="navbar-request">
@@ -25,8 +25,8 @@ export default {
   },
   computed: {
     isManagerOrAdmin() {
-      const roleId = localStorage.getItem('roleId');
-      return roleId === 'manager' || roleId === 'admin';
+      const role = JSON.parse(localStorage.getItem('user')).role;
+      return role === 'manager' || role === 'admin';
     },
   },
   methods: {

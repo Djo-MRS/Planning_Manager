@@ -7,6 +7,9 @@
             <MDBBtn color="light" floating class="notif-button" @click="goToPage('/notif')" id="rightbar-notif">
                 <MDBIcon icon="bell" style="font-size: 18px;"></MDBIcon>
             </MDBBtn>
+            <MDBBtn color="light" floating class="notif-button" @click="goToSignup" v-if="isAdmin">
+                <MDBIcon icon="user-cog" style="font-size: 18px;"></MDBIcon>
+            </MDBBtn> 
         </div>
         <div class="center-button">
             <MDBBtn color="light" floating class="notif-button" @click="triggerAlert" id="rightbar-alert">
@@ -15,6 +18,9 @@
         </div>
         <MDBBtn color="light" floating class="notif-button" @click="$emit('tutoClicked')" id="rightbar-tuto">
             <MDBIcon icon="question" style="font-size: 18px;"></MDBIcon>
+        </MDBBtn>
+        <MDBBtn color="light" floating class="notif-button" @click="goToLogout">
+            <MDBIcon icon="sign-out-alt" style="font-size: 18px;"></MDBIcon>
         </MDBBtn>
         <div v-if="alertVisible" class="alert">
             BATMAN EST EN MISSION !!!
@@ -33,15 +39,30 @@ export default {
     },
     data() {
         return {
-            alertVisible: false 
+            alertVisible: false,
+            isAdmin: false
         };
     },
+    mounted() {
+        if (JSON.parse(localStorage.getItem('user')).role === 'admin') {
+            this.isAdmin = true;
+        } else {
+            this.isAdmin = false;
+        }
+    },
     methods: {
+        goToSignup() {
+            this.$router.push('/sign_up');
+        },
         goToPage(path) {
             this.$router.push(path);
         },
         triggerAlert() {
             this.$refs.alerte.showAlert();
+        },
+        goToLogout() {
+            localStorage.clear();
+            this.$router.push('/sign_in');
         },
         async sendNotification() {
             const userRole = this.getUserRole();
@@ -57,8 +78,8 @@ export default {
                                 title: "Mission Alert",
                                 message: "Batman est en mission !!!",
                                 date: new Date().toISOString(),
-                                sender: "System", // Ou le nom de l'utilisateur
-                                receiver: "User" // À remplacer par le destinataire réel
+                                sender: "System",
+                                receiver: "User"
                             }
                         })
                     });
@@ -75,7 +96,7 @@ export default {
             }
         },
         getUserRole() {
-            return 'Manager'; // Exemple statique, implémentez selon votre logique
+            return 'Manager';
         }
     },
 }
