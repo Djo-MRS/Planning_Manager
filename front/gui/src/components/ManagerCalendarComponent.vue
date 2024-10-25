@@ -1,22 +1,24 @@
 <template>
+    <main class="profile-view">
+        <h1 class="profile-title">Management</h1>
     <div class="">
         <div class= "buttons">
-            <MDBBtn color="info" class="add-task-button" @click="openModal">Ajouter une tâche</MDBBtn>
-            <MDBBtn color="warning" class="add-task-button" @click="goToPage('/teams')">Planning des équipes</MDBBtn>
+            <MDBBtn color="info" class="add-task-button" id="dashboard-task" @click="openModal" >Ajouter une tâche</MDBBtn>
+            <MDBBtn color="warning" class="add-task-button" id ="dashboard-addteam" @click="goToPage('/teams')" >Planning des équipes</MDBBtn>
         </div>
         <ManagerModalComponent :showModal="isModalOpen" :currentDate="currentDate" :users="users" :from="add" @closeModal="closeModal" />
     </div>
-    <div class="calendar">
+    <div class="calendar" id="dashboard-display">
         <div class="header">
             <button @click="prevWeek" class="arrow-button">&larr;</button>
             <h2 class="week-title">{{ weekTitle }}</h2>
             <button @click="nextWeek" class="arrow-button">&rarr;</button>
         </div>
-        <div class="tab">
+        <div class="tab" id="calendar-team">
             <div class="tab-col-users">
                 <div class="users-col">
                     <!-- Dropdown with different teams attached to the Manager -->
-                    <select v-model="selectedTeam"  @change="selectTeam">
+                    <select v-model="selectedTeam"  @change="selectTeam" id="dashboard-team">
                         <option v-for="team in teamsManager" :key="team.id" :value="team.teamName">
                             {{ team.teamName }}
                         </option>
@@ -60,6 +62,7 @@
             </div>
         </div>
     </div>
+    </main>
 </template>
 
 <script>
@@ -259,7 +262,6 @@ export default {
   <style scoped>
   .calendar {
     display: flex;
-    flex-direction: column;
     align-items: center;
     margin: 0px;
     border: 1px solid #ddd;
@@ -267,7 +269,7 @@ export default {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     background-color: #fff;
-    height: 100%;
+ 
   }
   
   .header {
