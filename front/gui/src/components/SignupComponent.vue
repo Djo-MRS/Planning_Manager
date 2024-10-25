@@ -158,8 +158,19 @@ export default {
       }
     },
     async getUsers() {
+      const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
       try {
-        const response = await fetch("/api/users");
+        const response = await fetch("/api/users", 
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+              "X-XSRF-TOKEN": csrfToken
+            },
+            credentials: "include"
+          }
+        );
         this.users = (await response.json()).data;
       } catch (error) {
         this.message = "Error getting users: " + error.message;
