@@ -18,7 +18,9 @@ defmodule TimemanagerWeb.Router do
 
     post "/users/sign_in", AuthController, :login
     post "/users/sign_up", AuthController, :sign_up
-    get "/users", UserController, :index
+
+    get "/favicon.ico", BlockController, :block
+    get "/robots.txt", BlockController, :block
 
 
     # Routes protégées (après connexion)
@@ -26,11 +28,12 @@ defmodule TimemanagerWeb.Router do
 
     delete "/users/sign_out", AuthController, :sign_out
 
+    get "/users", UserController, :index
     get "/users/:id", UserController, :show
     post "/users", UserController, :create
     delete "/users/:id", UserController, :delete
     put "/users/:id", UserController, :update
-    # get "/users", UserController, :show_with_query
+    get "/users", UserController, :show_with_query
 
     get "/workingtime/:userID", WorkingtimeController, :index
     get "/workingtime/:userID/:id", WorkingtimeController, :show
@@ -40,9 +43,14 @@ defmodule TimemanagerWeb.Router do
 
     get "/clocks/:userID", ClockController, :get_by_user
     post "/clocks/:userID", ClockController, :create_for_user
+
+    resources "/teams", TeamController, only: [:index, :create, :show, :update, :delete] do
+      get "/users", UserController, :list_team_users
+      post "/add_user", TeamController, :add_user_to_team
+      delete "/remove_user", TeamController, :remove_user_from_team
+    end
   end
 
-  # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:timemanager, :dev_routes) do
     import Phoenix.LiveDashboard.Router
 

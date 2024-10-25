@@ -4,7 +4,7 @@
       <MDBBtn color="light" @click="goToPage('/home')">
         <i class="fas fa-home-alt icon"></i>
       </MDBBtn>
-      <MDBBtn v-if="isManagerOrAdmin" color="light" @click="goToPage('/manager')">
+      <MDBBtn  color="light" @click="goToPage('/dashboard')"> <!--v-if="isManagerOrAdmin"-->
         <i class="fas fa-users-cog icon"></i>
       </MDBBtn>
       <MDBBtn color="light" @click="goToPage('/request')">
@@ -47,15 +47,24 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: fixed;
-  bottom: 30px;
+  position:fixed;
+  bottom: 20px;
   width: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 .button-group {
-  border-radius: 30px !important; /* Modifier le border-radius du groupe de boutons */
+  border-radius: 20px !important; /* Modifier le border-radius du groupe de boutons */
 }
 .icon {
   font-size: 22px;
   padding-inline: 25px;
+}
+@media (max-width: 768px) {
+  .box-group {
+    bottom: 10px;
+    width: auto;
+  }
 }
 </style>

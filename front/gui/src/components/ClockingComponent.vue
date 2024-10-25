@@ -345,4 +345,15 @@ export default {
 .rounded-xl {
   border-radius: 1rem;
 }
+
+.fc {
+    z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+  .clocking {
+    max-height: 300px; 
+  }
+}
+
 </style>
