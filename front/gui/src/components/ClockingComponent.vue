@@ -350,4 +350,10 @@ export default {
     z-index: 1;
   }
 
+  @media (max-width: 768px) {
+  .clocking {
+    max-height: 300px; 
+  }
+}
+
 </style>

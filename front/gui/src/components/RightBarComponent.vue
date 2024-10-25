@@ -121,15 +121,15 @@ export default {
     justify-content: flex-end;
     align-items: center;
     position: relative;
-    font-size: 30px
 }
 @media (max-width: 768px) {
   .column {
     top: 10px; 
-    right: 10px; 
+    right: 0; 
     padding: 10px;
     z-index: 3000;
     height: auto;
   }
+
 }
 </style>

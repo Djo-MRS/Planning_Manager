@@ -43,10 +43,18 @@ export default {
 </script>
 
 <style scoped>
-  .profile-content {
-    display: flex;
-    gap: 20px;
-  }
+.profile-view {
+  display: flex;
+  flex-direction: column; 
+  height: 100vh; 
+  overflow: hidden; 
+}
+
+.profile-container {
+  flex: 1; 
+  display: flex;
+  align-items: flex-start; 
+}
   
   .profile-info {
     width: 35%;
@@ -64,6 +72,7 @@ export default {
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     font-size: 30px;
     align-self: flex-start;
+    margin: 0;
   }
   
   .profile-row {
@@ -94,6 +103,11 @@ export default {
     height: 45px; 
     border: 1px solid #8d8d8d;
     width: 400px;
+  }
+
+  .manager-calendar {
+  overflow-y: auto; 
+  flex: 1; 
   }
   
   @media (max-width: 991px) {

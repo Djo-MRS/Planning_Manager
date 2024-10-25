@@ -1,17 +1,14 @@
 <template>
   <div class="container-grid">
-    <div class="main-content">      
-      <ManagerComponent />
-    </div>
-  <section class="right-bar">
-    <RightBarComponent/>
-  </section>
-  <NavBarComponent />
-  </div>
-  <ManagerComponent  /> <!--:is-admin="isAdmin"-->
-  <div > <!--v-if="isManager"-->
-    <h2>Planning des employés</h2>
-    <CalendarComponent />
+      <div class="main-content">      
+          <ManagerComponent />
+          <h2>Planning des employés</h2>
+          <CalendarComponent />
+      </div>
+      <section class="right-bar">
+          <RightBarComponent/>
+      </section>
+      <NavBarComponent />
   </div>
 </template>
   
@@ -41,7 +38,20 @@ export default {
 </script>
   
 <style>
-  .main-content{
-      padding: 50px;
-  }
+.container-grid {
+  display: flex;
+  flex-direction: column; 
+  height: 100vh; 
+}
+
+.main-content {
+  flex: 1; 
+  margin: 0 20px; 
+}
+
+.right-bar {
+  width: 80px;
+}
+
+
 </style>

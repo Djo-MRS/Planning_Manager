@@ -47,13 +47,15 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: fixed;
+  position:fixed;
   bottom: 20px;
   width: 100%;
+  left: 0;
+  right: 0;
   z-index: 1000;
 }
 .button-group {
-  border-radius: 50px !important; /* Modifier le border-radius du groupe de boutons */
+  border-radius: 20px !important; /* Modifier le border-radius du groupe de boutons */
 }
 .icon {
   font-size: 22px;
@@ -61,7 +63,8 @@ export default {
 }
 @media (max-width: 768px) {
   .box-group {
-    bottom: 10px; /* Ajuste la position si nécessaire */
+    bottom: 10px;
+    width: auto;
   }
 }
 </style>

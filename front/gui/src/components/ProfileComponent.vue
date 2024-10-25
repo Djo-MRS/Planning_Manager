@@ -33,7 +33,7 @@
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/6aba804eaa1d8545a85a24c33aef6da56670f1863f755108481ef2d0a86bd07a?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Manager icon" />
               </div>
-              <MDBInput type="text" label="Manager" v-model="user.manager"  />
+              <MDBInput label="Manager" type="text" v-model="user.manager"  />
             </div>
           </div>
         </section>

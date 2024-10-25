@@ -267,6 +267,7 @@ export default {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     background-color: #fff;
+    height: 100%;
   }
   
   .header {
