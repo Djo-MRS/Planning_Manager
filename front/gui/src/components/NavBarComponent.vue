@@ -1,13 +1,13 @@
 <template>
   <div class="box-group">
     <MDBBtnGroup class="button-group rounded-pill">
-      <MDBBtn color="light" @click="goToPage('/home')">
+      <MDBBtn color="light" @click="goToPage('/home')" id="navbar-home">
         <i class="fas fa-home-alt icon"></i>
       </MDBBtn>
-      <MDBBtn  color="light" @click="goToPage('/dashboard')" v-if="isManagerOrAdmin">
+      <MDBBtn  color="light" @click="goToPage('/dashboard')" v-if="isManagerOrAdmin" id="navbar-dashboard">
         <i class="fas fa-users-cog icon"></i>
       </MDBBtn>
-      <MDBBtn color="light" @click="goToPage('/request')">
+      <MDBBtn color="light" @click="goToPage('/request')" id="navbar-request">
         <i class="fas fa-envelope icon"></i>
       </MDBBtn>
     </MDBBtnGroup>

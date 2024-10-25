@@ -9,11 +9,11 @@
         >{{ user.firstname + " " + user.lastname }}</label
       >
     </div>
-    <div v-if="user.id" class="mt-4">
-      <h3 class="text-xl font-bold text-center text-gray-700 mb-4">
+    <div v-if="user.id" class="mt-4" >
+      <h3 class="text-xl font-bold text-center text-gray-700 mb-4" id="clocking-date">
         {{ currentDateTime }}
       </h3>
-      <div class="flex justify-center mb-4">
+      <div class="flex justify-center mb-4" id="clocking-button">
         <button v-if="!status" @click="clockInUser" class="btn btn-primary">
           Badger en entrée
         </button>
@@ -21,7 +21,7 @@
           Badger en sortie
         </button>
       </div>
-      <div class="flex justify-between px-4">
+      <div class="flex justify-between px-4" id="clocking-display">
         <p class="text-md font-medium text-gray-700">
           Commencé à : <span>{{ formattedStartTime || "--" }}</span>
         </p>

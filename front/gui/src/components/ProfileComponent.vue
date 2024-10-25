@@ -3,7 +3,7 @@
     <div class="profile-container">
       <div class="profile-content">
         <section class="profile-info">
-          <div class="profile-details">
+          <div class="profile-details" id="profil-display">
             <h1 class="profile-title">Profil</h1>
             <div class="profile-row">
               <div class="profile-item">

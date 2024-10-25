@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FullCalendar ref="fullCalendar" :options="calendarOptions" />
+    <FullCalendar ref="fullCalendar" :options="calendarOptions" id="calendar"/>
 
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">

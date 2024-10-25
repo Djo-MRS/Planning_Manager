@@ -1,10 +1,10 @@
 <template>
     <div class="column">
         <div class="top-column">
-            <MDBBtn color="light" floating class="profile-button" @click="goToPage('/profile')">
+            <MDBBtn color="light" floating class="profile-button" @click="goToPage('/profile')" id="rightbar-profile">
                 <MDBIcon icon="user" style="font-size: 25px;"></MDBIcon>
             </MDBBtn>
-            <MDBBtn color="light" floating class="notif-button" @click="goToPage('/notif')">
+            <MDBBtn color="light" floating class="notif-button" @click="goToPage('/notif')" id="rightbar-notif">
                 <MDBIcon icon="bell" style="font-size: 18px;"></MDBIcon>
             </MDBBtn>
             <MDBBtn color="light" floating class="notif-button" @click="goToSignup" v-if="isAdmin">
@@ -12,11 +12,11 @@
             </MDBBtn> 
         </div>
         <div class="center-button">
-            <MDBBtn color="light" floating class="notif-button" @click="triggerAlert">
+            <MDBBtn color="light" floating class="notif-button" @click="triggerAlert" id="rightbar-alert">
                 <i class="fab fa-earlybirds" style="font-size: 40px;"></i>
             </MDBBtn>
         </div>
-        <MDBBtn color="light" floating class="notif-button" @click="goToPage('/help')">
+        <MDBBtn color="light" floating class="notif-button" @click="$emit('tutoClicked')" id="rightbar-tuto">
             <MDBIcon icon="question" style="font-size: 18px;"></MDBIcon>
         </MDBBtn>
         <MDBBtn color="light" floating class="notif-button" @click="goToLogout">
