@@ -1,20 +1,29 @@
 <template>
-    <div>
-        <button class="home-button" @click="goToSignin">
-            <i class="fas fa-home icon">
-            </i>
-        </button>
-        <SignupComponent />
+    <div class="container-grid">
+        <div class="main-content">      
+            <SignupComponent />
+        </div>
+        <section class="right-bar">
+            <RightBarComponent/>
+        </section>
+        <AlerteBatmanComponent ref="alerte" />
+        <NavBarComponent />
     </div>
 </template>
 
 <script>
+import AlerteBatmanComponent from '@/components/AlerteBatmanComponent.vue';
+import NavBarComponent from '@/components/NavBarComponent.vue';
+import RightBarComponent from '@/components/RightBarComponent.vue';
 import SignupComponent from '@/components/SignupComponent.vue';
 
 export default {
     name: 'SignupView',
     components: {
-        SignupComponent
+        SignupComponent,
+        RightBarComponent,
+        AlerteBatmanComponent,
+        NavBarComponent
     },
     methods: {
       goToSignin() {
