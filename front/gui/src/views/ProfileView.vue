@@ -1,6 +1,6 @@
 <template>
-  <div class="contnr-grid">
-      <div >      
+  <div class="container-grid">
+      <div class="main-content">      
           <ProfileComponent />
       </div>
       <section class="right-bar">

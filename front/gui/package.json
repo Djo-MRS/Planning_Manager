@@ -11,14 +11,18 @@
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/resource-timeline": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@fullcalendar/vue3": "^6.1.15",
+    "bootstrap-vue": "^2.23.1",
     "chart.js": "^4.4.4",
     "core-js": "^3.8.3",
+    "element-plus": "^2.8.6",
     "mdb-vue-ui-kit": "^6.0.0",
     "vue": "^3.2.13",
     "vue-chartjs": "^5.3.1",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "vue-scheduler": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

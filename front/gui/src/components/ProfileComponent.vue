@@ -148,10 +148,6 @@ export default {
     width: 40px;
   }
   
-  .profile-label {
-    margin: auto 0;
-  }
-  
   .form-input {
     border-radius: 10px;
     background-color: #fff;
