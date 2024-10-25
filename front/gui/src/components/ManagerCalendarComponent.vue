@@ -1,6 +1,9 @@
 <template>
     <div class="">
-        <MDBBtn color="info" class="add-task-button" @click="openModal">Ajouter une tâche</MDBBtn>
+        <div class= "buttons">
+            <MDBBtn color="info" class="add-task-button" @click="openModal">Ajouter une tâche</MDBBtn>
+            <MDBBtn color="warning" class="add-task-button" @click="goToPage('/teams')">Planning des équipes</MDBBtn>
+        </div>
         <ManagerModalComponent :showModal="isModalOpen" :currentDate="currentDate" :users="users" :from="add" @closeModal="closeModal" />
     </div>
     <div class="calendar">
@@ -185,6 +188,10 @@ export default {
                 month: 'long'     // Affiche le mois (ex: "octobre")
             });
         },
+
+        goToPage(path) {
+            this.$router.push(path);
+        },
         
         async fetchTeamsByManager() {
             console.log('okok')
@@ -260,6 +267,7 @@ export default {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     background-color: #fff;
+    height: 100%;
   }
   
   .header {

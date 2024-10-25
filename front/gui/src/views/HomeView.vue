@@ -27,3 +27,21 @@ export default {
     }
 };
 </script>
+
+<style>
+.container-grid {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.main-content {
+    flex: 1; 
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.right-bar {
+    width: 80px;
+}
+</style>
