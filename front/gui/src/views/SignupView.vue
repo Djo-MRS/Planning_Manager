@@ -50,7 +50,9 @@ export default {
 </script>
 
 <style>
-    
+    .container-grid{
+        height: 100%;
+    }
 
     .home-button {
         position: fixed;
