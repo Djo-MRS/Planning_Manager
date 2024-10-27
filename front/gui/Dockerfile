@@ -7,8 +7,8 @@ WORKDIR /app
 # Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
 
-# Installer les dépendances
-RUN npm install
+# Installer les dépendances, incluant driver.js
+RUN npm install driver.js && npm install
 
 # Copier le reste des fichiers de l'application
 COPY . .

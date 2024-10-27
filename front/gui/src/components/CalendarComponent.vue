@@ -62,7 +62,7 @@ export default {
 
       try {
         const userId = JSON.parse(localStorage.getItem('user')).id;
-        const response = await fetch('/api/workingtime/'+ userId,
+        const response = await fetch('http://localhost:4000/api/workingtime/'+ userId,
           {
             method: 'GET',
             headers: {
@@ -113,7 +113,7 @@ export default {
       const token = localStorage.getItem("token");
 
       try {
-        const response = await fetch(`/api/workingtime/${this.editedEvent.id}`,
+        const response = await fetch(`http://localhost:4000/api/workingtime/${this.editedEvent.id}`,
           {
             method: 'PUT',
             headers: {
