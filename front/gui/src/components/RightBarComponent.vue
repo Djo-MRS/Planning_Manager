@@ -38,59 +38,45 @@ export default {
         MDBIcon,
 
     },
-    data() {
-        return {
-            alertVisible: false,
-            isAdmin: false
-        };
-    },
     mounted() {
         this.isAdmin = JSON.parse(localStorage.getItem('user')).role === 'admin';
+        this.fetchAlerts(); // Récupérer les alertes au chargement
+        setInterval(this.fetchAlerts, 5000); // Vérifier toutes les 5 secondes
     },
     methods: {
+        async fetchAlerts() {
+    const response = await fetch('/api/alerts');
+    const data = await response.json();
+        if (data.message) {
+            this.showAlert(data.message);
+        }
+    },
+        showAlert(message) {
+            this.alertMessage = message;
+            this.alertVisible = true;
+            setTimeout(() => {
+                this.alertVisible = false;
+            }, 3000);
+        },
+        async triggerAlert() {
+            const message = "BATMAN est en mission !!!";
+            await fetch('/api/alerts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message })
+            });
+        },
         goToSignup() {
             this.$router.push('/sign_up');
         },
         goToPage(path) {
             this.$router.push(path);
         },
-        triggerAlert() {
-            this.$refs.alerte.showAlert();
-        },
         goToLogout() {
             localStorage.clear();
             this.$router.push('/sign_in');
-        },
-        async sendNotification() {
-            const userRole = this.getUserRole();
-            if (userRole === 'Manager' || userRole === 'Admin') {
-                try {
-                    const response = await fetch('/api/notifications', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            notification: {
-                                title: "Mission Alert",
-                                message: "Batman est en mission !!!",
-                                date: new Date().toISOString(),
-                                sender: "System",
-                                receiver: "User"
-                            }
-                        })
-                    });
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de l\'ajout de la notification');
-                    }
-                    const data = await response.json();
-                    console.log(data);
-                } catch (error) {
-                    console.error(error);
-                }
-            } else {
-                alert("Vous n'avez pas les autorisations nécessaires.");
-            }
         },
         getUserRole() {
             return JSON.parse(localStorage.getItem('user')).role;
