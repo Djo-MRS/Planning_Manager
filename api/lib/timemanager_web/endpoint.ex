@@ -25,10 +25,13 @@ defmodule TimemanagerWeb.Endpoint do
 
   # CORS configuration with specific origin
   plug CORSPlug,
-    origin: ["http://localhost:8080"],  # Spécifie l'origine de ton frontend
-    credentials: true,                  # Permet l'envoi des credentials (cookies, etc.)
-    max_age: 8600,                      # Cache les règles CORS pendant 8600 secondes
-    methods: ["GET", "POST", "PUT", "DELETE"]
+  origin: ["http://localhost:8080"],
+  credentials: true,
+  max_age: 8600,
+  headers: ["Authorization", "Content-Type", "X-XSRF-TOKEN", "X-CSRF-Token"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+
+
 
   plug Phoenix.LiveDashboard.RequestLogger,
     param_key: "request_logger",

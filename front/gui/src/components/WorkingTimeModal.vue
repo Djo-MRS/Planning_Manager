@@ -134,29 +134,45 @@
   }
   
   const clearAllData = async () => {
-    try {
-      await fetch(
-        `http://localhost:4000/api/workingtime/${props.current_user.id}/${props.period.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    } catch (error) {
-      console.log("Error", error);
-    }
-  };
+  const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
+  const token = localStorage.getItem("token");
+
+  // Affiche les valeurs des propriétés dans la console
+  console.log("Current User ID:", props.current_user?.id);
+  console.log("Period ID:", props.period?.id);
+
+  try {
+    await fetch(
+      `http://localhost:4000/api/workingtime/${props.current_user.id}/${props.period.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "X-CSRF-Token": csrfToken,
+        },
+        credentials: "include",
+      }
+    );
+  } catch (error) {
+    console.log("Error", error);
+  }
+};
+
 
   const savingWorkingTime = async () => {
-    console.log(props.period);
+    console.log("Period ID:", props.period?.id);
+    const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
+    const token = localStorage.getItem("token");
     try {
       await fetch(`http://localhost:4000/api/workingtime/${props.period.id}`, {
         method: method,
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "X-CSRF-Token": csrfToken,
         },
+        credentials: "include",
         body: JSON.stringify({
           workingtime: {
             start: new Date(start.value),

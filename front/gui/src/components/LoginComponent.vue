@@ -32,11 +32,12 @@ export default {
   methods: {
     async loginUser() {
       try {
-        const response = await fetch("/api/users/sign_in", {
-          method: "POST",
+        const response = await fetch('http://localhost:4000/api/users/sign_in', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
+          credentials: "include",
           body: JSON.stringify({
             email: this.email,
             password: this.password,
