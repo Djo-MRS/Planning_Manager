@@ -1,53 +1,58 @@
 <template>
     <main class="profile-view">
         <h1 class="profile-title">Management</h1>
-        <div class="">
-            <div class="buttons">
-                <MDBBtn color="info" class="add-task-button" id="dashboard-task" @click="openModal">Ajouter une tâche</MDBBtn>
-                <MDBBtn color="warning" class="add-task-button" id="dashboard-addteam" @click="goToPage('/teams')">Planning des équipes</MDBBtn>
-            </div>
-            <ManagerModalComponent :showModal="isModalOpen" :currentDate="currentDate" :users="users" :from="add" @closeModal="closeModal" />
+    <div class="">
+        <div class= "buttons">
+            <MDBBtn color="info" class="add-task-button" id="dashboard-task" @click="openModal" >Ajouter une tâche</MDBBtn>
+            <MDBBtn color="warning" class="add-task-button" id ="dashboard-addteam" @click="goToPage('/teams')" >Planning des équipes</MDBBtn>
         </div>
+        <ManagerModalComponent :showModal="isModalOpen" :currentDate="currentDate" :users="users" :from="add" @closeModal="closeModal" />
+    </div>
+    <div class="calendar" id="dashboard-display">
         <div class="header">
             <button @click="prevWeek" class="arrow-button">&larr;</button>
             <h2 class="week-title">{{ weekTitle }}</h2>
             <button @click="nextWeek" class="arrow-button">&rarr;</button>
         </div>
-            <div class="calendar" id="calendar-team">
-                <div class="tab-col-users">
-                    <div class="users-col">
-                        <select v-model="selectedTeam" @change="selectTeam" id="dashboard-team">
-                            <option v-for="team in teamsManager" :key="team.id" :value="team.teamName">
-                                {{ team.teamName }}
-                            </option>
-                        </select>
-                        <div class="users-cell" v-for="user in users" :key="user.firstname">
-                            <div class="image-profile"></div>
-                            {{ user.firstname }}
+        <div class="tab" id="calendar-team">
+            <div class="tab-col-users">
+                <div class="users-col">
+                    <!-- Dropdown with different teams attached to the Manager -->
+                    <select v-model="selectedTeam"  @change="selectTeam" id="dashboard-team">
+                        <option v-for="team in teamsManager" :key="team.id" :value="team.teamName">
+                            {{ team.teamName }}
+                        </option>
+                    </select>
+                    <div class="users-cell" v-for="user in users" :key="user.firstname">
+                        <div class="image-profile">
+                            
                         </div>
+                        {{ user.firstname }}
                     </div>
                 </div>
-                <div class="tab-col-week">
-                    <div class="days">
-                        <div class="day-cell" v-for="(day, index) in weekDays" :key="index">
-                            {{ formatDate(day) }}
-                        </div>
+            </div>
+            <div class="tab-col-week">
+                <div class="days">
+                    <div class="day-cell" v-for="(day, index) in weekDays" :key="index">
+                        {{ formatDate(day) }} <!-- Utilisez la fonction de formatage ici -->
                     </div>
-                    <div class="calendar-table">
-                        <div class="users">
-                            <div v-for="(user, userIndex) in users" :key="userIndex" class="user-row">
-                                <div class="event-cells">
-                                    <div v-for="(day, dayIndex) in weekDays" :key="dayIndex" class="event-cell">
-                                        <div class="event-part upper-part">
-                                            <TaskItemComponent 
-                                                v-for="task in getTasksForDay(day, user)" 
-                                                :key="task.start" 
-                                                :task="task" 
-                                                :type="wt"
-                                                :current_user="user"
-                                            />
-                                        </div>
-                                        <div class="event-part lower-part"></div>
+                </div>
+                <div class="calendar-table">
+                    <div class="users">
+                        <div v-for="(user, userIndex) in users" :key="userIndex" class="user-row">
+                            <div class="event-cells">
+                                <div v-for="(day, dayIndex) in weekDays" :key="dayIndex" class="event-cell">
+                                    <div class="event-part upper-part">
+                                        <TaskItemComponent 
+                                        v-for="task in getTasksForDay(day, user)" 
+                                        :key="task.start" 
+                                        :task="task" 
+                                        :type="wt"
+                                        :current_user="user"
+                                       />
+                                        
+                                    </div>
+                                    <div class="event-part lower-part">
                                     </div>
                                 </div>
                             </div>
@@ -55,6 +60,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
     </main>
 </template>
 
@@ -129,7 +136,7 @@ export default {
             for (let i = 0; i < 7; i++) {
                 const day = new Date(startOfWeek);
                 day.setDate(day.getDate() + i);
-                days.push(day);  
+                days.push(day);  // Ajoutez l'objet Date directement au lieu de le convertir en chaîne
             }
             return days;
         }
@@ -156,7 +163,8 @@ export default {
         },
        
         selectTeam() {
-            this.fetchUsersByTeam(this.selectedTeam.id);
+            const team = this.teamsManager.find(t => t.teamName === this.selectedTeam);
+            if (team) this.fetchUsersByTeam(team.id);
         },
         addTasks(task){
             this.tasks.push(task);
@@ -179,9 +187,9 @@ export default {
         formatDate(date) {
         // Formater la date en français
             return date.toLocaleDateString('fr-FR', {
-                weekday: 'long',  // Affiche le jour de la semaine (ex: "mercredi")
-                day: 'numeric',   // Affiche le jour du mois (ex: "23")
-                month: 'long'     // Affiche le mois (ex: "octobre")
+                weekday: 'long',  
+                day: 'numeric',   
+                month: 'long'    
             });
         },
 
@@ -189,11 +197,11 @@ export default {
             this.$router.push(path);
         },
         
-        async fetchTeamsByManager() {
-            console.log('okok')
+        async fetchTeamsByManager(userId) {
+            console.log('fetchByManager', userId);
             try {
                 const response = await fetch(
-                    `http://localhost:4000/api/teams/manager`,
+                    `http://localhost:4000/api/teams/manager/${userId}`,
                     {
                         method: "GET",
                         headers: {
@@ -208,6 +216,7 @@ export default {
                 }
 
                 const result = await response.json();
+                console.log('Resultat teams manager', result)
                 this.teamUsers = result.data;
 
             } catch (error) {
@@ -216,7 +225,7 @@ export default {
             }
         },
         async fetchUsersByTeam(teamId) {
-            console.log('okokkk')
+            console.log('fetchUsersByTeam', teamId)
             try {
                 const response = await fetch(
                     `http://localhost:4000/api/teams/users?teamId=${teamId}`,
@@ -234,6 +243,7 @@ export default {
                 }
 
                 const result = await response.json();
+                console.log('Resultat users team', result)
                 this.users = result.data;
 
             } catch (error) {
@@ -246,6 +256,7 @@ export default {
     mounted() {
         console.log(this.teamsManager[0].teamName)
         this.selected = this.teamsManager[0].teamName;
+        this.fetchTeamsByManager(26); //récupérer le currrent_user id
      
     }
 };
@@ -253,161 +264,145 @@ export default {
 </script>
   
   <style scoped>
-.calendar {
-    display: flex;
+  .calendar {
+    display: flex; 
+    flex-direction: column;
     align-items: center;
-    justify-content: center; 
     margin: 0px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     background-color: #fff;
-    max-height: 450px;
-    overflow: auto;
-    flex-wrap: nowrap; /* Permet aux éléments de passer à la ligne si nécessaire */
-}
-
-.header {
+ 
+  }
+  
+  .header {
     display: flex;
     align-items: center;
-    justify-content: center; 
+    justify-content: space-between;
     width: 100%;
     margin-bottom: 10px;
-}
-
-.arrow-button {
+  }
+  
+  .arrow-button {
     background: none;
     border: none;
     font-size: 24px; 
     cursor: pointer;
     color: #007BFF;
     transition: color 0.3s;
-    margin: 0 5px; 
-}
-
-.arrow-button:hover {
+  }
+  
+  .arrow-button:hover {
     color: #0056b3; 
-}
-
-.week-title { 
+  }
+  
+  .week-title { 
     font-size: 20px; 
     font-weight: bold;
     color: #333; 
-}
-
-.calendar-table {
+  }
+  
+  .calendar-table {
     display: flex;
     flex-direction: row;
     background-color: #8d8d8d;
-    justify-content: center; 
-    flex-wrap: wrap; /* Permet aux colonnes de se réorganiser sur petits écrans */
-}
-
-.days {
+  }
+  
+  .days {
     display: flex;
-    flex-direction: row; 
-    flex-wrap: wrap; /* Permet aux jours de se réorganiser */
-}
-
-.day-cell {
+    flex-direction: row; /* Les jours sont en colonne */
+  }
+  
+  .day-cell {
     text-align: center;
-    width: 100px; /* Peut être ajusté pour les écrans plus petits */
+    width: 110px;
     background-color: #f9f9f9; 
     padding: 10px;
     margin-left: 1px;
-}
-
-.users {
+  }
+  
+  .users {
     display: flex;
-    flex-direction: column; 
-    width: 100%;
-}
-
-.user-row {
+    flex-direction: column; /* Les utilisateurs sont en colonne */
+  }
+  
+  .user-row {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap; /* Permet aux utilisateurs de se réorganiser */
-}
-
-.event-cells {
+  }
+  
+  .user-name {
+    margin-right: 10px; /* Espace entre le nom et les cellules d'événements */
+  }
+  
+  .event-cells {
     display: flex;
-    flex-wrap: wrap; /* Permet aux événements de se réorganiser */
-}
-
-.event-cell {
+  }
+  
+  .event-cell {
     display: flex;
-    flex-direction: column; 
-    width: 100px; /* Ajuste cette largeur pour plus de flexibilité */
-    height: 100px; 
-    border-top: 1px solid #ccc; 
-    margin-left: 1px; 
-    background-color: #e9ecef; 
-}
+    flex-direction: column; /* Aligne les parties verticalement */
+    width: 110px; /* Largeur de la cellule d'événement */
+    height: 100px; /* Hauteur de la cellule d'événement */
+    border-top: 1px solid #ccc; /* Bordure de chaque cellule d'événement */
+    margin-left: 1px; /* Espace entre les cellules d'événements */
+    background-color: #e9ecef; /* Couleur de fond par défaut */
+    }
 
-.event-part {
-    flex: 1; 
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    cursor: pointer; 
-}
+    .event-part {
+        flex: 1; /* Chaque partie prendra une hauteur égale */
+        display: flex;
+        justify-content: center; /* Centrer le contenu horizontalement */
+        align-items: center; /* Centrer le contenu verticalement */
+        cursor: pointer; /* Indique que c'est cliquable */
+    }
 
-.title-cell {
-    padding: 10px;
-    width: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    .upper-part {
+        background-color: #ffffff; /* Couleur de la partie supérieure */
+    }
 
-.users-cell {
+    .lower-part {
+        background-color: #ffffff; /* Couleur de la partie inférieure */
+    }
+
+  .title-cell{
+      padding: 10px;
+      width: 110px;
+    
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  .users-cell{
     height: 100px;
-    width: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.image-profile {
-    border: #8d8d8d solid 1px;
-    border-radius: 50px;
-    height: 70px;
-    width: 70px;
-}
-
-.add-task-button {
-    margin: 10px;
-}
-
-select {
-    height: 72px;
-    width: 100%;
-    border: 1px #8D8D8D solid;
-}
-
-/* Media Queries */
-@media (max-width: 768px) {
-    .day-cell {
-        width: 80px; 
+      width: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
-
-    .event-cell {
-        width: 80px; 
-        height: auto; 
+    .tab{
+        display: flex;
+        max-height: 500px;
+        overflow: auto;
     }
-
-    .week-title {
-        font-size: 18px; 
+    
+    .image-profile{
+      border: #8d8d8d solid 1px;
+      border-radius: 50px;
+        height: 70px;
+        width: 70px;
     }
-
-    .arrow-button {
-        font-size: 20px; 
+    .add-task-button{
+        margin: 10px;
     }
-
-    .users-cell {
-        width: 80px; 
+    
+    select{
+        height: 72px;
+        width: 100%;
+        border: 1px #8D8D8D solid;
     }
-}
-</style>
+  </style>
+  
