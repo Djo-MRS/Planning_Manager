@@ -1,6 +1,6 @@
 <template>
-  <MDBRow>
-    <MDBCol id="signup-add">
+  <MDBRow class="responsive-row">
+    <MDBCol class="responsive-col" id="signup-add">
       <h2>Create a user</h2>
         <form @submit.prevent="createUser" class="signup-form">
         <input
@@ -50,7 +50,7 @@
 
     </MDBCol>
 
-    <MDBCol>
+    <MDBCol class="responsive-col">
       <h2>Delete a user</h2>
         <form @submit.prevent="deleteUser" class="signup-form">
       <select id="signup-modify"
@@ -207,14 +207,6 @@ export default {
 </script>
 
 <style scoped>
-.signup-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh; 
-  background-color: #fff; 
-}
 
 .logo {
   max-width: 400px;
@@ -224,7 +216,7 @@ export default {
 .signup-form {
   display: flex;
   flex-direction: column;
-  width: 400px; 
+  width: 100%; 
 }
 
 .input-field {
@@ -258,6 +250,21 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
-</style>
 
-  
+@media (max-width: 768px) {
+  .responsive-row {
+    flex-direction: column; 
+    align-items: center; 
+  }
+
+  .responsive-col {
+    width: 80%; 
+    height: 90vh; 
+    margin-bottom: 20px; 
+  }
+
+  .signup-form {
+    width: 100%; 
+}
+}
+</style>

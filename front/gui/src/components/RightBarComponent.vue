@@ -12,7 +12,7 @@
             </MDBBtn> 
         </div>
         <div class="center-button">
-            <MDBBtn color="light" floating class="notif-button" @click="triggerAlertandSendNotification" id="rightbar-alert">
+            <MDBBtn color="light" floating class="notif-button" @click="triggerAlert" id="rightbar-alert">
                 <i class="fab fa-earlybirds" style="font-size: 40px;"></i>
             </MDBBtn>
         </div>
@@ -53,10 +53,6 @@ export default {
         },
         goToPage(path) {
             this.$router.push(path);
-        },
-        triggerAlertAndSendNotification() {
-            this.triggerAlert();
-            this.sendNotification();
         },
         triggerAlert() {
             this.$refs.alerte.showAlert();
