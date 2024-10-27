@@ -56,7 +56,7 @@ const routes = [
     component: SignupView,
   },
   {
-    path: '/chartManager/:userID',
+    path: '/chartManager',
     name: 'ChartManager',
     component: ChartManager
   },

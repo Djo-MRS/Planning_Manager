@@ -91,10 +91,10 @@ export default defineComponent({
     const getUserData = async () => {
       const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
       const token = localStorage.getItem("token");
+      const userID = JSON.parse(localStorage.getItem("user")).id;
 
       try {
-        // Récupérer les informations de l'utilisateur
-        const responseUser = await fetch(`http://localhost:4000/api/users/1`, {
+        const responseUser = await fetch(`http://localhost:4000/api/users/` + userID, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -107,7 +107,6 @@ export default defineComponent({
         const user = resultUser.data;
         username.value = `${user.firstname} ${user.lastname}`;
 
-        // Récupérer les heures travaillées
         const responseWorkingtime = await fetch(
           `http://localhost:4000/api/workingtime/${user.id}`,
           {
@@ -123,7 +122,6 @@ export default defineComponent({
         const resultWorkingtime = await responseWorkingtime.json();
         const workingtimes = resultWorkingtime.data;
 
-        // 1. Calcul des heures journalières pour le graphique en barres
         const dailyHours = workingtimes.reduce((acc, entry) => {
           const day = new Date(entry.start).toLocaleDateString("fr-FR", { weekday: "long" });
           const hours = (new Date(entry.end) - new Date(entry.start)) / 3600000;
@@ -141,7 +139,6 @@ export default defineComponent({
           ],
         };
 
-        // 2. Progression Hebdomadaire
         const weeklyProgression = [];
         const weeklyHours = {};
 
@@ -166,7 +163,6 @@ export default defineComponent({
           ],
         };
 
-        // 3. Répartition par Projet ou Tâche pour le graphique en secteurs
         const projectDistribution = {};
         workingtimes.forEach(entry => {
           const project = entry.project || "Projet Inconnu";
