@@ -30,14 +30,16 @@
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/4bd16cbc188756c619de2382066dab461ca564bcfc1128a74560cc8c9ffc8db0?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Service icon" />
               </div>
-              <select v-model="user.role">
-                <option value="" disabled>Choisir un rôle</option>
-                <option v-for="role in roles" :key="role.id" :value="role.id">
-                  {{ role.name }}
-                </option>
-              </select>
+              <div class="role-select">
+                <label for="role">Role</label>
+                <select v-model="user.role" id="role">
+                  <option value="" disabled>Choisir un rôle</option>
+                  <option v-for="role in roles" :key="role.id" :value="role.id">
+                    {{ role.name }}
+                  </option>
+                </select>
+              </div>
             </div>
-
             <div class="profile-row">
               <div class="profile-item">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/6aba804eaa1d8545a85a24c33aef6da56670f1863f755108481ef2d0a86bd07a?placeholderIfAbsent=true&apiKey=1dd5640dff5747c98816899eb6d392e1" class="profile-icon" alt="Manager icon" />

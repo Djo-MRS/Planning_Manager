@@ -25,11 +25,6 @@ const routes = [
     name: 'ProfileView',
     component: ProfileView,
   },
-  // {
-  //   path: '/help',
-  //   name: 'HelpView',
-  //   component: HelpView,
-  // },
   {
     path: '/dashboard',
     name: 'ManagerDashboardView',

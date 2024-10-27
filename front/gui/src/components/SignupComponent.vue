@@ -1,6 +1,6 @@
 <template>
   <MDBRow>
-    <MDBCol>
+    <MDBCol id="signup-add">
       <h2>Create a user</h2>
         <form @submit.prevent="createUser" class="signup-form">
         <input
@@ -53,7 +53,7 @@
     <MDBCol>
       <h2>Delete a user</h2>
         <form @submit.prevent="deleteUser" class="signup-form">
-      <select
+      <select id="signup-modify"
         v-model="selectedUserId"
         @change="selectUser"
         class="
@@ -68,7 +68,7 @@
           {{ user.firstname }} {{ user.lastname }}
         </option>
       </select>
-      <button type="submit" class="delete-button">Delete</button>
+      <button type="submit" class="delete-button" id="signup-delete">Delete</button>
     </form>
 
     <div v-if="messageDeleted" class="mt-3">{{ messageDeleted }}  </div>

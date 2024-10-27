@@ -1,58 +1,53 @@
 <template>
     <main class="profile-view">
         <h1 class="profile-title">Management</h1>
-    <div class="">
-        <div class= "buttons">
-            <MDBBtn color="info" class="add-task-button" id="dashboard-task" @click="openModal" >Ajouter une tâche</MDBBtn>
-            <MDBBtn color="warning" class="add-task-button" id ="dashboard-addteam" @click="goToPage('/teams')" >Planning des équipes</MDBBtn>
+        <div class="">
+            <div class="buttons">
+                <MDBBtn color="info" class="add-task-button" id="dashboard-task" @click="openModal">Ajouter une tâche</MDBBtn>
+                <MDBBtn color="warning" class="add-task-button" id="dashboard-addteam" @click="goToPage('/teams')">Planning des équipes</MDBBtn>
+            </div>
+            <ManagerModalComponent :showModal="isModalOpen" :currentDate="currentDate" :users="users" :from="add" @closeModal="closeModal" />
         </div>
-        <ManagerModalComponent :showModal="isModalOpen" :currentDate="currentDate" :users="users" :from="add" @closeModal="closeModal" />
-    </div>
-    <div class="calendar" id="dashboard-display">
         <div class="header">
             <button @click="prevWeek" class="arrow-button">&larr;</button>
             <h2 class="week-title">{{ weekTitle }}</h2>
             <button @click="nextWeek" class="arrow-button">&rarr;</button>
         </div>
-        <div class="tab" id="calendar-team">
-            <div class="tab-col-users">
-                <div class="users-col">
-                    <!-- Dropdown with different teams attached to the Manager -->
-                    <select v-model="selectedTeam"  @change="selectTeam" id="dashboard-team">
-                        <option v-for="team in teamsManager" :key="team.id" :value="team.teamName">
-                            {{ team.teamName }}
-                        </option>
-                    </select>
-                    <div class="users-cell" v-for="user in users" :key="user.firstname">
-                        <div class="image-profile">
-                            
+            <div class="calendar" id="calendar-team">
+                <div class="tab-col-users">
+                    <div class="users-col">
+                        <select v-model="selectedTeam" @change="selectTeam" id="dashboard-team">
+                            <option v-for="team in teamsManager" :key="team.id" :value="team.teamName">
+                                {{ team.teamName }}
+                            </option>
+                        </select>
+                        <div class="users-cell" v-for="user in users" :key="user.firstname">
+                            <div class="image-profile"></div>
+                            {{ user.firstname }}
                         </div>
-                        {{ user.firstname }}
                     </div>
                 </div>
-            </div>
-            <div class="tab-col-week">
-                <div class="days">
-                    <div class="day-cell" v-for="(day, index) in weekDays" :key="index">
-                        {{ formatDate(day) }} <!-- Utilisez la fonction de formatage ici -->
+                <div class="tab-col-week">
+                    <div class="days">
+                        <div class="day-cell" v-for="(day, index) in weekDays" :key="index">
+                            {{ formatDate(day) }}
+                        </div>
                     </div>
-                </div>
-                <div class="calendar-table">
-                    <div class="users">
-                        <div v-for="(user, userIndex) in users" :key="userIndex" class="user-row">
-                            <div class="event-cells">
-                                <div v-for="(day, dayIndex) in weekDays" :key="dayIndex" class="event-cell">
-                                    <div class="event-part upper-part">
-                                        <TaskItemComponent 
-                                        v-for="task in getTasksForDay(day, user)" 
-                                        :key="task.start" 
-                                        :task="task" 
-                                        :type="wt"
-                                        :current_user="user"
-                                       />
-                                        
-                                    </div>
-                                    <div class="event-part lower-part">
+                    <div class="calendar-table">
+                        <div class="users">
+                            <div v-for="(user, userIndex) in users" :key="userIndex" class="user-row">
+                                <div class="event-cells">
+                                    <div v-for="(day, dayIndex) in weekDays" :key="dayIndex" class="event-cell">
+                                        <div class="event-part upper-part">
+                                            <TaskItemComponent 
+                                                v-for="task in getTasksForDay(day, user)" 
+                                                :key="task.start" 
+                                                :task="task" 
+                                                :type="wt"
+                                                :current_user="user"
+                                            />
+                                        </div>
+                                        <div class="event-part lower-part"></div>
                                     </div>
                                 </div>
                             </div>
@@ -60,8 +55,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
     </main>
 </template>
 
@@ -136,7 +129,7 @@ export default {
             for (let i = 0; i < 7; i++) {
                 const day = new Date(startOfWeek);
                 day.setDate(day.getDate() + i);
-                days.push(day);  // Ajoutez l'objet Date directement au lieu de le convertir en chaîne
+                days.push(day);  
             }
             return days;
         }
@@ -260,144 +253,161 @@ export default {
 </script>
   
   <style scoped>
-  .calendar {
+.calendar {
     display: flex;
     align-items: center;
+    justify-content: center; 
     margin: 0px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     background-color: #fff;
- 
-  }
-  
-  .header {
+    max-height: 450px;
+    overflow: auto;
+    flex-wrap: nowrap; /* Permet aux éléments de passer à la ligne si nécessaire */
+}
+
+.header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; 
     width: 100%;
     margin-bottom: 10px;
-  }
-  
-  .arrow-button {
+}
+
+.arrow-button {
     background: none;
     border: none;
     font-size: 24px; 
     cursor: pointer;
     color: #007BFF;
     transition: color 0.3s;
-  }
-  
-  .arrow-button:hover {
+    margin: 0 5px; 
+}
+
+.arrow-button:hover {
     color: #0056b3; 
-  }
-  
-  .week-title { 
+}
+
+.week-title { 
     font-size: 20px; 
     font-weight: bold;
     color: #333; 
-  }
-  
-  .calendar-table {
+}
+
+.calendar-table {
     display: flex;
     flex-direction: row;
     background-color: #8d8d8d;
-  }
-  
-  .days {
+    justify-content: center; 
+    flex-wrap: wrap; /* Permet aux colonnes de se réorganiser sur petits écrans */
+}
+
+.days {
     display: flex;
-    flex-direction: row; /* Les jours sont en colonne */
-  }
-  
-  .day-cell {
+    flex-direction: row; 
+    flex-wrap: wrap; /* Permet aux jours de se réorganiser */
+}
+
+.day-cell {
     text-align: center;
-    width: 110px;
+    width: 100px; /* Peut être ajusté pour les écrans plus petits */
     background-color: #f9f9f9; 
     padding: 10px;
     margin-left: 1px;
-  }
-  
-  .users {
+}
+
+.users {
     display: flex;
-    flex-direction: column; /* Les utilisateurs sont en colonne */
-  }
-  
-  .user-row {
+    flex-direction: column; 
+    width: 100%;
+}
+
+.user-row {
     display: flex;
     align-items: center;
-  }
-  
-  .user-name {
-    margin-right: 10px; /* Espace entre le nom et les cellules d'événements */
-  }
-  
-  .event-cells {
+    flex-wrap: nowrap; /* Permet aux utilisateurs de se réorganiser */
+}
+
+.event-cells {
     display: flex;
-  }
-  
-  .event-cell {
+    flex-wrap: wrap; /* Permet aux événements de se réorganiser */
+}
+
+.event-cell {
     display: flex;
-    flex-direction: column; /* Aligne les parties verticalement */
-    width: 110px; /* Largeur de la cellule d'événement */
-    height: 100px; /* Hauteur de la cellule d'événement */
-    border-top: 1px solid #ccc; /* Bordure de chaque cellule d'événement */
-    margin-left: 1px; /* Espace entre les cellules d'événements */
-    background-color: #e9ecef; /* Couleur de fond par défaut */
-    }
+    flex-direction: column; 
+    width: 100px; /* Ajuste cette largeur pour plus de flexibilité */
+    height: 100px; 
+    border-top: 1px solid #ccc; 
+    margin-left: 1px; 
+    background-color: #e9ecef; 
+}
 
-    .event-part {
-        flex: 1; /* Chaque partie prendra une hauteur égale */
-        display: flex;
-        justify-content: center; /* Centrer le contenu horizontalement */
-        align-items: center; /* Centrer le contenu verticalement */
-        cursor: pointer; /* Indique que c'est cliquable */
-    }
+.event-part {
+    flex: 1; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer; 
+}
 
-    .upper-part {
-        background-color: #ffffff; /* Couleur de la partie supérieure */
-    }
+.title-cell {
+    padding: 10px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    .lower-part {
-        background-color: #ffffff; /* Couleur de la partie inférieure */
-    }
-
-  .title-cell{
-      padding: 10px;
-      width: 110px;
-    
-      display: flex;
-      justify-content: center;
-      align-items: center;
-  }
-  .users-cell{
+.users-cell {
     height: 100px;
-      width: 100px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.image-profile {
+    border: #8d8d8d solid 1px;
+    border-radius: 50px;
+    height: 70px;
+    width: 70px;
+}
+
+.add-task-button {
+    margin: 10px;
+}
+
+select {
+    height: 72px;
+    width: 100%;
+    border: 1px #8D8D8D solid;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .day-cell {
+        width: 80px; 
     }
-    .tab{
-        display: flex;
-        max-height: 500px;
-        overflow: auto;
+
+    .event-cell {
+        width: 80px; 
+        height: auto; 
     }
-    
-    .image-profile{
-      border: #8d8d8d solid 1px;
-      border-radius: 50px;
-        height: 70px;
-        width: 70px;
+
+    .week-title {
+        font-size: 18px; 
     }
-    .add-task-button{
-        margin: 10px;
+
+    .arrow-button {
+        font-size: 20px; 
     }
-    
-    select{
-        height: 72px;
-        width: 100%;
-        border: 1px #8D8D8D solid;
+
+    .users-cell {
+        width: 80px; 
     }
-  </style>
-  
+}
+</style>

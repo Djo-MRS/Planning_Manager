@@ -27,30 +27,31 @@ export default {
 </script>
 
 <style>
-  @media (max-width: 768px) {
-      .box-list{
-        margin-left: 0px;
-      }
-  }
 .box-list {
     width: 100%;
     margin-left: 30px;
+    max-height: 200px;
 }
 .list-container {
   overflow-y: auto;
-  max-height: 750px;
+  max-height: 500px;
   padding-right: 15px; 
 }
 
-/* Optionnel : style pour personnaliser la barre de défilement */
 .list-container::-webkit-scrollbar {
   width: 8px;
 }
-
 
 .list-container::-webkit-scrollbar-thumb {
   background-color: #8d8d8d;
   border-radius: 4px;
 }
+
+  @media (max-width: 768px) {
+      .box-list{
+        margin-left: 0px;
+      }
+  }
+
 
 </style>
