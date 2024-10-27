@@ -55,7 +55,7 @@ export default {
   z-index: 1000;
 }
 .button-group {
-  border-radius: 20px !important; /* Modifier le border-radius du groupe de boutons */
+  border-radius: 20px !important; 
 }
 .icon {
   font-size: 22px;

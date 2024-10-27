@@ -2,7 +2,7 @@ defmodule Timemanager.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:id, :firstname, :lastname, :email]}  # Déplacement avant le bloc schema
+  @derive {Jason.Encoder, only: [:id, :firstname, :lastname, :email]}
   schema "users" do
     field :firstname, :string
     field :lastname, :string
@@ -18,8 +18,8 @@ defmodule Timemanager.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:firstname, :lastname, :email, :password, :role_id])  # Utilise :role_id
-    |> validate_required([:firstname, :lastname, :email, :password, :role_id])  # Ajoute :role_id
+    |> cast(attrs, [:firstname, :lastname, :email, :password, :role_id])
+    |> validate_required([:firstname, :lastname, :email, :password, :role_id])
     |> unique_constraint(:email)
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 6)

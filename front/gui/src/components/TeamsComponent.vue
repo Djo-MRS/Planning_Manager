@@ -9,11 +9,9 @@
     </header>
 
     <div class="row g-4">
-      <!-- Carousel pour les petits écrans -->
       <div class="col-12 d-md-none">
         <div id="cardsCarousel" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-inner">
-            <!-- Slide 1: Liste des équipes (Aside) -->
             <div class="carousel-item active">
               <aside class="bg-white shadow-sm rounded p-3">
                 <h4 class="text-secondary mb-3">Liste des équipes</h4>
@@ -28,14 +26,12 @@
                 </ul>
               </aside>
             </div>
-            <!-- Slide 2: Actions d'équipe -->
             <div class="carousel-item">
               <section>
                 <div class="card h-100 shadow-sm">
                   <div class="card-body">
                     <h4 class="card-title text-secondary mb-3">Actions d'équipe</h4>
 
-                    <!-- Formulaire de création d'équipe -->
                     <div v-if="showCreateForm" class="mb-4">
                       <h5>Créer une équipe</h5>
                       <form @submit.prevent="createTeam">
@@ -48,7 +44,6 @@
                       </form>
                     </div>
 
-                    <!-- Formulaire de modification d'équipe -->
                     <div v-if="selectedTeam" class="mb-4">
                       <h5>Modifier l'équipe</h5>
                       <form @submit.prevent="updateTeam">
@@ -62,8 +57,7 @@
                       </form>
                     </div>
 
-                    <!-- Ajouter un utilisateur à une équipe -->
-                    <div v-if="selectedTeam" class="mt-4 mb-4">
+                  <div v-if="selectedTeam" class="mt-4 mb-4">
                       <h5>Ajouter un utilisateur à l'équipe</h5>
                       <form @submit.prevent="addUserToTeam">
                         <div class="mb-3">
@@ -78,7 +72,6 @@
                       </form>
                     </div>
 
-                    <!-- Supprimer un utilisateur d'une équipe -->
                     <div v-if="selectedTeam" class="mt-4 mb-4">
                       <h5>Retirer un utilisateur de l'équipe</h5>
                       <form @submit.prevent="removeUserFromTeam">
@@ -97,7 +90,6 @@
                 </div>
               </section>
             </div>
-            <!-- Slide 3: Tableau des utilisateurs -->
             <div class="carousel-item">
               <section>
                 <div class="card h-100 shadow-sm">
@@ -130,7 +122,6 @@
               </section>
             </div>
           </div>
-          <!-- Contrôles du carousel -->
           <button class="carousel-control-prev" type="button" data-bs-target="#cardsCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Précédent</span>
@@ -142,8 +133,7 @@
         </div>
       </div>
 
-      <!-- Affichage normal pour les écrans moyens et grands -->
-      <aside class="col-md-3 d-none d-md-block">
+-      <aside class="col-md-3 d-none d-md-block">
         <div class="bg-white shadow-sm rounded p-3 overflow-auto" id="team-list">
           <h4 class="text-secondary mb-3">Liste des équipes</h4>
           <ul class="list-group">
@@ -159,8 +149,7 @@
       </aside>
       <main class="col-md-9 d-none d-md-block">
         <div class="row g-4">
-          <!-- Actions d'équipe -->
-          <section class="col-md-6">
+-          <section class="col-md-6">
             <div class="card h-100 shadow-sm">
               <div class="card-body" id="team-action">
                 <h4 class="card-title text-secondary mb-3">Actions d'équipe</h4>
@@ -176,8 +165,7 @@
                   </form>
                 </div>
 
-                <!-- Formulaire de modification d'équipe -->
-                <div v-if="selectedTeam" class="mb-4">
+               <div v-if="selectedTeam" class="mb-4">
                   <h5>Modifier l'équipe</h5>
                   <form @submit.prevent="updateTeam">
                     <div class="mb-3">
@@ -190,7 +178,6 @@
                   </form>
                 </div>
 
-                <!-- Ajouter un utilisateur à une équipe -->
                 <div v-if="selectedTeam" class="mt-4 mb-4">
                   <h5>Ajouter un utilisateur à l'équipe</h5>
                   <form @submit.prevent="addUserToTeam">
@@ -206,7 +193,6 @@
                   </form>
                 </div>
 
-                <!-- Supprimer un utilisateur d'une équipe -->
                 <div v-if="selectedTeam" class="mt-4 mb-4">
                   <h5>Retirer un utilisateur de l'équipe</h5>
                   <form @submit.prevent="removeUserFromTeam">
@@ -225,7 +211,6 @@
             </div>
           </section>
 
-          <!-- Tableau des utilisateurs dans l'équipe sélectionnée -->
           <section class="col-md-6">
             <div class="card h-100 shadow-sm">
               <div class="card-body" id="team-task">

@@ -5,7 +5,6 @@ alias Timemanager.Accounts.User
 
 Repo.delete_all(User)
 
-# Vérification et création des rôles
 role_admin = Repo.get_by(Accounts.Role, name: "admin") ||
   case Accounts.create_role(%{name: "admin"}) do
     {:ok, role} -> role
@@ -24,7 +23,6 @@ role_employee = Repo.get_by(Accounts.Role, name: "employee") ||
     {:error, _changeset} -> IO.puts("Role employee already exists"); Repo.get_by!(Accounts.Role, name: "employee")
   end
 
-# Création des utilisateurs avec leur rôle
 Accounts.create_user(%{
   firstname: "Admin",
   lastname: "User",

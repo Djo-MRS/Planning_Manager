@@ -77,9 +77,7 @@ end
     Repo.all(Role)
   end
 
-  @doc """
-  Authentifie l'utilisateur.
-  """
+
  def authenticate_user(conn, email, password) do
   user = Repo.get_by(User, email: email) |> Repo.preload(:role)
 

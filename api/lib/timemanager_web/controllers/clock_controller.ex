@@ -35,7 +35,7 @@ defmodule TimemanagerWeb.ClockController do
                 |> put_status(:not_found)
                 |> json(%{error: "Utilisateur non trouvé"})
 
-              _user ->  # Utilisation du préfixe `_` pour éviter les avertissements
+              _user -> 
                 user = Repo.preload(Accounts.get_user(user_id), :role)
                 clocks = Clocking.get_clocks_by_user(user_id)
                 clocks = Repo.preload(clocks, :user)

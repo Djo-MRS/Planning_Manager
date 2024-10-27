@@ -8,17 +8,14 @@ defmodule TimemanagerWeb.TeamController do
 
   action_fallback TimemanagerWeb.FallbackController
 
-  # Fonction utilitaire pour nettoyer les ID (s'assure que c'est une chaîne avant d'utiliser String.trim)
   defp clean_id(id) when is_binary(id), do: String.trim(id)
   defp clean_id(id), do: id
 
-  # Liste toutes les équipes
   def index(conn, _params) do
     teams = Teams.list_teams()
     render(conn, :index, teams: teams)
   end
 
-  # Crée une nouvelle équipe
   def create(conn, %{"team" => team_params}) do
     with {:ok, %Team{} = team} <- Teams.create_team(team_params) do
       conn
@@ -28,31 +25,27 @@ defmodule TimemanagerWeb.TeamController do
     end
   end
 
-  # Affiche les informations d'une équipe
   def show(conn, %{"id" => id}) do
-    team = Teams.get_team!(clean_id(id))  # Utilise clean_id ici
+    team = Teams.get_team!(clean_id(id))
     render(conn, :show, team: team)
   end
 
-  # Met à jour une équipe existante
   def update(conn, %{"id" => id, "team" => team_params}) do
-    team = Teams.get_team!(clean_id(id))  # Utilise clean_id ici
+    team = Teams.get_team!(clean_id(id))
 
     with {:ok, %Team{} = team} <- Teams.update_team(team, team_params) do
       render(conn, :show, team: team)
     end
   end
 
-  # Supprime une équipe
   def delete(conn, %{"id" => id}) do
-    team = Teams.get_team!(clean_id(id))  # Utilise clean_id ici
+    team = Teams.get_team!(clean_id(id))
 
     with {:ok, %Team{}} <- Teams.delete_team(team) do
       send_resp(conn, :no_content, "")
     end
   end
 
-  # Ajoute un utilisateur à une équipe
   def add_user_to_team(conn, %{"team_id" => team_id, "user_id" => user_id}) do
     case UserTeams.add_user_to_team(user_id, team_id) do
       {:ok, _user_team} ->
@@ -73,7 +66,7 @@ defmodule TimemanagerWeb.TeamController do
   end
 
 
-  # Supprime un utilisateur d'une équipe
+
   def remove_user_from_team(conn, %{"team_id" => team_id, "user_id" => user_id}) do
     with {:ok, _user_team} <- UserTeams.remove_user_from_team(clean_id(user_id), clean_id(team_id)) do
       conn

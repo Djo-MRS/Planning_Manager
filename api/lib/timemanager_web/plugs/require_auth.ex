@@ -1,6 +1,6 @@
 defmodule TimemanagerWeb.Plugs.RequireAuth do
   import Plug.Conn
-  import Phoenix.Controller, only: [json: 2] # Importer la fonction json/2
+  import Phoenix.Controller, only: [json: 2]
   alias Joken.Signer
   require Logger
 
@@ -13,7 +13,6 @@ defmodule TimemanagerWeb.Plugs.RequireAuth do
       ["Bearer " <> token] ->
         signer = Joken.Signer.create("HS256", @jwt_secret)
 
-        # Vérifier le token avec Joken
         case Joken.verify(token, signer) do
           {:ok, claims} ->
             Logger.debug("JWT claims: #{inspect(claims)}")

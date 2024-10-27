@@ -44,11 +44,11 @@ import ManagerModalComponent from './ManagerModalComponent.vue';
         },
         methods: {
             handleClick() {
-                this.currentTask = this.task;  // Mettez la tâche actuelle
-                this.isModifyModalOpen = true;  // Ouvrez la modal
+                this.currentTask = this.task;  
+                this.isModifyModalOpen = true;  
             },
             closeModifyModal() {
-                this.isModifyModalOpen = false; // Fermez la modal
+                this.isModifyModalOpen = false;
             }
         },
     };

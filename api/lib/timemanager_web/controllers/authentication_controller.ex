@@ -7,7 +7,6 @@ defmodule TimemanagerWeb.AuthController do
   def login(conn, %{"email" => email, "password" => password}) do
     case Accounts.authenticate_user(conn, email, password) do
       {:ok, token, user, conn} ->
-        # Précharger le rôle de l'utilisateur et renvoyer la réponse
         user = Repo.preload(user, :role)
         conn
         |> put_resp_cookie("jwt", token, http_only: true)
@@ -38,14 +37,13 @@ defmodule TimemanagerWeb.AuthController do
   def sign_up(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
       {:ok, %User{} = user} ->
-        user = Repo.preload(user, :role)  # Précharger l'association role ici
-
+        user = Repo.preload(user, :role)
         conn
         |> put_status(:created)
         |> json(%{
           message: "User created successfully",
           user_id: user.id,
-          role: user.role.name  # Inclure le rôle ici
+          role: user.role.name
         })
 
       {:error, %Ecto.Changeset{} = changeset} ->

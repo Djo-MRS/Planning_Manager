@@ -22,9 +22,7 @@
         <MDBBtn color="light" floating class="notif-button" @click="goToLogout" id="rightbar-logout">
             <MDBIcon icon="sign-out-alt" style="font-size: 18px;"></MDBIcon>
         </MDBBtn>
-        <div v-if="alertVisible" class="alert">
-            BATMAN EST EN MISSION !!!
-        </div>
+        
     </div>
 </template>
 
@@ -38,35 +36,9 @@ export default {
         MDBIcon,
 
     },
-    mounted() {
-        this.isAdmin = JSON.parse(localStorage.getItem('user')).role === 'admin';
-        this.fetchAlerts(); // Récupérer les alertes au chargement
-        setInterval(this.fetchAlerts, 5000); // Vérifier toutes les 5 secondes
-    },
     methods: {
-        async fetchAlerts() {
-    const response = await fetch('/api/alerts');
-    const data = await response.json();
-        if (data.message) {
-            this.showAlert(data.message);
-        }
-    },
-        showAlert(message) {
-            this.alertMessage = message;
-            this.alertVisible = true;
-            setTimeout(() => {
-                this.alertVisible = false;
-            }, 3000);
-        },
         async triggerAlert() {
-            const message = "BATMAN est en mission !!!";
-            await fetch('/api/alerts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ message })
-            });
+         alert('BATMAN EST EN MISSION !!!');
         },
         goToSignup() {
             this.$router.push('/sign_up');

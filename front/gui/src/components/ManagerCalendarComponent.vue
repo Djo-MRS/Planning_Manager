@@ -17,7 +17,6 @@
         <div class="tab" id="calendar-team">
             <div class="tab-col-users">
                 <div class="users-col">
-                    <!-- Dropdown with different teams attached to the Manager -->
                     <select v-model="selectedTeam"  @change="selectTeam" id="dashboard-team">
                         <option v-for="team in teamsManager" :key="team.id" :value="team.teamName">
                             {{ team.teamName }}
@@ -34,7 +33,7 @@
             <div class="tab-col-week">
                 <div class="days">
                     <div class="day-cell" v-for="(day, index) in weekDays" :key="index">
-                        {{ formatDate(day) }} <!-- Utilisez la fonction de formatage ici -->
+                        {{ formatDate(day) }} 
                     </div>
                 </div>
                 <div class="calendar-table">
@@ -81,10 +80,10 @@ export default {
             add: "add",
             tasks: [
                 {
-                    user: 'Alice', // Assignation à l'utilisateur
+                    user: 'Alice', 
                     title: 'Réunion de projet',
-                    start: '2024-10-25T09:00:00', // Date et heure de début
-                    end: '2024-10-25T10:00:00' // Date et heure de fin
+                    start: '2024-10-25T09:00:00',
+                    end: '2024-10-25T10:00:00' 
                 },
                 {
                     user: 'Bob',
@@ -136,7 +135,7 @@ export default {
             for (let i = 0; i < 7; i++) {
                 const day = new Date(startOfWeek);
                 day.setDate(day.getDate() + i);
-                days.push(day);  // Ajoutez l'objet Date directement au lieu de le convertir en chaîne
+                days.push(day);  
             }
             return days;
         }
@@ -185,7 +184,6 @@ export default {
             });
         },
         formatDate(date) {
-        // Formater la date en français
             return date.toLocaleDateString('fr-FR', {
                 weekday: 'long',  
                 day: 'numeric',   
@@ -256,7 +254,7 @@ export default {
     mounted() {
         console.log(this.teamsManager[0].teamName)
         this.selected = this.teamsManager[0].teamName;
-        this.fetchTeamsByManager(26); //récupérer le currrent_user id
+        this.fetchTeamsByManager(26); 
      
     }
 };
@@ -312,7 +310,7 @@ export default {
   
   .days {
     display: flex;
-    flex-direction: row; /* Les jours sont en colonne */
+    flex-direction: row; 
   }
   
   .day-cell {
@@ -325,7 +323,7 @@ export default {
   
   .users {
     display: flex;
-    flex-direction: column; /* Les utilisateurs sont en colonne */
+    flex-direction: column;
   }
   
   .user-row {
@@ -334,7 +332,7 @@ export default {
   }
   
   .user-name {
-    margin-right: 10px; /* Espace entre le nom et les cellules d'événements */
+    margin-right: 10px; 
   }
   
   .event-cells {
@@ -343,28 +341,28 @@ export default {
   
   .event-cell {
     display: flex;
-    flex-direction: column; /* Aligne les parties verticalement */
-    width: 110px; /* Largeur de la cellule d'événement */
-    height: 100px; /* Hauteur de la cellule d'événement */
-    border-top: 1px solid #ccc; /* Bordure de chaque cellule d'événement */
-    margin-left: 1px; /* Espace entre les cellules d'événements */
-    background-color: #e9ecef; /* Couleur de fond par défaut */
+    flex-direction: column; 
+    width: 110px; 
+    height: 100px;
+    border-top: 1px solid #ccc; 
+    margin-left: 1px; 
+    background-color: #e9ecef; 
     }
 
     .event-part {
-        flex: 1; /* Chaque partie prendra une hauteur égale */
+        flex: 1; 
         display: flex;
-        justify-content: center; /* Centrer le contenu horizontalement */
-        align-items: center; /* Centrer le contenu verticalement */
-        cursor: pointer; /* Indique que c'est cliquable */
+        justify-content: center; 
+        align-items: center; 
+        cursor: pointer; 
     }
 
     .upper-part {
-        background-color: #ffffff; /* Couleur de la partie supérieure */
+        background-color: #ffffff; 
     }
 
     .lower-part {
-        background-color: #ffffff; /* Couleur de la partie inférieure */
+        background-color: #ffffff; 
     }
 
   .title-cell{

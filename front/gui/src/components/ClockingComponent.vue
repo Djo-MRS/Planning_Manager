@@ -215,7 +215,6 @@ export default {
 
         this.errorMessage = "";
 
-        // N'envoyez que le temps de travail une fois que l'heure de fin est bien définie
         await this.sendWorkingTime();
       } catch (error) {
         this.errorMessage = `Erreur : ${error.message}`;

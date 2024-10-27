@@ -39,7 +39,7 @@ export default {
   padding-right: 15px; 
 }
 
-/* Optionnel : style pour personnaliser la barre de défilement */
+
 .list-container::-webkit-scrollbar {
   width: 8px;
 }

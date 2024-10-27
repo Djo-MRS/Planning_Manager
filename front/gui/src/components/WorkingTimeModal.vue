@@ -14,7 +14,6 @@
       </MDBModalHeader>
       <MDBModalBody>
         <div class="data_row d-flex">
-          <!-- Mettre dropdown des users de l'équipe -->
 
           <label for="start">Start </label>
           <input id="start" type="datetime-local" v-model="start" />
@@ -137,7 +136,6 @@
   const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
   const token = localStorage.getItem("token");
 
-  // Affiche les valeurs des propriétés dans la console
   console.log("Current User ID:", props.current_user?.id);
   console.log("Period ID:", props.period?.id);
 

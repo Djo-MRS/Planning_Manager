@@ -23,7 +23,6 @@ defmodule TimemanagerWeb.Endpoint do
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :timemanager
   end
 
-  # CORS configuration with specific origin
   plug CORSPlug,
   origin: ["http://localhost:8080"],
   credentials: true,
