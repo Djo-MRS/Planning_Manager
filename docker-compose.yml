@@ -1,15 +1,14 @@
 services:
   db:
-      image: postgres:15-alpine 
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: timemanager_dev
-      ports:
-        - "5432:5432"
-
-      volumes:
-        - pgdata:/var/lib/postgresql/data
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: timemanager_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   api:
     build: ./api
@@ -18,19 +17,19 @@ services:
       - "4000:4000"
     depends_on:
       - db
-    develop:
-      watch:
-        - action: rebuild
-          path: ./api
+    volumes:
+      - ./api:/app 
+    command: mix phx.server 
 
   frontend:
-    build:  ./front/gui
-    ports:
-      - "8080:80"
-    develop:
-      watch:
-        - action: rebuild
-          path: ./front/gui
+   build:
+    context: ./front/gui
+    target: build
+   ports:
+    - "8080:8080"
+   volumes:
+    - ./front/gui:/app 
+   command: npm run serve
 
 volumes:
   pgdata:

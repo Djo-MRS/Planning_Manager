@@ -1,13 +1,165 @@
 <template>
   <div class="container-fluid p-4 bg-light">
     <header class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="text-primary font-weight-bold">Gestion d'équipes</h2>
+      <h2 class="text-primary font-weight-bold">Dashboard Manager</h2>
       <button class="btn btn-success" @click="showCreateForm = true">
         + Créer une nouvelle équipe
       </button>
     </header>
 
     <div class="row g-4">
+      <!-- Carousel pour les petits écrans -->
+      <div class="col-12 d-md-none">
+        <div id="cardsCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <!-- Slide 1: Liste des équipes (Aside) -->
+            <div class="carousel-item active">
+              <aside class="bg-white shadow-sm rounded p-3">
+                <h4 class="text-secondary mb-3">Liste des équipes</h4>
+                <ul class="list-group">
+                  <li
+                    v-for="team in teams"
+                    :key="team.id"
+                    class="list-group-item d-flex justify-content-between align-items-center mb-2"
+                  >
+                    <span>{{ team.name }}</span>
+                    <button class="btn btn-outline-primary btn-sm" @click="editTeam(team)">
+                      Modifier
+                    </button>
+                  </li>
+                </ul>
+              </aside>
+            </div>
+            <!-- Slide 2: Actions d'équipe -->
+            <div class="carousel-item">
+              <section>
+                <div class="card h-100 shadow-sm">
+                  <div class="card-body">
+                    <h4 class="card-title text-secondary mb-3">Actions d'équipe</h4>
+
+                    <!-- Formulaire de création d'équipe -->
+                    <div v-if="showCreateForm" class="mb-4">
+                      <h5>Créer une équipe</h5>
+                      <form @submit.prevent="createTeam">
+                        <div class="mb-3">
+                          <label for="name" class="form-label">Nom de l'équipe</label>
+                          <input type="text" class="form-control" id="name" v-model="newTeam.name" required />
+                        </div>
+                        <button type="submit" class="btn btn-success me-2">Créer</button>
+                        <button class="btn btn-outline-secondary" @click="showCreateForm = false">Annuler</button>
+                      </form>
+                    </div>
+
+                    <!-- Formulaire de modification d'équipe -->
+                    <div v-if="selectedTeam" class="mb-4">
+                      <h5>Modifier l'équipe</h5>
+                      <form @submit.prevent="updateTeam">
+                        <div class="mb-3">
+                          <label for="editName" class="form-label">Nom de l'équipe</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="editName"
+                            v-model="selectedTeam.name"
+                            @input="updateTeamNameInList"
+                            required
+                          />
+                        </div>
+                        <button type="submit" class="btn btn-primary me-2">Modifier</button>
+                        <button class="btn btn-outline-secondary" @click="selectedTeam = null">Annuler</button>
+                      </form>
+                    </div>
+
+                    <!-- Ajouter un utilisateur à une équipe -->
+                    <div v-if="selectedTeam" class="mt-4 mb-4">
+                      <h5>Ajouter un utilisateur à l'équipe</h5>
+                      <form @submit.prevent="addUserToTeam">
+                        <div class="mb-3">
+                          <label for="userId" class="form-label">Sélectionner un utilisateur</label>
+                          <select class="form-select" v-model="selectedUserId" required>
+                            <option v-for="user in users" :key="user.id" :value="user.id">
+                              {{ user.firstname }} {{ user.lastname }} ({{ user.role.name }})
+                            </option>
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Ajouter</button>
+                      </form>
+                    </div>
+
+                    <!-- Supprimer un utilisateur d'une équipe -->
+                    <div v-if="selectedTeam" class="mt-4 mb-4">
+                      <h5>Retirer un utilisateur de l'équipe</h5>
+                      <form @submit.prevent="removeUserFromTeam">
+                        <div class="mb-3">
+                          <label for="removeUserId" class="form-label">Sélectionner un utilisateur</label>
+                          <select class="form-select" v-model="selectedRemoveUserId" required>
+                            <option v-for="user in teamUsers" :key="user.id" :value="user.id">
+                              {{ user.firstname }} {{ user.lastname }} ({{ user.role.name }})
+                            </option>
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Retirer</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+            <!-- Slide 3: Tableau des utilisateurs -->
+            <div class="carousel-item">
+              <section>
+                <div class="card h-100 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title mb-4">Utilisateurs dans l'équipe : {{ selectedTeam ? selectedTeam.name : 'Sélectionnez une équipe' }}</h5>
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Nom</th>
+                          <th>Email</th>
+                          <th>Rôle</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-if="teamUsers.length === 0">
+                          <td colspan="4" class="text-center">Aucun utilisateur dans cette équipe</td>
+                        </tr>
+                        <tr v-for="user in teamUsers" :key="user.id">
+                          <td>{{ user.id }}</td>
+                          <td>{{ user.firstname }} {{ user.lastname }}</td>
+                          <td>{{ user.email }}</td>
+                          <td>{{ user.role.name }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+          <!-- Contrôles du carousel -->
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#cardsCarousel"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#cardsCarousel"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Affichage normal pour les écrans moyens et grands -->
       <aside class="col-md-3 d-none d-md-block">
         <div class="bg-white shadow-sm rounded p-3 overflow-auto">
           <h4 class="text-secondary mb-3">Liste des équipes</h4>
@@ -25,12 +177,15 @@
           </ul>
         </div>
       </aside>
-      <main class="col-md-9">
+      <main class="col-md-9 d-none d-md-block">
         <div class="row g-4">
+          <!-- Actions d'équipe -->
           <section class="col-md-6">
             <div class="card h-100 shadow-sm">
               <div class="card-body">
                 <h4 class="card-title text-secondary mb-3">Actions d'équipe</h4>
+
+                <!-- Formulaire de création d'équipe -->
                 <div v-if="showCreateForm" class="mb-4">
                   <h5>Créer une équipe</h5>
                   <form @submit.prevent="createTeam">
@@ -42,10 +197,63 @@
                     <button class="btn btn-outline-secondary" @click="showCreateForm = false">Annuler</button>
                   </form>
                 </div>
-                <!-- Formulaires et autres sections... -->
+
+                <!-- Formulaire de modification d'équipe -->
+                <div v-if="selectedTeam" class="mb-4">
+                  <h5>Modifier l'équipe</h5>
+                  <form @submit.prevent="updateTeam">
+                    <div class="mb-3">
+                      <label for="editName" class="form-label">Nom de l'équipe</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="editName"
+                        v-model="selectedTeam.name"
+                        @input="updateTeamNameInList"
+                        required
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Modifier</button>
+                    <button class="btn btn-outline-secondary" @click="selectedTeam = null">Annuler</button>
+                  </form>
+                </div>
+
+                <!-- Ajouter un utilisateur à une équipe -->
+                <div v-if="selectedTeam" class="mt-4 mb-4">
+                  <h5>Ajouter un utilisateur à l'équipe</h5>
+                  <form @submit.prevent="addUserToTeam">
+                    <div class="mb-3">
+                      <label for="userId" class="form-label">Sélectionner un utilisateur</label>
+                      <select class="form-select" v-model="selectedUserId" required>
+                        <option v-for="user in users" :key="user.id" :value="user.id">
+                          {{ user.firstname }} {{ user.lastname }} ({{ user.role.name }})
+                        </option>
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Ajouter</button>
+                  </form>
+                </div>
+
+                <!-- Supprimer un utilisateur d'une équipe -->
+                <div v-if="selectedTeam" class="mt-4 mb-4">
+                  <h5>Retirer un utilisateur de l'équipe</h5>
+                  <form @submit.prevent="removeUserFromTeam">
+                    <div class="mb-3">
+                      <label for="removeUserId" class="form-label">Sélectionner un utilisateur</label>
+                      <select class="form-select" v-model="selectedRemoveUserId" required>
+                        <option v-for="user in teamUsers" :key="user.id" :value="user.id">
+                          {{ user.firstname }} {{ user.lastname }} ({{ user.role.name }})
+                        </option>
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Retirer</button>
+                  </form>
+                </div>
               </div>
             </div>
           </section>
+
+          <!-- Tableau des utilisateurs dans l'équipe sélectionnée -->
           <section class="col-md-6">
             <div class="card h-100 shadow-sm">
               <div class="card-body">
@@ -92,6 +300,9 @@ export default {
       selectedUserId: null,
       selectedRemoveUserId: null,
       showCreateForm: false,
+      csrfToken: document.cookie.split("c-xsrf-token=")[1]?.split(";")[0],
+      jwt: localStorage.getItem("token"),
+
     };
   },
   created() {
@@ -100,7 +311,15 @@ export default {
   },
   methods: {
     fetchTeams() {
-      fetch("http://localhost:4000/api/teams")
+      fetch("http://localhost:4000/api/teams", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.jwt,
+          "X-XSRF-TOKEN": this.csrfToken
+        },
+        credentials: "include",
+      })
         .then((response) => response.json())
         .then((data) => {
           this.teams = data.data;
@@ -112,7 +331,15 @@ export default {
         });
     },
     fetchUsers() {
-      fetch("http://localhost:4000/api/users")
+      fetch("http://localhost:4000/api/users", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.jwt,
+          "X-XSRF-TOKEN": this.csrfToken
+        },
+        credentials: "include",
+      })
         .then((response) => response.json())
         .then((data) => {
           this.users = data.data;
@@ -122,7 +349,15 @@ export default {
         });
     },
     fetchTeamUsers(teamId) {
-      fetch(`http://localhost:4000/api/teams/${teamId}/users`)
+      fetch(`http://localhost:4000/api/teams/${teamId}/users`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.jwt,
+          "X-XSRF-TOKEN": this.csrfToken
+        },
+        credentials: "include",
+      })
         .then((response) => response.json())
         .then((data) => {
           this.teamUsers = data.data;
@@ -140,7 +375,10 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.jwt,
+          "X-XSRF-TOKEN": this.csrfToken
         },
+        credentials: "include",
         body: JSON.stringify({ team: this.newTeam }),
       })
         .then((response) => response.json())
@@ -164,7 +402,10 @@ export default {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.jwt,
+          "X-XSRF-TOKEN": this.csrfToken
         },
+        credentials: "include",
         body: JSON.stringify({ team: this.selectedTeam }),
       })
         .then((response) => response.json())
@@ -184,7 +425,10 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.jwt,
+          "X-XSRF-TOKEN": this.csrfToken
         },
+        credentials: "include",
         body: JSON.stringify({ user_id: this.selectedUserId }),
       })
         .then(() => {
@@ -201,7 +445,10 @@ export default {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.jwt,
+          "X-XSRF-TOKEN": this.csrfToken
         },
+        credentials: "include",
         body: JSON.stringify({ user_id: this.selectedRemoveUserId }),
       })
         .then(() => {

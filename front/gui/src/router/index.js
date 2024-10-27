@@ -7,6 +7,7 @@ import NotifView from '@/views/NotifView.vue';
 import RequestView from '@/views/RequestView.vue';
 import LoginView from '@/views/LoginView.vue';
 import SignupView from '@/views/SignupView.vue';
+import ChartManager from '@/views/ChartManagerView.vue';
 
 const routes = [
   {
@@ -24,11 +25,11 @@ const routes = [
     name: 'ProfileView',
     component: ProfileView,
   },
-  {
-    path: '/help',
-    name: 'HelpView',
-    component: HelpView,
-  },
+  // {
+  //   path: '/help',
+  //   name: 'HelpView',
+  //   component: HelpView,
+  // },
   {
     path: '/dashboard',
     name: 'ManagerDashboardView',
@@ -58,6 +59,11 @@ const routes = [
     path: '/sign_up',
     name: 'SignupView',
     component: SignupView,
+  },
+  {
+    path: '/chartManager/:userID',
+    name: 'ChartManager',
+    component: ChartManager
   },
 ];
 

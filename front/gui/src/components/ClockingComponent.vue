@@ -74,7 +74,7 @@ export default {
 
       try {
         const response = await fetch(
-          `/api/clocks/${this.user.id}`,
+          `http://localhost:4000/api/clocks/${this.user.id}`,
           {
             method: "GET",
             headers: {
@@ -143,7 +143,7 @@ export default {
       const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
       try {
         const response = await fetch(
-          `/api/clocks/${this.user.id}`,
+          `http://localhost:4000/api/clocks/${this.user.id}`,
           {
             method: "POST",
             headers: {
@@ -183,7 +183,7 @@ export default {
       const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
       try {
         const response = await fetch(
-          `/api/clocks/${this.user.id}`,
+          `http://localhost:4000/api/clocks/${this.user.id}`,
           {
             method: "POST",
             headers: {
@@ -232,7 +232,7 @@ export default {
         const endTime = new Date().toISOString();
 
         const response = await fetch(
-          `/api/workingtime/${this.user.id}`,
+          `http://localhost:4000/api/workingtime/${this.user.id}`,
           {
             method: "POST",
             headers: {
