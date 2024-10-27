@@ -2,9 +2,10 @@
   <div class="container-fluid p-4 bg-light">
     <header class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="text-primary font-weight-bold">Dashboard Manager</h2>
-      <button class="btn btn-success" @click="showCreateForm = true" id="team-add>
+      <button class="btn btn-success" @click="showCreateForm = true" id="team-add">
         + Créer une nouvelle équipe
       </button>
+
     </header>
 
     <div class="row g-4">
@@ -17,11 +18,8 @@
               <aside class="bg-white shadow-sm rounded p-3">
                 <h4 class="text-secondary mb-3">Liste des équipes</h4>
                 <ul class="list-group">
-                  <li
-                    v-for="team in teams"
-                    :key="team.id"
-                    class="list-group-item d-flex justify-content-between align-items-center mb-2"
-                  >
+                  <li v-for="team in teams" :key="team.id"
+                    class="list-group-item d-flex justify-content-between align-items-center mb-2">
                     <span>{{ team.name }}</span>
                     <button class="btn btn-outline-primary btn-sm" @click="editTeam(team)">
                       Modifier
@@ -56,14 +54,8 @@
                       <form @submit.prevent="updateTeam">
                         <div class="mb-3">
                           <label for="editName" class="form-label">Nom de l'équipe</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="editName"
-                            v-model="selectedTeam.name"
-                            @input="updateTeamNameInList"
-                            required
-                          />
+                          <input type="text" class="form-control" id="editName" v-model="selectedTeam.name"
+                            @input="updateTeamNameInList" required />
                         </div>
                         <button type="submit" class="btn btn-primary me-2">Modifier</button>
                         <button class="btn btn-outline-secondary" @click="selectedTeam = null">Annuler</button>
@@ -110,7 +102,8 @@
               <section>
                 <div class="card h-100 shadow-sm">
                   <div class="card-body">
-                    <h5 class="card-title mb-4">Utilisateurs dans l'équipe : {{ selectedTeam ? selectedTeam.name : 'Sélectionnez une équipe' }}</h5>
+                    <h5 class="card-title mb-4">Utilisateurs dans l'équipe : {{ selectedTeam ? selectedTeam.name :
+                      'Sélectionnez une équipe' }}</h5>
                     <table class="table table-striped table-hover">
                       <thead>
                         <tr>
@@ -138,21 +131,11 @@
             </div>
           </div>
           <!-- Contrôles du carousel -->
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#cardsCarousel"
-            data-bs-slide="prev"
-          >
+          <button class="carousel-control-prev" type="button" data-bs-target="#cardsCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Précédent</span>
           </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#cardsCarousel"
-            data-bs-slide="next"
-          >
+          <button class="carousel-control-next" type="button" data-bs-target="#cardsCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Suivant</span>
           </button>
@@ -162,13 +145,10 @@
       <!-- Affichage normal pour les écrans moyens et grands -->
       <aside class="col-md-3 d-none d-md-block">
         <div class="bg-white shadow-sm rounded p-3 overflow-auto" id="team-list">
-          <h4 class="text-secondary mb-3" >Liste des équipes</h4>
+          <h4 class="text-secondary mb-3">Liste des équipes</h4>
           <ul class="list-group">
-            <li
-              v-for="team in teams"
-              :key="team.id"
-              class="list-group-item d-flex justify-content-between align-items-center mb-2"
-            >
+            <li v-for="team in teams" :key="team.id"
+              class="list-group-item d-flex justify-content-between align-items-center mb-2">
               <span>{{ team.name }}</span>
               <button class="btn btn-outline-primary btn-sm" @click="editTeam(team)">
                 Modifier
@@ -183,7 +163,7 @@
           <section class="col-md-6">
             <div class="card h-100 shadow-sm">
               <div class="card-body" id="team-action">
-                <h4 class="card-title text-secondary mb-3" >Actions d'équipe</h4>
+                <h4 class="card-title text-secondary mb-3">Actions d'équipe</h4>
                 <div v-if="showCreateForm" class="mb-4">
                   <h5>Créer une équipe</h5>
                   <form @submit.prevent="createTeam">
@@ -202,14 +182,8 @@
                   <form @submit.prevent="updateTeam">
                     <div class="mb-3">
                       <label for="editName" class="form-label">Nom de l'équipe</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="editName"
-                        v-model="selectedTeam.name"
-                        @input="updateTeamNameInList"
-                        required
-                      />
+                      <input type="text" class="form-control" id="editName" v-model="selectedTeam.name"
+                        @input="updateTeamNameInList" required />
                     </div>
                     <button type="submit" class="btn btn-primary me-2">Modifier</button>
                     <button class="btn btn-outline-secondary" @click="selectedTeam = null">Annuler</button>
@@ -255,7 +229,8 @@
           <section class="col-md-6">
             <div class="card h-100 shadow-sm">
               <div class="card-body" id="team-task">
-                <h5 class="card-title mb-4" >Utilisateurs dans l'équipe : {{ selectedTeam ? selectedTeam.name : 'Sélectionnez une équipe' }}</h5>
+                <h5 class="card-title mb-4">Utilisateurs dans l'équipe : {{ selectedTeam ? selectedTeam.name :
+                  'Sélectionnez une équipe' }}</h5>
                 <table class="table table-striped table-hover">
                   <thead>
                     <tr>
@@ -481,7 +456,7 @@ body {
 }
 
 .card-body {
-  overflow: auto; 
+  overflow: auto;
 }
 
 .list-group-item {
@@ -508,8 +483,8 @@ body {
   }
 
   .main-content {
-    padding: 20px; 
-    }
+    padding: 20px;
+  }
 
   main {
     width: 100%;

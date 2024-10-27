@@ -18,18 +18,18 @@ services:
     depends_on:
       - db
     volumes:
-      - ./api:/app 
-    command: mix phx.server 
+      - ./api:/app
+    command: MIX_ENV=dev mix phx.server --force-polling
 
   frontend:
-   build:
-    context: ./front/gui
-    target: build
-   ports:
-    - "8080:8080"
-   volumes:
-    - ./front/gui:/app 
-   command: npm run serve
+    build:
+      context: ./front/gui
+      target: build
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./front/gui:/app
+    command: npm run serve
 
 volumes:
   pgdata:

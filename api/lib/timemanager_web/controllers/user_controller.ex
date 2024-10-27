@@ -47,7 +47,7 @@ defmodule TimemanagerWeb.UserController do
       nil ->
         conn
         |> put_status(:not_found)
-        |> json(%{error: "User not found"})
+        |> json(%{error: "User not found "})
       user ->
         render(conn, :show, user: user)
     end
@@ -69,7 +69,7 @@ defmodule TimemanagerWeb.UserController do
   def list_team_users(conn, %{"team_id" => team_id}) do
     team = Team
            |> Repo.get!(team_id)
-           |> Repo.preload(users: [:role])  # Précharge l'association :users avec leur :role
+           |> Repo.preload(users: [:role])
 
     render(conn, "index.json", users: team.users)
   end

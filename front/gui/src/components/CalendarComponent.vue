@@ -5,7 +5,7 @@
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">
         <h3>Modifier Working Time</h3>
-        <label for="start-date">Date de début :</label>
+        <label for="start-date">Date de débutss :</label>
         <input type="datetime-local" v-model="editedEvent.start" />
 
         <label for="end-date">Date de fin :</label>
