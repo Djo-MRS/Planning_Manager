@@ -2,7 +2,7 @@
   <div class="container-fluid p-4 bg-light">
     <header class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="text-primary font-weight-bold">Dashboard Manager</h2>
-      <button class="btn btn-success" @click="showCreateForm = true" id="team-add>
+      <button class="btn btn-success" @click="showCreateForm = true" id="team-add">
         + Créer une nouvelle équipe
       </button>
     </header>
