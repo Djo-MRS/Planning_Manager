@@ -1,7 +1,7 @@
 <template>
    <h2 class="title"> Notifications </h2>
     <div class="container-grid">
-        <div class="main-content">      
+        <div class="main-notifview">      
             <NotifListComponent />
         </div>
         <section class="right-bar">
@@ -28,12 +28,20 @@ export default {
 </script>
 
 <style>
-    .body-row{
-        display: flex;
-        justify-content: space-between;  
-    }
-    .title{
-        margin: 15px;
-    }
+.container-grid{
+    height: 550px;
+}
+.main-notifview {
+    flex: 1; 
+    margin-right: 20px;
+    margin-left: 20px;
+}
+.body-row{
+    display: flex;
+    justify-content: space-between;  
+}
+.title{
+    margin: 15px;
+}
 
 </style>

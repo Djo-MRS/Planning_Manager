@@ -7,19 +7,19 @@
             <MDBBtn color="light" floating class="notif-button" @click="goToPage('/notif')" id="rightbar-notif">
                 <MDBIcon icon="bell" style="font-size: 18px;"></MDBIcon>
             </MDBBtn>
-            <MDBBtn color="light" floating class="notif-button" @click="goToSignup" v-if="isAdmin">
+            <MDBBtn color="light" floating class="notif-button" @click="goToSignup" v-if="isAdmin" id="rightbar-signup">
                 <MDBIcon icon="user-cog" style="font-size: 18px;"></MDBIcon>
             </MDBBtn> 
         </div>
         <div class="center-button">
-            <MDBBtn color="light" floating class="notif-button" @click="triggerAlert" id="rightbar-alert">
+            <MDBBtn color="light" floating class="notif-button" @click="triggerAlertandSendNotification" id="rightbar-alert">
                 <i class="fab fa-earlybirds" style="font-size: 40px;"></i>
             </MDBBtn>
         </div>
         <MDBBtn color="light" floating class="notif-button" @click="$emit('tutoClicked')" id="rightbar-tuto">
             <MDBIcon icon="question" style="font-size: 18px;"></MDBIcon>
         </MDBBtn>
-        <MDBBtn color="light" floating class="notif-button" @click="goToLogout">
+        <MDBBtn color="light" floating class="notif-button" @click="goToLogout" id="rightbar-logout">
             <MDBIcon icon="sign-out-alt" style="font-size: 18px;"></MDBIcon>
         </MDBBtn>
         <div v-if="alertVisible" class="alert">
@@ -35,7 +35,8 @@ export default {
     name: "RightBarComponent",
     components: {
         MDBBtn,
-        MDBIcon
+        MDBIcon,
+
     },
     data() {
         return {
@@ -44,11 +45,7 @@ export default {
         };
     },
     mounted() {
-        if (JSON.parse(localStorage.getItem('user')).role === 'admin') {
-            this.isAdmin = true;
-        } else {
-            this.isAdmin = false;
-        }
+        this.isAdmin = JSON.parse(localStorage.getItem('user')).role === 'admin';
     },
     methods: {
         goToSignup() {
@@ -56,6 +53,10 @@ export default {
         },
         goToPage(path) {
             this.$router.push(path);
+        },
+        triggerAlertAndSendNotification() {
+            this.triggerAlert();
+            this.sendNotification();
         },
         triggerAlert() {
             this.$refs.alerte.showAlert();
@@ -96,7 +97,7 @@ export default {
             }
         },
         getUserRole() {
-            return 'Manager';
+            return JSON.parse(localStorage.getItem('user')).role;
         }
     },
 }

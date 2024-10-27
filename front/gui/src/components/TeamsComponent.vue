@@ -2,15 +2,15 @@
   <div class="container-fluid p-4 bg-light">
     <header class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="text-primary font-weight-bold">Gestion d'équipes</h2>
-      <button class="btn btn-success" @click="showCreateForm = true">
+      <button class="btn btn-success" @click="showCreateForm = true" id="team-add">
         + Créer une nouvelle équipe
       </button>
     </header>
 
     <div class="row g-4">
       <aside class="col-md-3 d-none d-md-block">
-        <div class="bg-white shadow-sm rounded p-3 overflow-auto">
-          <h4 class="text-secondary mb-3">Liste des équipes</h4>
+        <div class="bg-white shadow-sm rounded p-3 overflow-auto" id="team-list">
+          <h4 class="text-secondary mb-3" >Liste des équipes</h4>
           <ul class="list-group">
             <li
               v-for="team in teams"
@@ -29,8 +29,8 @@
         <div class="row g-4">
           <section class="col-md-6">
             <div class="card h-100 shadow-sm">
-              <div class="card-body">
-                <h4 class="card-title text-secondary mb-3">Actions d'équipe</h4>
+              <div class="card-body" id="team-action">
+                <h4 class="card-title text-secondary mb-3" >Actions d'équipe</h4>
                 <div v-if="showCreateForm" class="mb-4">
                   <h5>Créer une équipe</h5>
                   <form @submit.prevent="createTeam">
@@ -48,8 +48,8 @@
           </section>
           <section class="col-md-6">
             <div class="card h-100 shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title mb-4">Utilisateurs dans l'équipe : {{ selectedTeam ? selectedTeam.name : 'Sélectionnez une équipe' }}</h5>
+              <div class="card-body" id="team-task">
+                <h5 class="card-title mb-4" >Utilisateurs dans l'équipe : {{ selectedTeam ? selectedTeam.name : 'Sélectionnez une équipe' }}</h5>
                 <table class="table table-striped table-hover">
                   <thead>
                     <tr>

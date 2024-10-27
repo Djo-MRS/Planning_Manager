@@ -4,7 +4,7 @@
             <SignupComponent />
         </div>
         <section class="right-bar">
-            <RightBarComponent/>
+            <RightBarComponent @tutoClicked="Tutorial" />
         </section>
         <AlerteBatmanComponent ref="alerte" />
         <NavBarComponent />
@@ -16,6 +16,8 @@ import AlerteBatmanComponent from '@/components/AlerteBatmanComponent.vue';
 import NavBarComponent from '@/components/NavBarComponent.vue';
 import RightBarComponent from '@/components/RightBarComponent.vue';
 import SignupComponent from '@/components/SignupComponent.vue';
+import { driver } from "driver.js"; 
+import "driver.js/dist/driver.css"; 
 
 export default {
     name: 'SignupView',
@@ -23,14 +25,28 @@ export default {
         SignupComponent,
         RightBarComponent,
         AlerteBatmanComponent,
-        NavBarComponent
+        NavBarComponent,
+
     },
     methods: {
+        Tutorial() {
+            const tuto = driver({
+                showProgress: true,
+                steps: [
+                    { element: '#signup-add', popover: { title: 'Création d\'utlisateur.', description: 'Créer un utlisateur à partir de ce formulaire.', side: "right", align: 'start'}},
+                    { element: '#signup-modify', popover: { title: 'Modification.', description: 'Choisir un utilisateur dans le menu déroulant. Modifier le profil sous le formulaire sur votre gauche si besoin', side: "bottom", align: 'start'}},
+                    { element: '#signup-delete', popover: { title: 'Suppression.', description: 'Cliquer sur le bouton pour supprimer l\'utilisateur. ATTENTION TOUTE SUPPRESSION EST DEFINITVE !!!', side: "bottom", align: 'start'}},         
+                ]
+            });
+
+            tuto.drive();
+        },
+
       goToSignin() {
         this.$router.push('/sign_in');
       }
-    }
-};
+    },
+}
 </script>
 
 <style>

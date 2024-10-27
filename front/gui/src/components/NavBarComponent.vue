@@ -49,9 +49,9 @@ export default {
   justify-content: center;
   position:fixed;
   bottom: 20px;
-  width: 100%;
-  left: 0;
-  right: 0;
+  width: 80%;
+  left: 50%; 
+  transform: translateX(-50%);
   z-index: 1000;
 }
 .button-group {
