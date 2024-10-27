@@ -125,7 +125,7 @@ export default {
           }));
       const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
       try {
-        const response = await fetch("/api/users/sign_up", {
+        const response = await fetch("http://localhost:4000/api/users/sign_up", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -160,7 +160,7 @@ export default {
     async getUsers() {
       const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
       try {
-        const response = await fetch("/api/users", 
+        const response = await fetch("http://localhost:4000/api/users", 
           {
             method: "GET",
             headers: {
@@ -180,7 +180,7 @@ export default {
     async deleteUser() {
       const csrfToken = document.cookie.split("c-xsrf-token=")[1]?.split(";")[0];
       try {
-        const response = await fetch("/api/users/" + this.selectedUserId, {
+        const response = await fetch("http://localhost:4000/api/users/" + this.selectedUserId, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

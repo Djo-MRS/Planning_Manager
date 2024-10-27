@@ -81,7 +81,7 @@ export default {
       let password = prompt('Write your password to confirm changes');
       if (password === null) return;
 
-      const response = await fetch('/api/users/' + this.user.id, {
+      const response = await fetch('http://localhost:4000/api/users/' + this.user.id, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
