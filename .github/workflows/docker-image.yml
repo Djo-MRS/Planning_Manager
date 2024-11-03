@@ -24,7 +24,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: "bushyoff"
-          password: "dckr_pat_f0V5UlWPzxvLoJpGG6Q2Qf9ILwM"
+ #         password: "dckr_pat_f0V5UlWPzxvLoJpGG6Q2Qf9ILwM"
       -
         name: Build and push elixir
         uses: docker/build-push-action@v6
@@ -50,7 +50,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: "bushyoff"
-          password: "dckr_pat_f0V5UlWPzxvLoJpGG6Q2Qf9ILwM"
+  #        password: "dckr_pat_f0V5UlWPzxvLoJpGG6Q2Qf9ILwM"
       -
         name: Build and push vuejs
         uses: docker/build-push-action@v6
