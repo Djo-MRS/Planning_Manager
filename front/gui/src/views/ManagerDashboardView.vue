@@ -58,12 +58,14 @@ export default {
   display: flex;
   flex-direction: column; 
   height: 100%; 
+  overflow: hidden;
 }
 
 .main-manager-dashboard {
   flex: 1; 
   margin-right: 20px;
   margin-left: 20px;
+  overflow: auto;
 }
 
 .right-bar {

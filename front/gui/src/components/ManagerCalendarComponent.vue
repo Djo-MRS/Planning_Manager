@@ -272,7 +272,10 @@ export default {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     background-color: #fff;
- 
+    max-height: 500px;
+    width: 100%; 
+    max-width: 100%;
+    overflow: auto; 
   }
   
   .header {
@@ -402,5 +405,11 @@ export default {
         width: 100%;
         border: 1px #8D8D8D solid;
     }
+
+    @media (max-width: 768px) {
+  .calendar {
+    width: 100%;
+  }
+}
   </style>
   
